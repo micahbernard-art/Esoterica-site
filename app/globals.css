@@ -23,8 +23,6 @@
   --line: rgba(226, 195, 124, 0.18);
   --line-strong: rgba(226, 195, 124, 0.45);
   --shadow-card: 0 22px 60px rgba(0, 0, 0, 0.22);
-  --font-display-stack: var(--font-display), "Iowan Old Style", Georgia, serif;
-  --font-sans-stack: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --content-width: 1180px;
   --wide-width: 1240px;
   --radius-sm: 8px;
@@ -44,6 +42,8 @@ html {
 }
 
 body {
+  --font-display-stack: var(--font-display), "Iowan Old Style", Georgia, serif;
+  --font-sans-stack: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   min-width: 320px;
   margin: 0;
   overflow-x: hidden;
