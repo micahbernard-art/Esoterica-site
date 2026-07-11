@@ -1,35 +1,112 @@
-import type { Metadata } from "next";
-import { headers } from "next/headers";
+import type { Metadata, Viewport } from "next";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "esoterica.local";
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
-  const metadataBase = new URL(`${protocol}://${host}`);
+const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://esoterica-cosmic-tarot.micahbernard.chatgpt.site"
+).replace(/\/$/, "");
 
-  return {
-    metadataBase,
-    title: "Esoterica | Tesoros Místicos",
-    description: "Tesoros místicos, lecturas de Tarot y sabiduría cósmica para tu viaje espiritual.",
-    icons: {
-      icon: "/favicon.svg",
-      shortcut: "/favicon.svg",
+const displayFont = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: "variable",
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sansFont = Manrope({
+  subsets: ["latin"],
+  weight: "variable",
+  variable: "--font-sans",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  applicationName: "Esoterica",
+  title: {
+    default: "Esoterica | Tarot y lecturas en Chiclayo",
+    template: "%s | Esoterica",
+  },
+  description:
+    "Explora barajas de Tarot, libros de aprendizaje y lecturas personalizadas. Atención por WhatsApp desde Chiclayo, Perú.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Esoterica | Tarot y lecturas en Chiclayo",
+    description:
+      "Barajas de Tarot, libros y lecturas personalizadas desde Chiclayo, Perú.",
+    url: "/",
+    siteName: "Esoterica",
+    locale: "es_PE",
+    type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1729,
+        height: 910,
+        alt: "Esoterica — Tarot, libros y lecturas personalizadas",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Esoterica | Tarot y lecturas en Chiclayo",
+    description:
+      "Barajas de Tarot, libros y lecturas personalizadas desde Chiclayo, Perú.",
+    images: ["/og.png"],
+  },
+  category: "Tarot y espiritualidad",
+};
+
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#0b1020",
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Esoterica",
+      url: siteUrl,
+      telephone: "+51 919 623 379",
+      sameAs: [
+        "https://www.instagram.com/esoterica.cix/",
+        "https://www.tiktok.com/@esoterica.cix",
+      ],
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+51 919 623 379",
+        contactType: "atención al cliente",
+        availableLanguage: "Spanish",
+      },
     },
-    openGraph: {
-      title: "Esoterica | Tesoros Místicos",
-      description: "Descubre tu magia y abraza tu viaje cósmico.",
-      type: "website",
-      images: [{ url: "/og.png", width: 1200, height: 630, alt: "Esoterica — Tesoros Místicos" }],
+    {
+      "@type": "LocalBusiness",
+      "@id": `${siteUrl}/#local-business`,
+      name: "Esoterica",
+      url: siteUrl,
+      telephone: "+51 919 623 379",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Chiclayo",
+        addressCountry: "PE",
+      },
+      sameAs: [
+        "https://www.instagram.com/esoterica.cix/",
+        "https://www.tiktok.com/@esoterica.cix",
+      ],
+      parentOrganization: {
+        "@id": `${siteUrl}/#organization`,
+      },
     },
-    twitter: {
-      card: "summary_large_image",
-      title: "Esoterica | Tesoros Místicos",
-      description: "Descubre tu magia y abraza tu viaje cósmico.",
-      images: ["/og.png"],
-    },
-  };
-}
+  ],
+};
 
 export default function RootLayout({
   children,
@@ -38,7 +115,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body className={`${displayFont.variable} ${sansFont.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

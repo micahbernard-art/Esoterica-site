@@ -1,22 +1,32 @@
-/** Cloudflare Worker entry point for the vinext-starter template. */
+/** Cloudflare Worker entry point for the Esoterica site. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 
-interface Env {
-  ASSETS: Fetcher;
-  DB: D1Database;
-  IMAGES: {
-    input(stream: ReadableStream): {
-      transform(options: Record<string, unknown>): {
-        output(options: { format: string; quality: number }): Promise<{ response(): Response }>;
-      };
-    };
-  };
+interface AssetFetcher {
+  fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
 }
 
-interface ExecutionContext {
+interface ImageOutput {
+  response(): Response;
+}
+
+interface ImageTransformer {
+  transform(options: { width?: number }): ImageTransformer;
+  output(options: { format: string; quality: number }): Promise<ImageOutput>;
+}
+
+interface ImagesBinding {
+  input(body: ReadableStream): ImageTransformer;
+}
+
+interface WorkerExecutionContext {
   waitUntil(promise: Promise<unknown>): void;
   passThroughOnException(): void;
+}
+
+interface Env {
+  ASSETS: AssetFetcher;
+  IMAGES: ImagesBinding;
 }
 
 // Image security config. SVG sources with .svg extension auto-skip the
@@ -26,7 +36,7 @@ interface ExecutionContext {
 // const imageConfig: ImageConfig = { dangerouslyAllowSVG: true };
 
 const worker = {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: WorkerExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === "/_vinext/image") {
