@@ -266,7 +266,6 @@
   aspect-ratio: 1;
   color: var(--portal-color);
   place-items: center;
-  filter: drop-shadow(0 0 24px rgba(131, 56, 236, 0.35));
   isolation: isolate;
 }
 
@@ -280,7 +279,6 @@
     radial-gradient(circle, rgba(131, 56, 236, 0.4), transparent 66%);
   box-shadow: 0 0 70px rgba(25, 214, 232, 0.18);
   content: "";
-  animation: portal-breathe 5.5s ease-in-out infinite;
 }
 
 .orbit-portal-halo,
@@ -293,33 +291,28 @@
 .orbit-portal-halo--outer {
   inset: 7%;
   opacity: 0.55;
-  animation: orbit-spin 24s linear infinite;
 }
 
 .orbit-portal-halo--middle {
   inset: 16%;
   border-color: var(--astral-cyan-300);
   opacity: 0.48;
-  animation: orbit-spin-reverse 17s linear infinite;
 }
 
 .orbit-portal-halo--inner {
   inset: 28%;
   border-style: dashed;
   opacity: 0.75;
-  animation: orbit-spin 11s linear infinite;
 }
 
 .orbit-portal-meridian {
   inset: 9% 25%;
   opacity: 0.45;
   transform: rotate(32deg);
-  animation: meridian-sway 8s ease-in-out infinite alternate;
 }
 
 .orbit-portal-meridian--two {
   transform: rotate(-38deg);
-  animation-delay: -4s;
 }
 
 .orbit-portal-center {
@@ -358,7 +351,6 @@
   border-radius: 50%;
   background: var(--astral-pearl);
   box-shadow: 0 0 9px var(--astral-pearl);
-  animation: star-pulse 2.8s ease-in-out infinite;
 }
 
 .orbit-portal-spark--one {
@@ -369,13 +361,11 @@
 .orbit-portal-spark--two {
   right: 13%;
   bottom: 18%;
-  animation-delay: -0.9s;
 }
 
 .orbit-portal-spark--three {
   bottom: 8%;
   left: 29%;
-  animation-delay: -1.8s;
 }
 
 .orbit-portal--compact {
@@ -435,8 +425,6 @@
   border-bottom: 0;
   background: linear-gradient(180deg, rgba(5, 3, 13, 0.92), rgba(11, 5, 27, 0.78));
   box-shadow: 0 1px 0 rgba(255, 227, 154, 0.18), 0 16px 42px rgba(2, 0, 10, 0.25);
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
 }
 
 .site-header::after {
@@ -534,7 +522,6 @@
 .primary-nav a[aria-current="page"] .nav-star {
   opacity: 1;
   transform: scale(1) rotate(0deg);
-  animation: star-pulse 2.6s ease-in-out infinite;
 }
 
 .header-contact {
@@ -564,13 +551,11 @@
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.52), transparent);
   content: "";
   transform: rotate(22deg);
-  animation: cta-comet 4.8s ease-in-out infinite;
 }
 
 .contact-orbit {
   --glyph-size: 1rem;
   color: var(--astral-cyan-300);
-  animation: orbit-spin 5s linear infinite;
 }
 
 .contact-spark {
@@ -579,7 +564,6 @@
   border-radius: 50%;
   background: var(--astral-gold-300);
   box-shadow: 0 0 7px var(--astral-gold-300);
-  animation: star-pulse 1.8s ease-in-out infinite;
 }
 
 /* Page thresholds */
@@ -606,7 +590,6 @@
   border-radius: 50%;
   background: repeating-radial-gradient(circle, transparent 0 48px, rgba(197, 156, 255, 0.065) 49px 50px);
   content: "";
-  animation: orbit-spin 80s linear infinite;
 }
 
 .page-hero::after {
@@ -619,7 +602,6 @@
   border-radius: 50%;
   background: radial-gradient(ellipse, rgba(25, 214, 232, 0.11), transparent 68%);
   content: "";
-  filter: blur(4px);
 }
 
 .page-hero--book {
@@ -743,7 +725,6 @@
   top: 18%;
   left: 4%;
   opacity: 0.22;
-  animation: celestial-float 8s ease-in-out infinite;
 }
 
 .page-hero-stars > :nth-child(2) {
@@ -753,7 +734,6 @@
   bottom: 16%;
   color: var(--astral-cyan-300);
   opacity: 0.62;
-  animation: star-pulse 3.8s ease-in-out infinite;
 }
 
 .page-hero-stars > :nth-child(3) {
@@ -762,7 +742,6 @@
   bottom: 12%;
   left: 46%;
   opacity: 0.35;
-  animation: celestial-float 6.8s ease-in-out infinite reverse;
 }
 
 /* Section constellations */
@@ -807,7 +786,6 @@
 
 .section-heading-astra > .celestial-glyph {
   --glyph-size: 2rem;
-  animation: star-pulse 4s ease-in-out infinite;
 }
 
 .section-heading-orbit {
@@ -815,7 +793,6 @@
   inset: 8%;
   border: 1px solid rgba(131, 245, 255, 0.35);
   border-radius: 50%;
-  animation: orbit-spin 12s linear infinite;
 }
 
 .section-heading-orbit::before,
@@ -908,7 +885,7 @@
 }
 
 .catalog-card-media img {
-  filter: saturate(0.86) contrast(1.06) hue-rotate(5deg);
+  filter: none;
   transform: scale(1.015);
   transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease;
 }
@@ -959,7 +936,6 @@
   box-shadow: 0 0 22px rgba(131, 56, 236, 0.38);
   place-items: center;
   transform: translateX(-50%);
-  backdrop-filter: blur(10px);
 }
 
 .catalog-card-orbit::before {
@@ -969,7 +945,6 @@
   border-radius: 50%;
   content: "";
   transform: rotate(36deg);
-  animation: orbit-spin 8s linear infinite;
 }
 
 .catalog-card-orbit .celestial-glyph {
@@ -982,7 +957,6 @@
   background: rgba(10, 3, 25, 0.82);
   color: var(--astral-pearl);
   clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-  backdrop-filter: blur(12px);
 }
 
 .reference-label {
@@ -1050,13 +1024,11 @@
   background: linear-gradient(100deg, transparent 15%, rgba(131, 245, 255, 0.22), transparent 75%);
   content: "";
   transform: translateX(-110%);
-  animation: living-button 4.5s ease-in-out infinite;
 }
 
 .catalog-card .button-secondary .celestial-glyph {
   --glyph-size: 1rem;
   color: var(--astral-cyan-300);
-  animation: orbit-spin 6s linear infinite;
 }
 
 /* Footer — final constellation, not a generic three-column slab */
@@ -1519,42 +1491,4 @@
   .header-contact::before {
     display: none;
   }
-}
-
-@keyframes orbit-spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes orbit-spin-reverse {
-  to { transform: rotate(-360deg); }
-}
-
-@keyframes portal-breathe {
-  0%, 100% { opacity: 0.65; transform: scale(0.92); }
-  50% { opacity: 1; transform: scale(1.08); }
-}
-
-@keyframes meridian-sway {
-  from { transform: rotate(22deg) scaleX(0.9); }
-  to { transform: rotate(52deg) scaleX(1.06); }
-}
-
-@keyframes star-pulse {
-  0%, 100% { opacity: 0.38; transform: scale(0.76) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.15) rotate(45deg); }
-}
-
-@keyframes celestial-float {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(-7deg); }
-  50% { transform: translate3d(0.8rem, -1.1rem, 0) rotate(8deg); }
-}
-
-@keyframes cta-comet {
-  0%, 28% { transform: translateX(-220%) rotate(22deg); }
-  54%, 100% { transform: translateX(720%) rotate(22deg); }
-}
-
-@keyframes living-button {
-  0%, 24% { transform: translateX(-120%); }
-  55%, 100% { transform: translateX(120%); }
 }

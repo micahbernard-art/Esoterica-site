@@ -16,6 +16,14 @@ body {
   overflow: clip;
 }
 
+@supports (content-visibility: auto) {
+  .astral-page > :is(.content-section, .page-content),
+  .site-footer {
+    contain-intrinsic-size: auto 900px;
+    content-visibility: auto;
+  }
+}
+
 .astral-page > .astral-divider {
   width: min(100% - 64px, var(--wide-width));
   max-width: none;
@@ -48,7 +56,6 @@ body {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.62), transparent);
   content: "";
   transform: rotate(22deg);
-  animation: astral-button-comet 4.8s ease-in-out infinite;
 }
 
 .astral-button .celestial-glyph {
@@ -86,7 +93,6 @@ body {
   content: "";
   opacity: 0.82;
   transform: translate3d(0, var(--scene-shift-soft, 0), 0);
-  animation: home-solar-turn 70s linear infinite;
 }
 
 .cosmos-entry::after {
@@ -120,7 +126,6 @@ body {
 
 .cosmos-entry .hero-kicker > span {
   color: var(--solar-400);
-  animation: star-pulse 2.8s ease-in-out infinite;
 }
 
 .cosmos-entry h1 {
@@ -171,7 +176,6 @@ body {
   border-radius: 50%;
   background: var(--comet-300);
   box-shadow: 0 0 1rem var(--comet-300);
-  animation: star-pulse 2.2s ease-in-out infinite;
 }
 
 .cosmos-entry__portal {
@@ -200,8 +204,7 @@ body {
   z-index: 3;
   width: 16rem;
   height: 24rem;
-  filter: drop-shadow(0 36px 38px rgba(0, 0, 0, 0.48));
-  animation: tarot-fan-float 6.5s ease-in-out infinite;
+  box-shadow: 0 36px 38px rgba(0, 0, 0, 0.32);
 }
 
 .tarot-back {
@@ -240,7 +243,6 @@ body {
 
 .tarot-back .celestial-glyph {
   --glyph-size: 4.6rem;
-  filter: drop-shadow(0 0 1.8rem currentColor);
 }
 
 .tarot-back--left {
@@ -268,7 +270,6 @@ body {
   background: color-mix(in srgb, var(--cosmos-800) 82%, transparent);
   box-shadow: 0 22px 52px rgba(0, 0, 0, 0.42), 0 0 36px color-mix(in srgb, var(--violet-500) 18%, transparent);
   clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
-  backdrop-filter: blur(18px);
 }
 
 .cosmos-entry .hero-feature::before {
@@ -325,14 +326,13 @@ body {
   border-radius: 50%;
   background: var(--pearl-50);
   box-shadow: 0 0 1.2rem var(--comet-300);
-  animation: dust-drift 7s ease-in-out infinite alternate;
 }
 
 .cosmos-entry__dust span:nth-child(1) { top: 12%; left: 44%; }
-.cosmos-entry__dust span:nth-child(2) { top: 24%; right: 4%; animation-delay: -1.4s; }
-.cosmos-entry__dust span:nth-child(3) { right: 38%; bottom: 18%; animation-delay: -3.1s; }
-.cosmos-entry__dust span:nth-child(4) { top: 54%; left: 2%; animation-delay: -4.7s; }
-.cosmos-entry__dust span:nth-child(5) { top: 8%; right: 28%; animation-delay: -5.8s; }
+.cosmos-entry__dust span:nth-child(2) { top: 24%; right: 4%; }
+.cosmos-entry__dust span:nth-child(3) { right: 38%; bottom: 18%; }
+.cosmos-entry__dust span:nth-child(4) { top: 54%; left: 2%; }
+.cosmos-entry__dust span:nth-child(5) { top: 8%; right: 28%; }
 
 /* Featured constellation */
 .astral-catalog {
@@ -398,7 +398,6 @@ body {
   background: repeating-radial-gradient(circle, transparent 0 4.8rem, color-mix(in srgb, var(--comet-300) 7%, transparent) 4.85rem 4.9rem);
   content: "";
   transform: translate3d(0, var(--scene-shift-soft, 0), 0);
-  animation: home-solar-turn 64s linear infinite reverse;
 }
 
 .orbital-categories__heading {
@@ -460,7 +459,6 @@ body {
   border-radius: 50%;
   content: "";
   transform: rotate(48deg);
-  animation: orbit-spin 12s linear infinite;
 }
 
 .category-orbit__core .celestial-glyph { --glyph-size: 2.5rem; }
@@ -483,7 +481,6 @@ body {
   border-radius: 0;
   background: color-mix(in srgb, var(--cosmos-800) 72%, transparent);
   clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
-  backdrop-filter: blur(15px);
 }
 
 .orbital-categories .category-card > .celestial-glyph {
@@ -602,7 +599,6 @@ body {
   padding: 0.85rem;
   border-top: 1px solid color-mix(in srgb, var(--solar-400) 34%, transparent);
   background: color-mix(in srgb, var(--cosmos-950) 68%, transparent);
-  backdrop-filter: blur(12px);
 }
 
 .eclipse-stage dt,
@@ -682,7 +678,6 @@ body {
   border-radius: 50%;
   content: "";
   transform: rotate(48deg);
-  animation: orbit-spin 10s linear infinite;
 }
 
 .process-planet .celestial-glyph { --glyph-size: 2.1rem; }
@@ -718,7 +713,6 @@ body {
 .crescent-scene__moon .celestial-glyph {
   --glyph-size: 68%;
   --glyph-cutout: var(--cosmos-950);
-  filter: drop-shadow(0 0 2rem color-mix(in srgb, var(--comet-300) 26%, transparent));
 }
 
 .crescent-scene .about-copy h2 {
@@ -731,7 +725,6 @@ body {
   border-radius: 0;
   background: color-mix(in srgb, var(--cosmos-800) 72%, transparent);
   clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
-  backdrop-filter: blur(16px);
 }
 
 /* Shared closing portal */
@@ -906,7 +899,6 @@ body {
     linear-gradient(155deg, var(--nebula-700), var(--cosmos-800) 52%, var(--cosmos-950));
   box-shadow: 1.1rem 1.3rem 0 color-mix(in srgb, var(--solar-400) 6%, transparent), 0 3rem 5rem rgba(0, 0, 0, 0.52), inset 0 0 0 0.85rem color-mix(in srgb, var(--solar-400) 6%, transparent);
   transform: rotateY(-9deg) rotateX(2deg) translate3d(0, var(--scene-shift-soft, 0), 0);
-  animation: artifact-float 6s ease-in-out infinite;
 }
 
 .artifact-scene .book-cover::before {
@@ -1060,7 +1052,6 @@ body {
   border: 1px solid color-mix(in srgb, var(--comet-300) 34%, transparent);
   border-radius: 50%;
   content: "";
-  animation: orbit-spin 13s linear infinite;
 }
 
 .reading-tier__sky .celestial-glyph {
@@ -1156,27 +1147,6 @@ body {
   .orbital-categories .category-card:hover > .celestial-glyph { transform: rotate(90deg) scale(1.12); }
   .celestial-gateways .purchase-link:hover .gateway-arrow { transform: translate(3px, -3px); }
   .celestial-gateways .purchase-link:hover { border-color: var(--solar-400); box-shadow: 0 0 2rem color-mix(in srgb, var(--violet-500) 20%, transparent); }
-}
-
-@keyframes home-solar-turn {
-  to { transform: translate3d(0, var(--scene-shift-soft, 0), 0) rotate(360deg); }
-}
-
-@keyframes tarot-fan-float {
-  50% { transform: translateY(-0.8rem) rotate(0.6deg); }
-}
-
-@keyframes artifact-float {
-  50% { transform: rotateY(-6deg) rotateX(1deg) translateY(-0.65rem); }
-}
-
-@keyframes dust-drift {
-  to { opacity: 0.35; transform: translate3d(1.2rem, -1.8rem, 0) scale(0.65); }
-}
-
-@keyframes astral-button-comet {
-  0%, 64% { transform: translateX(0) rotate(22deg); }
-  82%, 100% { transform: translateX(650%) rotate(22deg); }
 }
 
 @media (max-width: 1100px) {

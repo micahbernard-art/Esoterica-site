@@ -27,9 +27,9 @@ const makeStars = (
   });
 
 const starPlanes = [
-  { name: "far", stars: makeStars(16, 3, 1, 2) },
-  { name: "mid", stars: makeStars(10, 17, 2, 3) },
-  { name: "near", stars: makeStars(7, 31, 3, 4) },
+  { name: "far", stars: makeStars(9, 3, 1, 2) },
+  { name: "mid", stars: makeStars(6, 17, 2, 3) },
+  { name: "near", stars: makeStars(4, 31, 3, 4) },
 ] as const;
 
 export function CelestialBackdrop() {

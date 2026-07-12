@@ -41,6 +41,7 @@ export function CosmicMotion() {
     const visibleScenes = new Set<HTMLElement>();
 
     let frameId: number | null = null;
+    let lastScrollProgress = -1;
     let reducedMotion = motionPreference.matches;
 
     scenes.forEach((scene) => {
@@ -126,7 +127,10 @@ export function CosmicMotion() {
         ? 0
         : clamp(window.scrollY / maximumScroll);
 
-      root.style.setProperty("--scroll-p", scrollProgress.toFixed(4));
+      if (Math.abs(scrollProgress - lastScrollProgress) >= 0.001) {
+        root.style.setProperty("--scroll-p", scrollProgress.toFixed(4));
+        lastScrollProgress = scrollProgress;
+      }
 
       visibleScenes.forEach((scene) => {
         if (reducedMotion) {
@@ -159,7 +163,7 @@ export function CosmicMotion() {
         });
         requestMotionFrame();
       },
-      { rootMargin: "35% 0px 35% 0px", threshold: 0 },
+      { rootMargin: "15% 0px 15% 0px", threshold: 0 },
     );
 
     const revealObserver = new IntersectionObserver(
