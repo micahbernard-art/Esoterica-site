@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { whatsappUrl } from "@/lib/site-data";
+import { CelestialGlyph } from "./celestial-glyph";
 
 export type SitePath = "/" | "/tarot" | "/libros" | "/lecturas";
 
@@ -16,13 +17,13 @@ export function Header({ activePath }: { activePath: SitePath }) {
   );
 
   return (
-    <header className="site-header">
+    <header className="site-header" data-scroll-scene="navigation">
       <div className="header-inner">
         <Link className="brand-link" href="/" aria-label="Esoterica, ir al inicio">
           <span className="brand-mark" aria-hidden="true">
-            E
+            <CelestialGlyph kind="eclipse" />
           </span>
-          <span>Esoterica</span>
+          <span className="brand-wordmark">Esoterica</span>
         </Link>
 
         <nav className="primary-nav" aria-label="Navegación principal">
@@ -33,7 +34,8 @@ export function Header({ activePath }: { activePath: SitePath }) {
                   href={item.href}
                   aria-current={activePath === item.href ? "page" : undefined}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  <CelestialGlyph kind="star" className="nav-star" />
                 </Link>
               </li>
             ))}
@@ -47,7 +49,9 @@ export function Header({ activePath }: { activePath: SitePath }) {
           rel="noopener noreferrer"
           aria-label="Consultar por WhatsApp (abre en una pestaña nueva)"
         >
+          <CelestialGlyph kind="orbit" className="contact-orbit" />
           <span>Consultar</span>
+          <span className="contact-spark" aria-hidden="true" />
         </a>
       </div>
     </header>

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
+import "./cosmic-components.css";
+import "./cosmic-pages.css";
 
 const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ??

@@ -1,33 +1,78 @@
-const stars = Array.from({ length: 40 }, (_, index) => ({
-  id: index,
-  left: `${(index * 37 + 11) % 101}%`,
-  top: `${(index * 53 + 7) % 101}%`,
-  size: `${index % 7 === 0 ? 4 : index % 3 === 0 ? 3 : 2}px`,
-  delay: `${(index % 9) * -0.72}s`,
-  duration: `${3 + (index % 6) * 0.9}s`,
-}));
+import type { CSSProperties } from "react";
+
+type StarStyle = CSSProperties & {
+  "--star-size": string;
+  "--star-alpha": string;
+  "--twinkle-delay": string;
+  "--twinkle-duration": string;
+};
+
+const makeStars = (
+  count: number,
+  seed: number,
+  minimumSize: number,
+  sizeRange: number,
+) =>
+  Array.from({ length: count }, (_, index) => {
+    const sequence = index + seed;
+    return {
+      id: `${seed}-${index}`,
+      left: `${(sequence * 47 + seed * 13) % 101}%`,
+      top: `${(sequence * 61 + seed * 19) % 103}%`,
+      size: `${minimumSize + ((sequence * 7) % sizeRange)}px`,
+      alpha: (0.28 + ((sequence * 11) % 48) / 100).toFixed(2),
+      delay: `${-((sequence * 0.73) % 8).toFixed(2)}s`,
+      duration: `${(3.8 + ((sequence * 17) % 44) / 10).toFixed(1)}s`,
+    };
+  });
+
+const starPlanes = [
+  { name: "far", stars: makeStars(16, 3, 1, 2) },
+  { name: "mid", stars: makeStars(10, 17, 2, 3) },
+  { name: "near", stars: makeStars(7, 31, 3, 4) },
+] as const;
 
 export function CelestialBackdrop() {
   return (
     <div className="celestial-backdrop" aria-hidden="true">
-      <div className="aurora aurora-one" />
-      <div className="aurora aurora-two" />
-      <div className="star-field">
-        {stars.map((star) => (
-          <span
-            className="star-dot"
-            key={star.id}
-            style={{
-              left: star.left,
-              top: star.top,
-              width: star.size,
-              height: star.size,
-              animationDelay: star.delay,
-              animationDuration: star.duration,
-            }}
-          />
-        ))}
+      <div className="nebula-field nebula-field-one" />
+      <div className="nebula-field nebula-field-two" />
+
+      <div className="astral-sun" />
+      <div className="astral-crescent" />
+
+      <div className="orbit-shell orbit-shell-one" />
+      <div className="orbit-shell orbit-shell-two" />
+      <div className="orbit-shell orbit-shell-three" />
+
+      <div className="celestial-meridian">
+        <span className="meridian-planet meridian-planet-one" />
+        <span className="meridian-planet meridian-planet-two" />
+        <span className="meridian-planet meridian-planet-three" />
       </div>
+
+      {starPlanes.map((plane) => (
+        <div className={`star-plane star-plane-${plane.name}`} key={plane.name}>
+          {plane.stars.map((star) => (
+            <span
+              className="celestial-star"
+              key={star.id}
+              style={
+                {
+                  left: star.left,
+                  top: star.top,
+                  "--star-size": star.size,
+                  "--star-alpha": star.alpha,
+                  "--twinkle-delay": star.delay,
+                  "--twinkle-duration": star.duration,
+                } as StarStyle
+              }
+            />
+          ))}
+        </div>
+      ))}
+
+      <div className="restrained-comet" />
     </div>
   );
 }

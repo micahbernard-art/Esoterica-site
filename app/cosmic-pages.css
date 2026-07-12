@@ -1,0 +1,1336 @@
+/* SOL / TERRA route scenes — El Umbral Astral */
+
+body {
+  background: var(--cosmos-950);
+}
+
+.site-shell {
+  background:
+    radial-gradient(circle at 18% 3%, color-mix(in srgb, var(--violet-500) 30%, transparent), transparent 32rem),
+    radial-gradient(circle at 86% 38%, color-mix(in srgb, var(--dawn-400) 10%, transparent), transparent 30rem),
+    linear-gradient(180deg, var(--cosmos-900), var(--cosmos-950) 46%, #10072d);
+}
+
+.astral-page {
+  position: relative;
+  overflow: clip;
+}
+
+.astral-page > .astral-divider {
+  width: min(100% - 64px, var(--wide-width));
+  max-width: none;
+  margin: 0 auto;
+  opacity: 0.72;
+}
+
+.astral-page .section-eyebrow,
+.astral-page .hero-kicker {
+  color: var(--comet-300);
+  letter-spacing: 0.22em;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--comet-300) 32%, transparent);
+}
+
+.astral-button {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  isolation: isolate;
+}
+
+.astral-button::after {
+  position: absolute;
+  top: -75%;
+  left: -32%;
+  z-index: -1;
+  width: 20%;
+  height: 250%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.62), transparent);
+  content: "";
+  transform: rotate(22deg);
+  animation: astral-button-comet 4.8s ease-in-out infinite;
+}
+
+.astral-button .celestial-glyph {
+  --glyph-size: 1rem;
+  color: currentColor;
+}
+
+/* Home — crossing the threshold */
+.cosmos-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(28rem, 0.92fr);
+  align-items: center;
+  width: min(100% - 64px, var(--wide-width));
+  min-height: calc(100svh - 88px);
+  margin: 0 auto;
+  padding: clamp(5.5rem, 9vw, 9rem) 0 7.5rem;
+  gap: clamp(2.5rem, 6vw, 7rem);
+  isolation: isolate;
+}
+
+.cosmos-entry::before {
+  position: absolute;
+  top: -30%;
+  left: -28%;
+  z-index: -1;
+  width: clamp(34rem, 70vw, 72rem);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 22%, transparent);
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle, transparent 0 5.2rem, color-mix(in srgb, var(--solar-400) 8%, transparent) 5.25rem 5.3rem),
+    radial-gradient(circle, color-mix(in srgb, var(--solar-400) 23%, transparent), transparent 62%);
+  box-shadow: 0 0 11rem color-mix(in srgb, var(--solar-400) 8%, transparent);
+  content: "";
+  opacity: 0.82;
+  transform: translate3d(0, var(--scene-shift-soft, 0), 0);
+  animation: home-solar-turn 70s linear infinite;
+}
+
+.cosmos-entry::after {
+  position: absolute;
+  right: -9%;
+  bottom: 5%;
+  z-index: -1;
+  width: 18rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--mist-200);
+  box-shadow:
+    inset 5.2rem -0.7rem 0 0 var(--cosmos-900),
+    0 0 4rem color-mix(in srgb, var(--comet-300) 18%, transparent);
+  content: "";
+  opacity: 0.24;
+  transform: translate3d(0, var(--scene-shift-reverse, 0), 0) rotate(-18deg);
+}
+
+.cosmos-entry__copy,
+.cosmos-entry__portal {
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-entry .hero-kicker {
+  display: inline-flex;
+  margin-bottom: 1.7rem;
+  gap: 0.7rem;
+}
+
+.cosmos-entry .hero-kicker > span {
+  color: var(--solar-400);
+  animation: star-pulse 2.8s ease-in-out infinite;
+}
+
+.cosmos-entry h1 {
+  max-width: 8.6ch;
+  margin: 0;
+  color: var(--pearl-50);
+  font-family: var(--font-display-stack);
+  font-size: clamp(4.65rem, 8.2vw, 9.1rem);
+  font-weight: 520;
+  letter-spacing: -0.058em;
+  line-height: 0.82;
+  text-wrap: balance;
+  text-shadow: 0 12px 48px rgba(0, 0, 0, 0.52), 0 0 70px color-mix(in srgb, var(--violet-500) 26%, transparent);
+}
+
+.cosmos-entry h1 em {
+  color: transparent;
+  background: linear-gradient(105deg, var(--solar-400), var(--coral-400) 46%, var(--orchid-300));
+  background-clip: text;
+  font-weight: 470;
+  text-shadow: none;
+  -webkit-background-clip: text;
+}
+
+.cosmos-entry .hero-subtitle {
+  max-width: 54ch;
+  margin: 2.2rem 0 2.6rem;
+  color: var(--mist-200);
+}
+
+.cosmos-entry .hero-actions {
+  align-items: stretch;
+}
+
+.cosmos-entry .button-primary {
+  border-color: var(--solar-400);
+  background: linear-gradient(110deg, var(--solar-400), var(--coral-400));
+}
+
+.cosmos-entry .button-secondary {
+  border-color: color-mix(in srgb, var(--comet-300) 60%, transparent);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--comet-300) 12%, transparent), color-mix(in srgb, var(--violet-500) 24%, transparent));
+}
+
+.pulse-star {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--comet-300);
+  box-shadow: 0 0 1rem var(--comet-300);
+  animation: star-pulse 2.2s ease-in-out infinite;
+}
+
+.cosmos-entry__portal {
+  display: grid;
+  min-height: 38rem;
+  align-items: center;
+  justify-items: center;
+}
+
+.hero-orbit-stage {
+  position: relative;
+  display: grid;
+  width: min(100%, 35rem);
+  aspect-ratio: 0.9;
+  place-items: center;
+  transform: translate3d(0, var(--scene-shift-reverse, 0), 0);
+}
+
+.hero-orbit-stage > .orbit-portal {
+  --portal-size: min(34rem, 42vw);
+  position: absolute;
+}
+
+.tarot-fan {
+  position: relative;
+  z-index: 3;
+  width: 16rem;
+  height: 24rem;
+  filter: drop-shadow(0 36px 38px rgba(0, 0, 0, 0.48));
+  animation: tarot-fan-float 6.5s ease-in-out infinite;
+}
+
+.tarot-back {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 82%, transparent);
+  border-radius: 48% 48% 1rem 1rem / 20% 20% 1rem 1rem;
+  background:
+    radial-gradient(circle at 50% 36%, transparent 0 2.8rem, color-mix(in srgb, var(--comet-300) 35%, transparent) 2.85rem 2.9rem, transparent 3rem),
+    repeating-radial-gradient(circle at 50% 42%, transparent 0 2.1rem, color-mix(in srgb, var(--solar-400) 17%, transparent) 2.15rem 2.2rem),
+    linear-gradient(150deg, var(--nebula-700), var(--cosmos-800) 55%, var(--cosmos-950));
+  box-shadow: inset 0 0 0 0.8rem color-mix(in srgb, var(--solar-400) 7%, transparent), inset 0 0 0 calc(0.8rem + 1px) color-mix(in srgb, var(--solar-400) 44%, transparent);
+  color: var(--solar-400);
+  place-items: center;
+  transform-origin: 50% 110%;
+}
+
+.tarot-back::before,
+.tarot-back::after {
+  position: absolute;
+  inset: 1.4rem;
+  border: 1px solid color-mix(in srgb, var(--comet-300) 25%, transparent);
+  border-radius: inherit;
+  content: "";
+}
+
+.tarot-back::after {
+  inset: auto 50% 2rem;
+  width: 1px;
+  height: 4rem;
+  border: 0;
+  background: linear-gradient(var(--solar-400), transparent);
+}
+
+.tarot-back .celestial-glyph {
+  --glyph-size: 4.6rem;
+  filter: drop-shadow(0 0 1.8rem currentColor);
+}
+
+.tarot-back--left {
+  transform: translateX(-5rem) rotate(-18deg) scale(0.91);
+}
+
+.tarot-back--center {
+  z-index: 2;
+  transform: translateY(-1.1rem);
+}
+
+.tarot-back--right {
+  transform: translateX(5rem) rotate(18deg) scale(0.91);
+}
+
+.cosmos-entry .hero-feature {
+  position: absolute;
+  right: -1rem;
+  bottom: 0.5rem;
+  z-index: 6;
+  width: min(21rem, 72%);
+  padding: 1.25rem 1.35rem;
+  border-color: color-mix(in srgb, var(--comet-300) 35%, transparent);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--cosmos-800) 82%, transparent);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.42), 0 0 36px color-mix(in srgb, var(--violet-500) 18%, transparent);
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+  backdrop-filter: blur(18px);
+}
+
+.cosmos-entry .hero-feature::before {
+  left: 1.35rem;
+  width: 4rem;
+  background: linear-gradient(90deg, var(--solar-400), var(--comet-300));
+}
+
+.cosmos-entry .hero-feature-icon {
+  position: absolute;
+  top: -1rem;
+  right: 1rem;
+  width: 2.8rem;
+  height: 2.8rem;
+  margin: 0;
+  background: var(--cosmos-800);
+}
+
+.cosmos-entry .hero-feature h2 {
+  font-size: 1.45rem;
+}
+
+.cosmos-entry .hero-feature > p:last-of-type {
+  font-size: 0.82rem;
+}
+
+.coordinate-strip {
+  position: absolute;
+  right: 0;
+  bottom: 1.3rem;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--solar-400) 25%, transparent);
+  color: var(--mist-200);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+}
+
+.cosmos-entry__dust {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.cosmos-entry__dust span {
+  position: absolute;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--pearl-50);
+  box-shadow: 0 0 1.2rem var(--comet-300);
+  animation: dust-drift 7s ease-in-out infinite alternate;
+}
+
+.cosmos-entry__dust span:nth-child(1) { top: 12%; left: 44%; }
+.cosmos-entry__dust span:nth-child(2) { top: 24%; right: 4%; animation-delay: -1.4s; }
+.cosmos-entry__dust span:nth-child(3) { right: 38%; bottom: 18%; animation-delay: -3.1s; }
+.cosmos-entry__dust span:nth-child(4) { top: 54%; left: 2%; animation-delay: -4.7s; }
+.cosmos-entry__dust span:nth-child(5) { top: 8%; right: 28%; animation-delay: -5.8s; }
+
+/* Featured constellation */
+.astral-catalog {
+  position: relative;
+  padding-top: var(--section-space, clamp(7rem, 13vw, 11rem));
+  padding-bottom: var(--section-space, clamp(7rem, 13vw, 11rem));
+}
+
+.astral-catalog::before {
+  position: absolute;
+  top: 42%;
+  right: -12vw;
+  left: -12vw;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--comet-300) 28%, transparent), color-mix(in srgb, var(--solar-400) 36%, transparent), transparent);
+  content: "";
+  transform: rotate(-4deg);
+}
+
+.featured-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.catalog-constellation {
+  position: relative;
+}
+
+.catalog-constellation:nth-child(2) {
+  transform: translateY(4.5rem);
+}
+
+.catalog-star,
+.constellation-index {
+  display: inline-flex;
+  margin-bottom: 0.9rem;
+  color: var(--comet-300);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
+
+/* Orbital category compass */
+.orbital-categories {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(17rem, 0.72fr) minmax(34rem, 1.28fr);
+  align-items: center;
+  min-height: 58rem;
+  gap: clamp(3rem, 7vw, 8rem);
+}
+
+.orbital-categories::before {
+  position: absolute;
+  top: 12%;
+  right: -8%;
+  width: min(58rem, 74vw);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--orchid-300) 18%, transparent);
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 4.8rem, color-mix(in srgb, var(--comet-300) 7%, transparent) 4.85rem 4.9rem);
+  content: "";
+  transform: translate3d(0, var(--scene-shift-soft, 0), 0);
+  animation: home-solar-turn 64s linear infinite reverse;
+}
+
+.orbital-categories__heading {
+  position: relative;
+  z-index: 2;
+}
+
+.orbital-categories .section-heading {
+  display: block;
+  margin: 0;
+}
+
+.orbital-categories .section-heading-astra,
+.orbital-categories .section-action {
+  display: none;
+}
+
+.category-orbit {
+  position: relative;
+  display: grid;
+  min-height: 42rem;
+  place-items: center;
+}
+
+.category-orbit::before,
+.category-orbit::after {
+  position: absolute;
+  inset: 12% 5%;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 30%, transparent);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(18deg);
+}
+
+.category-orbit::after {
+  inset: 24% -4%;
+  border-color: color-mix(in srgb, var(--comet-300) 25%, transparent);
+  transform: rotate(-24deg);
+}
+
+.category-orbit__core {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  width: 9.5rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 72%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--violet-500) 48%, var(--cosmos-950)), var(--cosmos-950));
+  color: var(--solar-400);
+  box-shadow: 0 0 5rem color-mix(in srgb, var(--violet-500) 30%, transparent);
+  place-items: center;
+}
+
+.category-orbit__core::before {
+  position: absolute;
+  inset: -1.2rem 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--comet-300) 48%, transparent);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(48deg);
+  animation: orbit-spin 12s linear infinite;
+}
+
+.category-orbit__core .celestial-glyph { --glyph-size: 2.5rem; }
+.category-orbit__core span { font-family: var(--font-display-stack); font-size: 1.15rem; }
+
+.orbital-categories .category-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10rem 8rem;
+}
+
+.orbital-categories .category-card {
+  position: relative;
+  min-height: 11rem;
+  padding: 1.55rem;
+  border-color: color-mix(in srgb, var(--orchid-300) 26%, transparent);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--cosmos-800) 72%, transparent);
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+  backdrop-filter: blur(15px);
+}
+
+.orbital-categories .category-card > .celestial-glyph {
+  --glyph-size: 1.7rem;
+  color: var(--solar-400);
+}
+
+.category-orbit-index {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  color: var(--comet-300);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+}
+
+.orbital-categories .category-copy strong {
+  font-family: var(--font-display-stack);
+  font-size: 2rem;
+}
+
+.orbital-categories .category-arrow {
+  color: var(--comet-300);
+}
+
+/* Eclipse panels */
+.eclipse-panel,
+.monthly-eclipse {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 28%, transparent);
+  border-radius: 14rem 14rem 1.5rem 1.5rem;
+  background:
+    radial-gradient(circle at 82% 48%, color-mix(in srgb, var(--dawn-400) 17%, transparent), transparent 22rem),
+    linear-gradient(125deg, color-mix(in srgb, var(--nebula-700) 88%, var(--cosmos-950)), var(--cosmos-950));
+  box-shadow: 0 36px 100px rgba(0, 0, 0, 0.46), inset 0 0 90px color-mix(in srgb, var(--violet-500) 16%, transparent);
+  color: var(--pearl-50);
+}
+
+.eclipse-panel::before,
+.monthly-eclipse::before {
+  position: absolute;
+  top: -42%;
+  right: -10%;
+  width: 36rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 28%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4rem color-mix(in srgb, var(--solar-400) 3%, transparent), 0 0 0 8rem color-mix(in srgb, var(--orchid-300) 2%, transparent);
+  content: "";
+}
+
+.eclipse-panel .section-eyebrow,
+.monthly-eclipse .section-eyebrow {
+  color: var(--comet-300);
+}
+
+.eclipse-panel h2,
+.monthly-eclipse h2 {
+  color: var(--pearl-50);
+  font-size: clamp(3.1rem, 5vw, 5.7rem);
+  line-height: 0.92;
+}
+
+.eclipse-panel .readings-highlight-copy,
+.monthly-eclipse .readings-highlight-copy {
+  position: relative;
+  z-index: 3;
+}
+
+.eclipse-panel .readings-highlight-details,
+.monthly-eclipse .readings-highlight-details {
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+}
+
+.eclipse-stage,
+.monthly-eclipse__stage {
+  position: relative;
+  display: grid;
+  min-height: 27rem;
+  place-items: center;
+}
+
+.eclipse-stage > .orbit-portal,
+.monthly-eclipse__stage > .orbit-portal {
+  --portal-size: min(26rem, 33vw);
+  position: absolute;
+  opacity: 0.9;
+}
+
+.eclipse-number {
+  color: var(--solar-400);
+  font-family: var(--font-display-stack);
+  font-size: 6.8rem;
+  line-height: 1;
+  text-shadow: 0 0 2rem color-mix(in srgb, var(--solar-400) 42%, transparent);
+}
+
+.eclipse-stage dl,
+.monthly-eclipse__stage dl {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.eclipse-stage dl > div,
+.monthly-eclipse__stage dl > div {
+  padding: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--solar-400) 34%, transparent);
+  background: color-mix(in srgb, var(--cosmos-950) 68%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.eclipse-stage dt,
+.monthly-eclipse__stage dt {
+  color: var(--mist-200);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eclipse-stage dd,
+.monthly-eclipse__stage dd {
+  margin: 0.15rem 0 0;
+  color: var(--pearl-50);
+  font-family: var(--font-display-stack);
+  font-size: 1.65rem;
+}
+
+/* Process constellation */
+.astral-process {
+  position: relative;
+  padding-top: clamp(8rem, 13vw, 12rem);
+  padding-bottom: clamp(8rem, 13vw, 12rem);
+}
+
+.astral-process .process-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(3rem, 7vw, 8rem);
+}
+
+.astral-process .process-grid::before {
+  position: absolute;
+  top: 4.7rem;
+  right: 12%;
+  left: 12%;
+  height: 8rem;
+  border-top: 1px solid color-mix(in srgb, var(--comet-300) 40%, transparent);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(-4deg);
+}
+
+.astral-process .process-card {
+  position: relative;
+  z-index: 2;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+}
+
+.astral-process .process-card:nth-child(2) {
+  transform: translateY(4rem);
+}
+
+.process-planet {
+  position: relative;
+  display: grid;
+  width: 9rem;
+  aspect-ratio: 1;
+  margin: 0 auto 2rem;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 52%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--violet-500) 42%, transparent), var(--cosmos-950));
+  color: var(--solar-400);
+  box-shadow: 0 0 3rem color-mix(in srgb, var(--violet-500) 24%, transparent);
+  place-items: center;
+}
+
+.process-planet::before {
+  position: absolute;
+  inset: -0.8rem 0.2rem;
+  border: 1px solid color-mix(in srgb, var(--comet-300) 40%, transparent);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(48deg);
+  animation: orbit-spin 10s linear infinite;
+}
+
+.process-planet .celestial-glyph { --glyph-size: 2.1rem; }
+.process-planet .process-number { position: absolute; right: -0.8rem; bottom: 0.5rem; color: var(--comet-300); }
+
+.astral-process .process-card h3 {
+  font-size: 2.2rem;
+}
+
+/* Crescent story */
+.crescent-scene {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.72fr) minmax(0, 0.84fr) minmax(18rem, 0.64fr);
+  align-items: center;
+  min-height: 46rem;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.crescent-scene__moon {
+  display: grid;
+  width: min(31rem, 34vw);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 20%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--violet-500) 28%, transparent), transparent 68%);
+  color: var(--mist-200);
+  box-shadow: 0 0 7rem color-mix(in srgb, var(--violet-500) 19%, transparent);
+  place-items: center;
+  transform: translate3d(var(--scene-shift-soft, 0), var(--scene-shift-reverse, 0), 0);
+}
+
+.crescent-scene__moon .celestial-glyph {
+  --glyph-size: 68%;
+  --glyph-cutout: var(--cosmos-950);
+  filter: drop-shadow(0 0 2rem color-mix(in srgb, var(--comet-300) 26%, transparent));
+}
+
+.crescent-scene .about-copy h2 {
+  font-size: clamp(3rem, 4.6vw, 5rem);
+  line-height: 0.94;
+}
+
+.crescent-scene .about-principles {
+  border: 1px solid color-mix(in srgb, var(--orchid-300) 25%, transparent);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--cosmos-800) 72%, transparent);
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+  backdrop-filter: blur(16px);
+}
+
+/* Shared closing portal */
+.portal-close {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  overflow: hidden;
+  min-height: 22rem;
+  padding: clamp(3rem, 6vw, 5rem);
+  border: 1px solid color-mix(in srgb, var(--comet-300) 30%, transparent);
+  border-radius: 10rem 1.2rem 10rem 1.2rem;
+  background:
+    radial-gradient(circle at 12% 50%, color-mix(in srgb, var(--violet-500) 32%, transparent), transparent 22rem),
+    linear-gradient(120deg, color-mix(in srgb, var(--nebula-700) 80%, var(--cosmos-950)), var(--cosmos-950));
+  box-shadow: inset 0 0 6rem color-mix(in srgb, var(--violet-500) 12%, transparent), 0 32px 80px rgba(0, 0, 0, 0.38);
+}
+
+.portal-close > .orbit-portal {
+  --portal-size: 17rem;
+  position: absolute;
+  top: 50%;
+  left: -4rem;
+  opacity: 0.42;
+  transform: translateY(-50%);
+}
+
+.portal-close > div:not(.orbit-portal) {
+  position: relative;
+  z-index: 2;
+  max-width: 45rem;
+  padding-left: 7rem;
+}
+
+.portal-close h2 {
+  font-size: clamp(3rem, 5vw, 5.1rem);
+  line-height: 0.92;
+}
+
+.portal-close > .button {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+}
+
+/* Tarot — a six-card constellation */
+.tarot-constellation {
+  position: relative;
+  padding-top: clamp(7rem, 12vw, 11rem);
+  padding-bottom: clamp(8rem, 14vw, 13rem);
+}
+
+.constellation-heading {
+  position: relative;
+}
+
+.constellation-key {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--mist-200);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.constellation-key .celestial-glyph { --glyph-size: 0.9rem; color: var(--solar-400); }
+
+.tarot-constellation .tarot-catalog-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 5rem clamp(1.6rem, 3.2vw, 3.2rem);
+}
+
+.tarot-constellation__cell {
+  position: relative;
+}
+
+.tarot-constellation__cell:nth-of-type(3n + 2) { transform: translateY(4rem); }
+.tarot-constellation__cell:nth-of-type(3n + 3) { transform: translateY(1.4rem); }
+
+.constellation-path {
+  position: absolute;
+  inset: 8% -4%;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--comet-300) 18%, transparent);
+  border-radius: 50%;
+  transform: rotate(-9deg);
+}
+
+.constellation-path span {
+  position: absolute;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--solar-400);
+  box-shadow: 0 0 1rem var(--solar-400);
+}
+
+.constellation-path span:nth-child(1) { top: 4%; left: 18%; }
+.constellation-path span:nth-child(2) { top: 18%; right: 24%; }
+.constellation-path span:nth-child(3) { top: 48%; left: 5%; }
+.constellation-path span:nth-child(4) { top: 56%; right: 8%; }
+.constellation-path span:nth-child(5) { bottom: 8%; left: 31%; }
+.constellation-path span:nth-child(6) { right: 38%; bottom: 2%; }
+
+.recommendation-portal__astral {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: grid;
+  align-items: center;
+}
+
+/* Book — orbiting artifact */
+.artifact-scene {
+  position: relative;
+  padding-top: clamp(7rem, 12vw, 11rem);
+  padding-bottom: clamp(8rem, 13vw, 12rem);
+}
+
+.artifact-scene .book-layout {
+  grid-template-columns: minmax(22rem, 0.82fr) minmax(0, 1.18fr);
+  align-items: start;
+  gap: clamp(4rem, 9vw, 9rem);
+}
+
+.book-artifact {
+  position: sticky;
+  top: 8.5rem;
+  min-height: 39rem;
+}
+
+.artifact-coordinate {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--comet-300);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
+
+.book-artifact__stage {
+  position: relative;
+  display: grid;
+  min-height: 36rem;
+  place-items: center;
+  perspective: 1100px;
+}
+
+.book-artifact__stage > .orbit-portal {
+  --portal-size: 29rem;
+  position: absolute;
+  opacity: 0.62;
+  transform: rotate(-8deg);
+}
+
+.artifact-scene .book-cover {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 22rem);
+  min-height: 31rem;
+  padding: 4rem 2.3rem 5rem;
+  border-color: color-mix(in srgb, var(--solar-400) 70%, transparent);
+  border-radius: 46% 46% 0.8rem 0.8rem / 17% 17% 0.8rem 0.8rem;
+  background:
+    radial-gradient(circle at 50% 34%, color-mix(in srgb, var(--violet-500) 42%, transparent), transparent 9rem),
+    linear-gradient(155deg, var(--nebula-700), var(--cosmos-800) 52%, var(--cosmos-950));
+  box-shadow: 1.1rem 1.3rem 0 color-mix(in srgb, var(--solar-400) 6%, transparent), 0 3rem 5rem rgba(0, 0, 0, 0.52), inset 0 0 0 0.85rem color-mix(in srgb, var(--solar-400) 6%, transparent);
+  transform: rotateY(-9deg) rotateX(2deg) translate3d(0, var(--scene-shift-soft, 0), 0);
+  animation: artifact-float 6s ease-in-out infinite;
+}
+
+.artifact-scene .book-cover::before {
+  inset: 1.1rem;
+  border-color: color-mix(in srgb, var(--comet-300) 34%, transparent);
+  border-radius: inherit;
+}
+
+.artifact-scene .book-cover-ornament {
+  border-color: color-mix(in srgb, var(--solar-400) 62%, transparent);
+  color: var(--solar-400);
+}
+
+.artifact-scene .book-cover-ornament .celestial-glyph { --glyph-size: 1.8rem; }
+
+.moon-phase-topics {
+  position: relative;
+  margin-top: 2rem;
+}
+
+.moon-phase-topics::before {
+  position: absolute;
+  top: 1.7rem;
+  bottom: 1.7rem;
+  left: 2rem;
+  width: 1px;
+  background: linear-gradient(var(--comet-300), var(--solar-400), transparent);
+  content: "";
+}
+
+.moon-phase-topics li {
+  position: relative;
+  min-height: 5.8rem;
+  padding-left: 5.2rem;
+  border: 0;
+}
+
+.moon-phase {
+  position: absolute;
+  left: 0;
+  display: grid;
+  width: 4rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 46%, transparent);
+  border-radius: 50%;
+  background: var(--cosmos-800);
+  color: var(--mist-200);
+  place-items: center;
+}
+
+.moon-phase .celestial-glyph { --glyph-size: 2rem; --glyph-cutout: var(--cosmos-800); }
+
+.celestial-gateways {
+  gap: 1rem;
+}
+
+.celestial-gateways .purchase-link {
+  position: relative;
+  min-height: 8.8rem;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--comet-300) 38%, transparent);
+  border-radius: 0;
+  background: linear-gradient(140deg, color-mix(in srgb, var(--violet-500) 22%, transparent), color-mix(in srgb, var(--cosmos-800) 82%, transparent));
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+}
+
+.celestial-gateways .purchase-link > .celestial-glyph {
+  --glyph-size: 2rem;
+  color: var(--solar-400);
+}
+
+.gateway-arrow {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: var(--comet-300);
+  transition: transform 220ms ease;
+}
+
+/* Readings — moon-phase chambers */
+.reading-chambers {
+  padding-top: clamp(7rem, 12vw, 11rem);
+  padding-bottom: clamp(8rem, 13vw, 12rem);
+}
+
+.reading-chambers__heading {
+  position: relative;
+}
+
+.phase-sequence {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--solar-400);
+}
+
+.phase-sequence > span {
+  width: 3rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--solar-400), var(--comet-300));
+  opacity: 0.45;
+}
+
+.phase-sequence .celestial-glyph { --glyph-size: 1.45rem; --glyph-cutout: var(--cosmos-950); }
+
+.reading-chambers .reading-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(1.25rem, 2.6vw, 2.5rem);
+}
+
+.reading-chambers .reading-tier {
+  position: relative;
+  overflow: visible;
+  min-height: 42rem;
+  padding: 8.2rem 2rem 2rem;
+  border-color: color-mix(in srgb, var(--orchid-300) 28%, transparent);
+  border-radius: 48% 48% 1rem 1rem / 16% 16% 1rem 1rem;
+  background:
+    radial-gradient(circle at 50% 13%, color-mix(in srgb, var(--violet-500) 38%, transparent), transparent 9rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--cosmos-800) 92%, transparent), color-mix(in srgb, var(--cosmos-950) 96%, transparent));
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.38), inset 0 0 0 0.7rem color-mix(in srgb, var(--solar-400) 3%, transparent);
+}
+
+.reading-chambers .reading-tier.is-featured {
+  border-color: color-mix(in srgb, var(--solar-400) 72%, transparent);
+  background:
+    radial-gradient(circle at 50% 13%, color-mix(in srgb, var(--solar-400) 24%, transparent), transparent 9rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--nebula-700) 78%, var(--cosmos-950)), var(--cosmos-950));
+  box-shadow: 0 2.5rem 6rem rgba(0, 0, 0, 0.48), 0 0 4.5rem color-mix(in srgb, var(--solar-400) 12%, transparent);
+  transform: translateY(-2rem);
+}
+
+.reading-tier__sky {
+  position: absolute;
+  top: 2.2rem;
+  right: 2rem;
+  left: 2rem;
+  display: grid;
+  min-height: 4.4rem;
+  place-items: center;
+}
+
+.reading-tier__sky::before {
+  position: absolute;
+  inset: -0.7rem 18%;
+  border: 1px solid color-mix(in srgb, var(--comet-300) 34%, transparent);
+  border-radius: 50%;
+  content: "";
+  animation: orbit-spin 13s linear infinite;
+}
+
+.reading-tier__sky .celestial-glyph {
+  --glyph-size: 3rem;
+  --glyph-cutout: var(--cosmos-800);
+  color: var(--solar-400);
+}
+
+.chamber-index {
+  position: absolute;
+  top: -0.4rem;
+  right: 0;
+  color: var(--comet-300);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+}
+
+.reading-chambers .popular-badge {
+  top: 1.25rem;
+  left: 50%;
+  right: auto;
+  border-radius: 0;
+  background: var(--solar-400);
+  color: var(--cosmos-950);
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  transform: translate(-50%, -50%);
+}
+
+.reading-chambers .reading-tier-header h2 {
+  font-size: clamp(2.2rem, 3.2vw, 3.1rem);
+}
+
+.reading-chambers .tier-price strong {
+  color: var(--solar-400);
+  font-size: clamp(3.1rem, 4.5vw, 4.6rem);
+}
+
+.monthly-eclipse__core {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  width: 9rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--cosmos-800);
+  color: var(--solar-400);
+  box-shadow: 0 0 4rem color-mix(in srgb, var(--solar-400) 26%, transparent);
+  place-items: center;
+}
+
+.monthly-eclipse__core .celestial-glyph { --glyph-size: 5rem; --glyph-cutout: var(--cosmos-800); }
+
+.astral-wayfinding {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  border-top: 1px solid color-mix(in srgb, var(--comet-300) 30%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--solar-400) 22%, transparent);
+  background: transparent;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.astral-wayfinding::before {
+  position: absolute;
+  left: 5rem;
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--comet-300), transparent);
+  content: "";
+}
+
+.astral-wayfinding .booking-note-icon {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 8rem;
+  aspect-ratio: 1;
+  margin: 0;
+  border-color: color-mix(in srgb, var(--solar-400) 46%, transparent);
+  background: var(--cosmos-800);
+  color: var(--solar-400);
+  place-items: center;
+}
+
+.astral-wayfinding .booking-note-icon .celestial-glyph { --glyph-size: 2.8rem; }
+.astral-wayfinding .booking-note-icon span { position: absolute; right: -0.6rem; bottom: 0; color: var(--comet-300); font-size: 0.66rem; }
+
+@media (hover: hover) and (pointer: fine) {
+  .astral-button:hover .celestial-glyph { transform: translateX(3px) rotate(35deg); }
+  .orbital-categories .category-card:hover > .celestial-glyph { transform: rotate(90deg) scale(1.12); }
+  .celestial-gateways .purchase-link:hover .gateway-arrow { transform: translate(3px, -3px); }
+  .celestial-gateways .purchase-link:hover { border-color: var(--solar-400); box-shadow: 0 0 2rem color-mix(in srgb, var(--violet-500) 20%, transparent); }
+}
+
+@keyframes home-solar-turn {
+  to { transform: translate3d(0, var(--scene-shift-soft, 0), 0) rotate(360deg); }
+}
+
+@keyframes tarot-fan-float {
+  50% { transform: translateY(-0.8rem) rotate(0.6deg); }
+}
+
+@keyframes artifact-float {
+  50% { transform: rotateY(-6deg) rotateX(1deg) translateY(-0.65rem); }
+}
+
+@keyframes dust-drift {
+  to { opacity: 0.35; transform: translate3d(1.2rem, -1.8rem, 0) scale(0.65); }
+}
+
+@keyframes astral-button-comet {
+  0%, 64% { transform: translateX(0) rotate(22deg); }
+  82%, 100% { transform: translateX(650%) rotate(22deg); }
+}
+
+@media (max-width: 1100px) {
+  .cosmos-entry { grid-template-columns: minmax(0, 1fr) minmax(24rem, 0.78fr); gap: 2.5rem; }
+  .cosmos-entry h1 { font-size: clamp(4.6rem, 9vw, 7.3rem); }
+  .hero-orbit-stage > .orbit-portal { --portal-size: min(29rem, 42vw); }
+  .tarot-fan { width: 13rem; height: 20rem; }
+  .tarot-back--left { transform: translateX(-3.8rem) rotate(-17deg) scale(0.9); }
+  .tarot-back--right { transform: translateX(3.8rem) rotate(17deg) scale(0.9); }
+  .orbital-categories { grid-template-columns: 1fr; min-height: auto; }
+  .orbital-categories__heading { max-width: 48rem; }
+  .category-orbit { min-height: 40rem; }
+  .crescent-scene { grid-template-columns: minmax(17rem, 0.7fr) minmax(0, 1.3fr); }
+  .crescent-scene .about-principles { grid-column: 1 / -1; }
+  .reading-chambers .reading-tier-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .reading-chambers .reading-tier:last-child { grid-column: 1 / -1; width: min(100%, 34rem); justify-self: center; }
+  .reading-chambers .reading-tier.is-featured { transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .cosmos-entry { grid-template-columns: 1fr; min-height: auto; padding-top: 6rem; }
+  .cosmos-entry__copy { max-width: 48rem; }
+  .cosmos-entry h1 { max-width: 8ch; }
+  .cosmos-entry__portal { min-height: 37rem; }
+  .hero-orbit-stage > .orbit-portal { --portal-size: 31rem; }
+  .cosmos-entry .hero-feature { right: 5%; }
+  .featured-catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .catalog-constellation:nth-child(2) { transform: translateY(2.5rem); }
+  .catalog-constellation:last-child { grid-column: 1 / -1; width: min(100%, 28rem); justify-self: center; margin-top: 2.5rem; }
+  .eclipse-panel, .monthly-eclipse { border-radius: 8rem 8rem 1.2rem 1.2rem; }
+  .astral-process .process-grid { grid-template-columns: 1fr; gap: 4rem; }
+  .astral-process .process-grid::before { top: 3rem; bottom: 3rem; left: 50%; width: 1px; height: auto; border: 0; background: linear-gradient(var(--comet-300), var(--solar-400), transparent); }
+  .astral-process .process-card:nth-child(2) { transform: none; }
+  .astral-process .process-card { max-width: 35rem; margin: 0 auto; }
+  .crescent-scene { grid-template-columns: 1fr; }
+  .crescent-scene__moon { width: min(26rem, 70vw); margin: 0 auto; }
+  .portal-close { grid-template-columns: 1fr; border-radius: 7rem 1rem 7rem 1rem; }
+  .portal-close > .button { justify-self: start; }
+  .tarot-constellation .tarot-catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tarot-constellation__cell:nth-of-type(n) { transform: none; }
+  .artifact-scene .book-layout { grid-template-columns: 1fr; }
+  .book-artifact { position: relative; top: auto; min-height: 37rem; }
+}
+
+@media (max-width: 760px) {
+  .astral-page > .astral-divider,
+  .cosmos-entry { width: min(100% - 36px, var(--wide-width)); }
+  .astral-page > .astral-divider { opacity: 0.5; }
+  .cosmos-entry { padding: 4.4rem 0 5.6rem; }
+  .cosmos-entry::before { top: -10rem; left: -24rem; width: 44rem; }
+  .cosmos-entry::after { right: -7rem; bottom: 21%; width: 14rem; }
+  .cosmos-entry h1 { max-width: 9ch; font-size: clamp(3.7rem, 17vw, 5.2rem); line-height: 0.86; }
+  .cosmos-entry .hero-actions { flex-direction: column; }
+  .cosmos-entry .hero-actions .button { width: 100%; }
+  .cosmos-entry__portal { min-height: 31rem; }
+  .hero-orbit-stage { width: 100%; }
+  .hero-orbit-stage > .orbit-portal { --portal-size: min(27rem, 112vw); }
+  .tarot-fan { width: 10.5rem; height: 16.5rem; }
+  .tarot-back--left { transform: translateX(-3rem) rotate(-17deg) scale(0.88); }
+  .tarot-back--right { transform: translateX(3rem) rotate(17deg) scale(0.88); }
+  .tarot-back .celestial-glyph { --glyph-size: 3.1rem; }
+  .cosmos-entry .hero-feature { right: 0; bottom: -0.5rem; width: min(22rem, 88%); }
+  .coordinate-strip { overflow: hidden; gap: 2rem; white-space: nowrap; }
+  .coordinate-strip span:nth-child(n + 3) { display: none; }
+  .featured-catalog-grid,
+  .orbital-categories .category-grid,
+  .tarot-constellation .tarot-catalog-grid,
+  .reading-chambers .reading-tier-grid { grid-template-columns: 1fr; }
+  .catalog-constellation:nth-child(n),
+  .tarot-constellation__cell:nth-of-type(n) { grid-column: auto; width: auto; margin: 0; transform: none; }
+  .featured-catalog-grid { gap: 3.8rem; }
+  .orbital-categories { padding-top: 6rem; padding-bottom: 6rem; gap: 3rem; }
+  .category-orbit { min-height: 0; }
+  .category-orbit::before,
+  .category-orbit::after,
+  .category-orbit__core { display: none; }
+  .orbital-categories .category-grid { gap: 1rem; }
+  .orbital-categories .category-card { min-height: 0; }
+  .eclipse-panel,
+  .monthly-eclipse { padding: 4rem 1.35rem; border-radius: 5.5rem 5.5rem 0.8rem 0.8rem; }
+  .eclipse-panel h2,
+  .monthly-eclipse h2 { font-size: clamp(2.8rem, 13vw, 4rem); }
+  .eclipse-stage,
+  .monthly-eclipse__stage { min-height: 23rem; }
+  .eclipse-stage > .orbit-portal,
+  .monthly-eclipse__stage > .orbit-portal { --portal-size: 21rem; }
+  .crescent-scene { min-height: auto; padding-top: 6rem; padding-bottom: 6rem; }
+  .portal-close { min-height: 0; padding: 4rem 1.4rem; border-radius: 4.5rem 0.8rem 4.5rem 0.8rem; }
+  .portal-close > .orbit-portal { --portal-size: 12rem; left: -4.5rem; }
+  .portal-close > div:not(.orbit-portal) { padding-left: 2.8rem; }
+  .portal-close > .button { width: 100%; }
+  .constellation-key,
+  .phase-sequence { position: relative; top: auto; right: auto; margin: -1rem 0 2rem; }
+  .constellation-path { display: none; }
+  .tarot-constellation .tarot-catalog-grid { gap: 4rem; }
+  .book-artifact__stage > .orbit-portal { --portal-size: 23rem; }
+  .artifact-scene .book-cover { width: min(90%, 20rem); }
+  .celestial-gateways { grid-template-columns: 1fr; }
+  .reading-chambers .reading-tier:nth-child(n) { grid-column: auto; width: auto; min-height: 0; }
+  .reading-chambers .reading-tier { padding: 7.6rem 1.35rem 1.5rem; }
+  .astral-wayfinding { grid-template-columns: 1fr; }
+  .astral-wayfinding::before { display: none; }
+  .astral-wayfinding .booking-note-icon { width: 6.5rem; }
+}
+
+@media (max-width: 390px) {
+  .astral-page > .astral-divider,
+  .cosmos-entry { width: min(100% - 28px, var(--wide-width)); }
+  .cosmos-entry h1 { font-size: 3.6rem; }
+  .cosmos-entry__portal { min-height: 29rem; }
+  .hero-orbit-stage > .orbit-portal { --portal-size: 24rem; }
+  .cosmos-entry .hero-feature { width: 94%; }
+  .eclipse-stage dl,
+  .monthly-eclipse__stage dl { gap: 0.4rem; padding: 0; }
+  .eclipse-stage dd,
+  .monthly-eclipse__stage dd { font-size: 1.3rem; }
+  .portal-close > div:not(.orbit-portal) { padding-left: 1.4rem; }
+  .moon-phase-topics li { padding-left: 4.7rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmos-entry::before,
+  .cosmos-entry__dust span,
+  .tarot-fan,
+  .category-orbit__core::before,
+  .orbital-categories::before,
+  .process-planet::before,
+  .artifact-scene .book-cover,
+  .reading-tier__sky::before,
+  .astral-button::after {
+    animation: none !important;
+  }
+
+  .cosmos-entry::before,
+  .hero-orbit-stage,
+  .crescent-scene__moon,
+  .artifact-scene .book-cover {
+    transform: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .cosmos-entry .hero-feature,
+  .orbital-categories .category-card,
+  .crescent-scene .about-principles,
+  .eclipse-stage dl > div,
+  .monthly-eclipse__stage dl > div {
+    background: var(--cosmos-800);
+  }
+
+  .portal-close,
+  .eclipse-panel,
+  .monthly-eclipse,
+  .reading-chambers .reading-tier {
+    border-color: var(--solar-400);
+  }
+}

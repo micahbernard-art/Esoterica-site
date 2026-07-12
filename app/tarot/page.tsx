@@ -1,4 +1,7 @@
+import { AstralDivider } from "@/components/site/astral-divider";
 import { CatalogCard } from "@/components/site/catalog-card";
+import { CelestialGlyph } from "@/components/site/celestial-glyph";
+import { OrbitPortal } from "@/components/site/orbit-portal";
 import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
 import { SiteFrame } from "@/components/site/site-frame";
@@ -11,29 +14,67 @@ const recommendationUrl = whatsappUrl(
 export default function TarotPage() {
   return (
     <SiteFrame activePath="/tarot">
-      <main id="main-content" className="subpage">
+      <main id="main-content" className="subpage astral-page tarot-page">
         <PageHero
+          variant="tarot"
           eyebrow="Catálogo"
           title="Colección de Tarot"
           description="Explora estilos de mazos y consulta directamente para confirmar modelos, precios y disponibilidad."
         />
 
-        <section className="page-content catalog-page" aria-labelledby="tarot-catalog-title">
-          <SectionHeading
-            eyebrow="Mazos y oráculos"
-            title="Encuentra una baraja para tu práctica"
-            titleId="tarot-catalog-title"
-            description="Estas imágenes son referenciales y pueden no corresponder al producto disponible. Antes de coordinar, te compartiremos los detalles de las opciones actuales."
-          />
+        <AstralDivider />
+
+        <section
+          className="page-content catalog-page tarot-constellation"
+          aria-labelledby="tarot-catalog-title"
+          data-scroll-scene="tarot-constellation"
+        >
+          <div className="constellation-heading" data-reveal="from-left">
+            <SectionHeading
+              eyebrow="Mazos y oráculos"
+              title="Encuentra una baraja para tu práctica"
+              titleId="tarot-catalog-title"
+              description="Estas imágenes son referenciales y pueden no corresponder al producto disponible. Antes de coordinar, te compartiremos los detalles de las opciones actuales."
+            />
+            <div className="constellation-key" aria-hidden="true">
+              <CelestialGlyph kind="star" />
+              <span>Seis portales · una constelación</span>
+            </div>
+          </div>
+
           <div className="catalog-grid tarot-catalog-grid">
-            {tarotCatalog.map((item) => (
-              <CatalogCard item={item} key={item.id} />
+            <div className="constellation-path" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            {tarotCatalog.map((item, index) => (
+              <div
+                className="tarot-constellation__cell"
+                data-reveal={index % 2 ? "rise-delay" : "rise"}
+                key={item.id}
+              >
+                <span className="constellation-index" aria-hidden="true">
+                  ✦ 0{index + 1}
+                </span>
+                <CatalogCard item={item} />
+              </div>
             ))}
           </div>
         </section>
 
-        <section className="content-section contact-banner" aria-labelledby="tarot-help-title">
-          <div>
+        <section
+          className="content-section contact-banner recommendation-portal"
+          aria-labelledby="tarot-help-title"
+          data-scroll-scene="recommendation-portal"
+        >
+          <div className="recommendation-portal__astral" data-reveal="scale-in">
+            <OrbitPortal variant="compact" />
+          </div>
+          <div data-reveal="from-left">
             <p className="section-eyebrow">Orientación personal</p>
             <h2 id="tarot-help-title">¿No sabes qué mazo elegir?</h2>
             <p>
@@ -42,13 +83,14 @@ export default function TarotPage() {
             </p>
           </div>
           <a
-            className="button button-primary"
+            className="button button-primary astral-button"
             href={recommendationUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Pedir una recomendación por WhatsApp (abre en una pestaña nueva)"
           >
-            Pedir recomendación
+            <span>Pedir recomendación</span>
+            <CelestialGlyph kind="star" />
           </a>
         </section>
       </main>

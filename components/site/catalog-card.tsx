@@ -1,6 +1,8 @@
 import Image from "next/image";
 import type { CatalogItem } from "@/lib/site-data";
 import { whatsappUrl } from "@/lib/site-data";
+import { AstralDivider } from "./astral-divider";
+import { CelestialGlyph } from "./celestial-glyph";
 
 export function CatalogCard({ item }: { item: CatalogItem }) {
   const inquiryUrl = whatsappUrl(
@@ -8,7 +10,7 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
   );
 
   return (
-    <article className="catalog-card">
+    <article className="catalog-card" data-reveal="card" data-scroll-scene="catalog-card">
       <div className="catalog-card-media">
         <Image
           src={item.image}
@@ -18,10 +20,15 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
         />
         <span className="reference-label">Imagen referencial</span>
         {item.featured ? <span className="featured-badge">Selección destacada</span> : null}
+        <span className="catalog-card-frame" aria-hidden="true" />
+        <span className="catalog-card-orbit" aria-hidden="true">
+          <CelestialGlyph kind={item.featured ? "sun" : "star"} />
+        </span>
       </div>
       <div className="catalog-card-content">
         <p className="category-label">{item.category}</p>
         <h3>{item.name}</h3>
+        <AstralDivider className="catalog-card-divider" />
         <p>{item.description}</p>
         <div className="catalog-card-footer">
           <span className="availability-label">Disponibilidad por confirmar</span>
@@ -32,6 +39,7 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
             rel="noopener noreferrer"
             aria-label={`Consultar ${item.name} por WhatsApp (abre en una pestaña nueva)`}
           >
+            <CelestialGlyph kind="orbit" />
             Consultar
           </a>
         </div>

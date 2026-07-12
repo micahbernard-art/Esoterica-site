@@ -1,0 +1,1560 @@
+:root {
+  /* SOL — El Umbral Astral, locked visual tokens */
+  --cosmos-950: #050314;
+  --cosmos-900: #0b0826;
+  --cosmos-800: #17103d;
+  --nebula-700: #33156b;
+  --violet-500: #5c38a8;
+  --orchid-300: #a98bff;
+  --comet-300: #62e6e8;
+  --solar-400: #f6c85f;
+  --dawn-400: #ff93b5;
+  --coral-400: #ff9a7a;
+  --pearl-50: #fff8e8;
+  --mist-200: #cec8dd;
+
+  /* Compact aliases consumed by the fixed motion layer. */
+  --cosmos: var(--cosmos-950);
+  --nebula: var(--nebula-700);
+  --orchid: var(--orchid-300);
+  --comet: var(--comet-300);
+  --solar: var(--solar-400);
+  --dawn: var(--dawn-400);
+  --pearl: var(--pearl-50);
+  --mist: var(--mist-200);
+
+  --astral-void: var(--cosmos-950);
+  --astral-ink: var(--cosmos-900);
+  --astral-violet-950: var(--cosmos-800);
+  --astral-violet-900: var(--nebula-700);
+  --astral-violet-800: var(--nebula-700);
+  --astral-violet-700: var(--violet-500);
+  --astral-violet-500: var(--violet-500);
+  --astral-violet-300: var(--orchid-300);
+  --astral-cyan-500: var(--comet-300);
+  --astral-cyan-300: var(--comet-300);
+  --astral-gold-500: var(--solar-400);
+  --astral-gold-300: var(--solar-400);
+  --astral-rose: var(--dawn-400);
+  --astral-pearl: var(--pearl-50);
+  --astral-mist: var(--mist-200);
+  --astral-muted: #aaa3bd;
+  --astral-line: rgba(255, 227, 154, 0.25);
+  --astral-line-bright: rgba(255, 227, 154, 0.68);
+  --astral-glass: rgba(18, 6, 42, 0.78);
+  --astral-glass-strong: rgba(11, 4, 28, 0.94);
+  --astral-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --astral-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --astral-track: 0.18em;
+  --astral-space-1: 0.375rem;
+  --astral-space-2: 0.75rem;
+  --astral-space-3: 1.25rem;
+  --astral-space-4: 2rem;
+  --astral-space-5: 3.25rem;
+  --astral-space-6: 5.25rem;
+  --astral-shadow:
+    0 36px 90px rgba(2, 0, 10, 0.56),
+    0 0 64px rgba(90, 31, 174, 0.16);
+  --astral-glow:
+    0 0 22px rgba(25, 214, 232, 0.28),
+    0 0 54px rgba(131, 56, 236, 0.22);
+
+  --ink-950: var(--astral-void);
+  --ink-900: var(--astral-ink);
+  --navy-850: var(--astral-violet-950);
+  --navy-800: var(--astral-violet-900);
+  --navy-700: var(--astral-violet-800);
+  --cream-50: var(--astral-pearl);
+  --cream-100: #f4e8ff;
+  --cream-200: var(--astral-mist);
+  --cream-300: #b9a9d2;
+  --gold-300: var(--astral-gold-300);
+  --gold-400: #edc66b;
+  --gold-500: var(--astral-gold-500);
+  --gold-600: #9d7228;
+  --plum-500: var(--astral-violet-500);
+  --plum-700: var(--astral-violet-800);
+  --text-primary: var(--astral-pearl);
+  --text-secondary: var(--astral-mist);
+  --text-muted: var(--astral-muted);
+  --surface-1: rgba(19, 6, 43, 0.88);
+  --surface-2: rgba(36, 10, 72, 0.76);
+  --surface-3: rgba(52, 16, 102, 0.86);
+  --line: var(--astral-line);
+  --line-strong: var(--astral-line-bright);
+  --shadow-card: var(--astral-shadow);
+}
+
+/* CSS-drawn celestial alphabet */
+.celestial-glyph {
+  --glyph-size: 1.15rem;
+  position: relative;
+  display: inline-grid;
+  width: var(--glyph-size);
+  height: var(--glyph-size);
+  flex: 0 0 auto;
+  color: currentColor;
+  place-items: center;
+  vertical-align: middle;
+}
+
+.celestial-glyph,
+.celestial-glyph-core,
+.celestial-glyph::before,
+.celestial-glyph::after,
+.celestial-glyph-core::before,
+.celestial-glyph-core::after {
+  box-sizing: border-box;
+}
+
+.celestial-glyph-core,
+.celestial-glyph::before,
+.celestial-glyph::after,
+.celestial-glyph-core::before,
+.celestial-glyph-core::after {
+  position: absolute;
+  display: block;
+  content: "";
+}
+
+.celestial-glyph--sun .celestial-glyph-core {
+  width: 43%;
+  height: 43%;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #fff 0 8%, currentColor 11% 100%);
+  box-shadow: 0 0 calc(var(--glyph-size) * 0.55) currentColor;
+}
+
+.celestial-glyph--sun::before,
+.celestial-glyph--sun::after {
+  top: 48%;
+  left: 5%;
+  width: 90%;
+  height: 1px;
+  background: currentColor;
+}
+
+.celestial-glyph--sun::after {
+  transform: rotate(90deg);
+}
+
+.celestial-glyph--sun .celestial-glyph-core::before,
+.celestial-glyph--sun .celestial-glyph-core::after {
+  top: 48%;
+  left: -72%;
+  width: 244%;
+  height: 1px;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+
+.celestial-glyph--sun .celestial-glyph-core::after {
+  transform: rotate(-45deg);
+}
+
+.celestial-glyph--moon .celestial-glyph-core {
+  width: 66%;
+  height: 66%;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 calc(var(--glyph-size) * 0.48) rgba(131, 245, 255, 0.5);
+}
+
+.celestial-glyph--moon .celestial-glyph-core::after {
+  top: -8%;
+  left: 31%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--glyph-cutout, var(--astral-violet-950));
+}
+
+.celestial-glyph--star .celestial-glyph-core,
+.celestial-glyph--star .celestial-glyph-core::before {
+  top: 5%;
+  left: calc(50% - 0.5px);
+  width: 1px;
+  height: 90%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.celestial-glyph--star .celestial-glyph-core::before {
+  top: calc(50% - 0.5px);
+  left: -225%;
+  width: 550%;
+  height: 1px;
+}
+
+.celestial-glyph--star::before,
+.celestial-glyph--star::after {
+  top: 50%;
+  left: 50%;
+  width: 48%;
+  height: 1px;
+  background: currentColor;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.celestial-glyph--star::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.celestial-glyph--orbit::before,
+.celestial-glyph--orbit::after {
+  inset: 18% 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transform: rotate(28deg);
+}
+
+.celestial-glyph--orbit::after {
+  transform: rotate(-28deg);
+}
+
+.celestial-glyph--orbit .celestial-glyph-core {
+  width: 19%;
+  height: 19%;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 9px currentColor;
+}
+
+.celestial-glyph--orbit .celestial-glyph-core::after {
+  top: -164%;
+  left: 205%;
+  width: 45%;
+  height: 45%;
+  border-radius: 50%;
+  background: var(--astral-cyan-300);
+}
+
+.celestial-glyph--eclipse::before {
+  inset: 2%;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 3px rgba(255, 227, 154, 0.08), 0 0 12px currentColor;
+}
+
+.celestial-glyph--eclipse .celestial-glyph-core {
+  width: 58%;
+  height: 58%;
+  border-radius: 50%;
+  background: var(--glyph-cutout, var(--astral-violet-950));
+  box-shadow: -3px 0 0 currentColor;
+}
+
+.celestial-glyph--eclipse::after {
+  top: 47%;
+  left: -14%;
+  width: 128%;
+  height: 8%;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transform: rotate(-14deg);
+}
+
+/* Armillary portals */
+.orbit-portal {
+  --portal-size: clamp(18rem, 31vw, 28rem);
+  --portal-color: var(--astral-gold-300);
+  position: relative;
+  display: grid;
+  width: var(--portal-size);
+  max-width: 100%;
+  aspect-ratio: 1;
+  color: var(--portal-color);
+  place-items: center;
+  filter: drop-shadow(0 0 24px rgba(131, 56, 236, 0.35));
+  isolation: isolate;
+}
+
+.orbit-portal::before {
+  position: absolute;
+  inset: 19%;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 248, 232, 0.22), transparent 24%),
+    radial-gradient(circle, rgba(131, 56, 236, 0.4), transparent 66%);
+  box-shadow: 0 0 70px rgba(25, 214, 232, 0.18);
+  content: "";
+  animation: portal-breathe 5.5s ease-in-out infinite;
+}
+
+.orbit-portal-halo,
+.orbit-portal-meridian {
+  position: absolute;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.orbit-portal-halo--outer {
+  inset: 7%;
+  opacity: 0.55;
+  animation: orbit-spin 24s linear infinite;
+}
+
+.orbit-portal-halo--middle {
+  inset: 16%;
+  border-color: var(--astral-cyan-300);
+  opacity: 0.48;
+  animation: orbit-spin-reverse 17s linear infinite;
+}
+
+.orbit-portal-halo--inner {
+  inset: 28%;
+  border-style: dashed;
+  opacity: 0.75;
+  animation: orbit-spin 11s linear infinite;
+}
+
+.orbit-portal-meridian {
+  inset: 9% 25%;
+  opacity: 0.45;
+  transform: rotate(32deg);
+  animation: meridian-sway 8s ease-in-out infinite alternate;
+}
+
+.orbit-portal-meridian--two {
+  transform: rotate(-38deg);
+  animation-delay: -4s;
+}
+
+.orbit-portal-center {
+  --glyph-size: 31%;
+  --glyph-cutout: #160930;
+  color: var(--astral-gold-300);
+}
+
+.orbit-portal-satellite {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--astral-cyan-300);
+  box-shadow: 0 0 14px var(--astral-cyan-300);
+}
+
+.orbit-portal-satellite--one {
+  top: 10%;
+  left: 18%;
+}
+
+.orbit-portal-satellite--two {
+  right: -1%;
+  bottom: 39%;
+  width: 4px;
+  height: 4px;
+  background: var(--astral-rose);
+  box-shadow: 0 0 12px var(--astral-rose);
+}
+
+.orbit-portal-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--astral-pearl);
+  box-shadow: 0 0 9px var(--astral-pearl);
+  animation: star-pulse 2.8s ease-in-out infinite;
+}
+
+.orbit-portal-spark--one {
+  top: 8%;
+  right: 22%;
+}
+
+.orbit-portal-spark--two {
+  right: 13%;
+  bottom: 18%;
+  animation-delay: -0.9s;
+}
+
+.orbit-portal-spark--three {
+  bottom: 8%;
+  left: 29%;
+  animation-delay: -1.8s;
+}
+
+.orbit-portal--compact {
+  --portal-size: 7rem;
+}
+
+.orbit-portal--compact .orbit-portal-center {
+  --glyph-size: 27%;
+}
+
+.orbit-portal--eclipse {
+  --portal-size: clamp(16rem, 28vw, 25rem);
+  --portal-color: var(--astral-cyan-300);
+}
+
+.orbit-portal--eclipse .orbit-portal-halo--middle,
+.orbit-portal--eclipse .orbit-portal-center {
+  color: var(--astral-gold-300);
+}
+
+.astral-divider {
+  display: flex;
+  width: 100%;
+  max-width: 34rem;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--astral-gold-300);
+}
+
+.astral-divider-line {
+  height: 1px;
+  min-width: 1.75rem;
+  background: linear-gradient(90deg, transparent, currentColor);
+  flex: 1;
+  opacity: 0.54;
+}
+
+.astral-divider-line:last-child {
+  background: linear-gradient(90deg, currentColor, transparent);
+}
+
+.astral-divider-label {
+  color: var(--astral-mist);
+  font-size: 0.61rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.astral-divider-star {
+  --glyph-size: 0.88rem;
+}
+
+/* Navigation — a floating observatory rail */
+.site-header {
+  border-bottom: 0;
+  background: linear-gradient(180deg, rgba(5, 3, 13, 0.92), rgba(11, 5, 27, 0.78));
+  box-shadow: 0 1px 0 rgba(255, 227, 154, 0.18), 0 16px 42px rgba(2, 0, 10, 0.25);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+.site-header::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--astral-cyan-500), var(--astral-gold-300), transparent);
+  content: "";
+  opacity: 0.52;
+}
+
+.header-inner {
+  min-height: 88px;
+}
+
+.brand-link,
+.footer-logo {
+  gap: 0.8rem;
+  color: var(--astral-pearl);
+}
+
+.brand-wordmark {
+  font-family: var(--astral-display);
+  font-size: 1.08em;
+  font-weight: 580;
+  letter-spacing: 0.035em;
+  text-shadow: 0 0 26px rgba(197, 156, 255, 0.28);
+}
+
+.brand-mark,
+.footer-logo-mark {
+  --glyph-cutout: var(--astral-violet-950);
+  position: relative;
+  display: grid;
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 1px solid var(--astral-line-bright);
+  border-radius: 50% 50% 44% 56%;
+  background: radial-gradient(circle, rgba(131, 56, 236, 0.24), transparent 70%);
+  color: var(--astral-gold-300);
+  box-shadow: inset 0 0 20px rgba(131, 56, 236, 0.2), 0 0 22px rgba(25, 214, 232, 0.12);
+  place-items: center;
+  transform: rotate(-8deg);
+}
+
+.brand-mark::after,
+.footer-logo-mark::after {
+  position: absolute;
+  inset: -5px 4px;
+  border: 1px solid rgba(131, 245, 255, 0.34);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(36deg);
+}
+
+.brand-mark .celestial-glyph,
+.footer-logo-mark .celestial-glyph {
+  --glyph-size: 1.45rem;
+}
+
+.primary-nav ul {
+  gap: clamp(0.1rem, 1vw, 0.7rem);
+}
+
+.primary-nav a {
+  gap: 0.45rem;
+  color: var(--astral-mist);
+  letter-spacing: 0.035em;
+}
+
+.primary-nav a::after {
+  right: 12px;
+  bottom: 0;
+  left: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--astral-cyan-300), transparent);
+  box-shadow: 0 0 9px rgba(131, 245, 255, 0.6);
+}
+
+.nav-star {
+  --glyph-size: 0.66rem;
+  color: var(--astral-gold-300);
+  opacity: 0;
+  transform: scale(0.2) rotate(-45deg);
+  transition: opacity 240ms ease, transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.primary-nav a[aria-current="page"] {
+  color: var(--astral-pearl);
+  text-shadow: 0 0 16px rgba(131, 245, 255, 0.35);
+}
+
+.primary-nav a[aria-current="page"] .nav-star {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  animation: star-pulse 2.6s ease-in-out infinite;
+}
+
+.header-contact {
+  position: relative;
+  min-height: 48px;
+  padding: 0.7rem 1.25rem;
+  overflow: hidden;
+  border: 1px solid rgba(131, 245, 255, 0.62);
+  border-radius: 0;
+  background:
+    linear-gradient(110deg, rgba(25, 214, 232, 0.17), rgba(131, 56, 236, 0.31)),
+    var(--astral-violet-950);
+  box-shadow: inset 0 0 22px rgba(131, 56, 236, 0.22), 0 0 22px rgba(25, 214, 232, 0.1);
+  color: var(--astral-pearl);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  letter-spacing: 0.035em;
+  isolation: isolate;
+}
+
+.header-contact::before {
+  position: absolute;
+  top: -70%;
+  left: -35%;
+  z-index: -1;
+  width: 24%;
+  height: 240%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.52), transparent);
+  content: "";
+  transform: rotate(22deg);
+  animation: cta-comet 4.8s ease-in-out infinite;
+}
+
+.contact-orbit {
+  --glyph-size: 1rem;
+  color: var(--astral-cyan-300);
+  animation: orbit-spin 5s linear infinite;
+}
+
+.contact-spark {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--astral-gold-300);
+  box-shadow: 0 0 7px var(--astral-gold-300);
+  animation: star-pulse 1.8s ease-in-out infinite;
+}
+
+/* Page thresholds */
+.page-hero {
+  position: relative;
+  min-height: clamp(34rem, 66svh, 46rem);
+  overflow: hidden;
+  border-bottom: 1px solid var(--astral-line);
+  background:
+    radial-gradient(circle at 78% 44%, rgba(131, 56, 236, 0.32), transparent 24rem),
+    radial-gradient(circle at 12% 8%, rgba(25, 214, 232, 0.11), transparent 24rem),
+    linear-gradient(135deg, rgba(25, 6, 55, 0.88), rgba(5, 3, 13, 0.82));
+  isolation: isolate;
+}
+
+.page-hero::before {
+  position: absolute;
+  top: -42%;
+  right: -8%;
+  z-index: -1;
+  width: min(50rem, 65vw);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 227, 154, 0.13);
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 48px, rgba(197, 156, 255, 0.065) 49px 50px);
+  content: "";
+  animation: orbit-spin 80s linear infinite;
+}
+
+.page-hero::after {
+  position: absolute;
+  right: -10%;
+  bottom: -48%;
+  z-index: -1;
+  width: 75%;
+  height: 70%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(25, 214, 232, 0.11), transparent 68%);
+  content: "";
+  filter: blur(4px);
+}
+
+.page-hero--book {
+  background:
+    radial-gradient(circle at 76% 46%, rgba(220, 174, 82, 0.2), transparent 21rem),
+    radial-gradient(circle at 8% 10%, rgba(255, 114, 199, 0.11), transparent 22rem),
+    linear-gradient(145deg, rgba(36, 9, 67, 0.91), rgba(5, 3, 13, 0.86));
+}
+
+.page-hero--readings {
+  background:
+    radial-gradient(circle at 73% 42%, rgba(25, 214, 232, 0.21), transparent 22rem),
+    radial-gradient(circle at 16% 10%, rgba(131, 56, 236, 0.2), transparent 27rem),
+    linear-gradient(135deg, rgba(16, 4, 45, 0.91), rgba(4, 8, 24, 0.88));
+}
+
+.page-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(17rem, 0.82fr);
+  align-items: center;
+  min-height: inherit;
+  padding: 3rem 0 4.6rem;
+  column-gap: clamp(3rem, 7vw, 7rem);
+}
+
+.page-hero .back-link {
+  align-self: start;
+  width: fit-content;
+  margin: 0;
+  grid-column: 1 / -1;
+  color: var(--astral-mist);
+  letter-spacing: 0.06em;
+}
+
+.page-hero .back-link .celestial-glyph {
+  --glyph-size: 0.72rem;
+  color: var(--astral-cyan-300);
+}
+
+.page-hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 58rem;
+}
+
+.page-hero .section-eyebrow,
+.section-heading .section-eyebrow {
+  color: var(--astral-cyan-300);
+  letter-spacing: 0.22em;
+  text-shadow: 0 0 17px rgba(25, 214, 232, 0.35);
+}
+
+.page-hero h1 {
+  max-width: 11ch;
+  color: var(--astral-pearl);
+  font-size: clamp(4.4rem, 7.4vw, 8rem);
+  font-weight: 520;
+  line-height: 0.87;
+  text-wrap: balance;
+  text-shadow: 0 8px 42px rgba(0, 0, 0, 0.48), 0 0 58px rgba(131, 56, 236, 0.23);
+}
+
+.page-hero--book h1 {
+  max-width: 9ch;
+  font-size: clamp(4rem, 6.8vw, 7.4rem);
+}
+
+.page-hero-divider {
+  width: min(100%, 29rem);
+  margin: 2rem 0 1.5rem;
+}
+
+.page-hero-copy > p:last-child {
+  max-width: 57ch;
+  margin: 0;
+  color: var(--astral-mist);
+  font-size: clamp(1rem, 1.45vw, 1.2rem);
+}
+
+.page-hero-portal {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-self: end;
+  place-items: center;
+}
+
+.page-hero-portal-caption {
+  position: absolute;
+  bottom: 6%;
+  color: var(--astral-gold-300);
+  font-size: 0.59rem;
+  font-weight: 800;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+}
+
+.page-hero--book .page-hero-portal {
+  transform: rotate(-8deg);
+}
+
+.page-hero--readings .page-hero-portal {
+  transform: translateY(5%) rotate(8deg) scale(1.15);
+}
+
+.page-hero--readings .orbit-portal--compact {
+  --portal-size: clamp(15rem, 25vw, 22rem);
+}
+
+.page-hero-stars {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: var(--astral-gold-300);
+  pointer-events: none;
+}
+
+.page-hero-stars > :nth-child(1) {
+  --glyph-size: 2.8rem;
+  position: absolute;
+  top: 18%;
+  left: 4%;
+  opacity: 0.22;
+  animation: celestial-float 8s ease-in-out infinite;
+}
+
+.page-hero-stars > :nth-child(2) {
+  --glyph-size: 1.3rem;
+  position: absolute;
+  right: 5%;
+  bottom: 16%;
+  color: var(--astral-cyan-300);
+  opacity: 0.62;
+  animation: star-pulse 3.8s ease-in-out infinite;
+}
+
+.page-hero-stars > :nth-child(3) {
+  --glyph-size: 1.8rem;
+  position: absolute;
+  bottom: 12%;
+  left: 46%;
+  opacity: 0.35;
+  animation: celestial-float 6.8s ease-in-out infinite reverse;
+}
+
+/* Section constellations */
+.section-heading {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 5vw, 4.8rem);
+  gap: clamp(1.4rem, 4vw, 4.8rem);
+}
+
+.section-heading-copy {
+  max-width: 49rem;
+}
+
+.section-heading h2 {
+  max-width: 15ch;
+  font-size: clamp(3.1rem, 5.4vw, 6.1rem);
+  font-weight: 520;
+  line-height: 0.91;
+  text-wrap: balance;
+}
+
+.section-heading-divider {
+  width: min(100%, 24rem);
+  margin: 1.5rem 0 1.3rem;
+}
+
+.section-heading > .section-heading-copy > p:last-child {
+  margin-top: 0;
+}
+
+.section-heading-astra {
+  position: relative;
+  display: grid;
+  width: clamp(5rem, 9vw, 8rem);
+  aspect-ratio: 1;
+  color: var(--astral-gold-300);
+  place-items: center;
+}
+
+.section-heading-astra > .celestial-glyph {
+  --glyph-size: 2rem;
+  animation: star-pulse 4s ease-in-out infinite;
+}
+
+.section-heading-orbit {
+  position: absolute;
+  inset: 8%;
+  border: 1px solid rgba(131, 245, 255, 0.35);
+  border-radius: 50%;
+  animation: orbit-spin 12s linear infinite;
+}
+
+.section-heading-orbit::before,
+.section-heading-orbit::after {
+  position: absolute;
+  inset: 14% -9%;
+  border: 1px solid var(--astral-line-bright);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(42deg);
+}
+
+.section-heading-orbit::after {
+  transform: rotate(-42deg);
+}
+
+/* Tall arched tarot objects */
+.catalog-grid {
+  gap: clamp(1.6rem, 3.2vw, 3.2rem);
+}
+
+.catalog-card {
+  position: relative;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(155deg, rgba(66, 21, 126, 0.26), transparent 44%),
+    linear-gradient(180deg, rgba(22, 6, 50, 0.93), rgba(8, 4, 20, 0.96));
+  box-shadow: var(--astral-shadow);
+  isolation: isolate;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 600ms ease;
+}
+
+.catalog-card::before,
+.catalog-card::after {
+  position: absolute;
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  border-color: var(--astral-gold-300);
+  content: "";
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.catalog-card::before {
+  right: -1px;
+  bottom: -1px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.catalog-card::after {
+  top: 44%;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.catalog-card-media,
+.featured-catalog-grid .catalog-card:last-child .catalog-card-media {
+  --glyph-cutout: var(--astral-violet-950);
+  min-height: 0;
+  margin: 0.85rem 0.85rem 0;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border: 1px solid rgba(255, 227, 154, 0.55);
+  border-radius: 48% 48% 0.8rem 0.8rem / 22% 22% 0.8rem 0.8rem;
+  background: var(--astral-violet-900);
+  box-shadow: inset 0 0 50px rgba(5, 3, 13, 0.8);
+}
+
+.catalog-card-media::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(135deg, rgba(131, 56, 236, 0.18), transparent 42%),
+    linear-gradient(180deg, transparent 48%, rgba(9, 3, 24, 0.82));
+  content: "";
+  pointer-events: none;
+}
+
+.catalog-card-media::after {
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 24%, transparent 0 19%, rgba(25, 214, 232, 0.08) 20%, transparent 36%),
+    linear-gradient(180deg, transparent 55%, rgba(5, 3, 13, 0.5));
+}
+
+.catalog-card-media img {
+  filter: saturate(0.86) contrast(1.06) hue-rotate(5deg);
+  transform: scale(1.015);
+  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease;
+}
+
+.catalog-card-frame {
+  position: absolute;
+  inset: 0.75rem;
+  z-index: 2;
+  border: 1px solid rgba(255, 227, 154, 0.58);
+  border-radius: 47% 47% 0.35rem 0.35rem / 20% 20% 0.35rem 0.35rem;
+  box-shadow: inset 0 0 0 1px rgba(131, 245, 255, 0.09);
+  pointer-events: none;
+}
+
+.catalog-card-frame::before,
+.catalog-card-frame::after {
+  position: absolute;
+  top: 34%;
+  width: 0.4rem;
+  height: 0.4rem;
+  border: 1px solid var(--astral-cyan-300);
+  border-radius: 50%;
+  background: var(--astral-violet-950);
+  box-shadow: 0 0 9px rgba(131, 245, 255, 0.5);
+  content: "";
+}
+
+.catalog-card-frame::before {
+  left: -0.25rem;
+}
+
+.catalog-card-frame::after {
+  right: -0.25rem;
+}
+
+.catalog-card-orbit {
+  position: absolute;
+  top: 1.8rem;
+  left: 50%;
+  z-index: 3;
+  display: grid;
+  width: 4.2rem;
+  height: 4.2rem;
+  border: 1px solid rgba(255, 227, 154, 0.58);
+  border-radius: 50%;
+  background: rgba(17, 5, 39, 0.72);
+  color: var(--astral-gold-300);
+  box-shadow: 0 0 22px rgba(131, 56, 236, 0.38);
+  place-items: center;
+  transform: translateX(-50%);
+  backdrop-filter: blur(10px);
+}
+
+.catalog-card-orbit::before {
+  position: absolute;
+  inset: -0.4rem 0.22rem;
+  border: 1px solid rgba(131, 245, 255, 0.45);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(36deg);
+  animation: orbit-spin 8s linear infinite;
+}
+
+.catalog-card-orbit .celestial-glyph {
+  --glyph-size: 1.45rem;
+}
+
+.reference-label,
+.featured-badge {
+  border-radius: 0;
+  background: rgba(10, 3, 25, 0.82);
+  color: var(--astral-pearl);
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  backdrop-filter: blur(12px);
+}
+
+.reference-label {
+  bottom: 1.15rem;
+  left: 1.15rem;
+  border: 1px solid rgba(255, 248, 232, 0.26);
+}
+
+.featured-badge {
+  top: 1.15rem;
+  right: 1.15rem;
+  border: 1px solid var(--astral-gold-300);
+  color: var(--astral-gold-300);
+}
+
+.catalog-card-content {
+  padding: 1.8rem 1.6rem 1.65rem;
+}
+
+.catalog-card .category-label {
+  color: var(--astral-cyan-300);
+  letter-spacing: 0.2em;
+}
+
+.catalog-card h3 {
+  color: var(--astral-pearl);
+  font-size: clamp(1.8rem, 2.7vw, 2.45rem);
+  font-weight: 540;
+  line-height: 1;
+}
+
+.catalog-card-divider {
+  width: 9rem;
+  margin: 1rem 0 0;
+}
+
+.catalog-card-divider .astral-divider-line:first-child,
+.catalog-card-divider .astral-divider-star {
+  display: none;
+}
+
+.catalog-card-content > p:not(.category-label) {
+  color: var(--astral-mist);
+}
+
+.availability-label {
+  color: var(--astral-muted);
+}
+
+.catalog-card .button-secondary {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(131, 245, 255, 0.52);
+  border-radius: 0;
+  background: linear-gradient(110deg, rgba(25, 214, 232, 0.1), rgba(131, 56, 236, 0.22));
+  color: var(--astral-pearl);
+  clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+  isolation: isolate;
+}
+
+.catalog-card .button-secondary::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 15%, rgba(131, 245, 255, 0.22), transparent 75%);
+  content: "";
+  transform: translateX(-110%);
+  animation: living-button 4.5s ease-in-out infinite;
+}
+
+.catalog-card .button-secondary .celestial-glyph {
+  --glyph-size: 1rem;
+  color: var(--astral-cyan-300);
+  animation: orbit-spin 6s linear infinite;
+}
+
+/* Footer — final constellation, not a generic three-column slab */
+.site-footer {
+  position: relative;
+  overflow: hidden;
+  margin-top: 3rem;
+  border-top: 0;
+  background:
+    radial-gradient(circle at 12% 54%, rgba(131, 56, 236, 0.23), transparent 24rem),
+    radial-gradient(circle at 88% 0%, rgba(25, 214, 232, 0.1), transparent 25rem),
+    linear-gradient(160deg, rgba(17, 5, 39, 0.97), rgba(5, 3, 13, 0.99));
+}
+
+.site-footer::before {
+  position: absolute;
+  top: 12%;
+  left: -7rem;
+  width: 22rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 227, 154, 0.12);
+  border-radius: 50%;
+  content: "";
+  box-shadow: 0 0 0 3rem rgba(131, 56, 236, 0.025), 0 0 0 6rem rgba(25, 214, 232, 0.015);
+}
+
+.footer-divider {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 4rem, 76rem);
+  max-width: none;
+  padding-top: 1.35rem;
+  margin: 0 auto;
+}
+
+.footer-main {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: minmax(18rem, 1.35fr) minmax(12rem, 0.7fr) minmax(15rem, 0.9fr);
+  padding-top: 5rem;
+}
+
+.footer-brand {
+  position: relative;
+  min-height: 13rem;
+}
+
+.footer-logo-mark {
+  width: 2.45rem;
+  height: 2.45rem;
+}
+
+.footer-orbit {
+  position: absolute;
+  right: 5%;
+  bottom: -4%;
+  color: var(--astral-gold-300);
+  opacity: 0.42;
+  transform: rotate(-16deg);
+}
+
+.footer-nav h2,
+.footer-contact h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--astral-cyan-300);
+  letter-spacing: 0.19em;
+}
+
+.footer-nav h2 .celestial-glyph,
+.footer-contact h2 .celestial-glyph {
+  --glyph-size: 0.86rem;
+  color: var(--astral-gold-300);
+}
+
+.footer-nav a {
+  gap: 0.65rem;
+}
+
+.footer-nav a > span {
+  color: var(--astral-gold-300);
+  font-size: 0.65rem;
+  transition: transform 300ms ease;
+}
+
+.footer-contact .text-link .celestial-glyph {
+  --glyph-size: 1rem;
+  color: var(--astral-cyan-300);
+}
+
+.footer-bottom {
+  position: relative;
+  z-index: 1;
+  border-top-color: rgba(255, 227, 154, 0.18);
+}
+
+.social-links a {
+  gap: 0.5rem;
+  border-radius: 0;
+  background: rgba(131, 56, 236, 0.06);
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+}
+
+.social-links .celestial-glyph {
+  --glyph-size: 0.78rem;
+  color: var(--astral-cyan-300);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brand-link:hover .brand-mark,
+  .footer-logo:hover .footer-logo-mark {
+    color: var(--astral-cyan-300);
+    transform: rotate(11deg) scale(1.06);
+  }
+
+  .primary-nav a:hover .nav-star {
+    opacity: 1;
+    transform: scale(1) rotate(90deg);
+  }
+
+  .header-contact:hover {
+    border-color: var(--astral-gold-300);
+    background: linear-gradient(110deg, rgba(25, 214, 232, 0.25), rgba(131, 56, 236, 0.48));
+    box-shadow: var(--astral-glow);
+    color: var(--astral-pearl);
+    transform: translateY(-3px) rotate(-0.5deg);
+  }
+
+  .back-link:hover .celestial-glyph {
+    transform: rotate(90deg) scale(1.2);
+  }
+
+  .catalog-card:hover {
+    box-shadow:
+      0 44px 100px rgba(2, 0, 10, 0.62),
+      0 0 0 1px rgba(131, 245, 255, 0.28),
+      0 0 76px rgba(131, 56, 236, 0.27);
+    transform: translateY(-12px) rotate(0.35deg);
+  }
+
+  .catalog-card:nth-child(even):hover {
+    transform: translateY(-12px) rotate(-0.35deg);
+  }
+
+  .catalog-card:hover .catalog-card-media img {
+    filter: saturate(1.05) contrast(1.08) hue-rotate(0deg);
+    transform: scale(1.09);
+  }
+
+  .catalog-card:hover .catalog-card-orbit {
+    color: var(--astral-cyan-300);
+    transform: translateX(-50%) translateY(5px) rotate(12deg);
+  }
+
+  .catalog-card .button-secondary:hover {
+    border-color: var(--astral-gold-300);
+    background: linear-gradient(110deg, rgba(25, 214, 232, 0.2), rgba(131, 56, 236, 0.36));
+    box-shadow: 0 0 24px rgba(25, 214, 232, 0.16);
+    color: var(--astral-pearl);
+  }
+
+  .footer-nav a:hover > span {
+    transform: rotate(90deg) scale(1.25);
+  }
+}
+
+@media (max-width: 1100px) {
+  .featured-catalog-grid .catalog-card:last-child {
+    display: flex;
+    grid-template-columns: none;
+  }
+
+  .page-hero-inner {
+    grid-template-columns: minmax(0, 1.25fr) minmax(15rem, 0.75fr);
+    column-gap: 2.5rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(4rem, 8vw, 6.5rem);
+  }
+
+  .section-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .section-action {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 900px) {
+  .page-hero {
+    min-height: 41rem;
+  }
+
+  .page-hero-inner {
+    grid-template-columns: minmax(0, 1fr) 14rem;
+    column-gap: 1.5rem;
+  }
+
+  .page-hero-portal {
+    align-self: end;
+    opacity: 0.78;
+  }
+
+  .page-hero-portal .orbit-portal {
+    --portal-size: 15rem;
+  }
+
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .header-inner {
+    min-height: 0;
+  }
+
+  .brand-mark {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .brand-mark .celestial-glyph {
+    --glyph-size: 1.15rem;
+  }
+
+  .header-contact {
+    min-height: 42px;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.78rem;
+  }
+
+  .header-contact .contact-orbit {
+    display: none;
+  }
+
+  .primary-nav a {
+    padding-right: 0.9rem;
+    padding-left: 0.9rem;
+  }
+
+  .page-hero {
+    min-height: 44rem;
+  }
+
+  .page-hero-inner {
+    position: relative;
+    display: block;
+    padding-top: 2rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .page-hero .back-link {
+    margin-bottom: 4.6rem;
+  }
+
+  .page-hero-copy {
+    position: relative;
+    z-index: 2;
+  }
+
+  .page-hero h1,
+  .page-hero--book h1 {
+    max-width: 10ch;
+    font-size: clamp(3.35rem, 16vw, 5.4rem);
+    line-height: 0.9;
+  }
+
+  .page-hero-divider {
+    width: 72%;
+    margin-top: 1.5rem;
+  }
+
+  .page-hero-portal {
+    position: absolute;
+    top: 2.2rem;
+    right: -5rem;
+    z-index: 0;
+    opacity: 0.32;
+    transform: rotate(15deg) !important;
+  }
+
+  .page-hero-portal .orbit-portal,
+  .page-hero--readings .orbit-portal--compact {
+    --portal-size: 18rem;
+  }
+
+  .page-hero-portal-caption {
+    display: none;
+  }
+
+  .page-hero-stars > :nth-child(3) {
+    left: 76%;
+  }
+
+  .section-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 4.5rem;
+    align-items: start;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(3rem, 14vw, 4.6rem);
+  }
+
+  .section-heading-astra {
+    width: 4.5rem;
+    margin-top: 2.2rem;
+  }
+
+  .section-action {
+    grid-column: 1 / -1;
+  }
+
+  .catalog-card-media,
+  .featured-catalog-grid .catalog-card:last-child .catalog-card-media {
+    aspect-ratio: 3 / 4;
+  }
+
+  .catalog-card-content {
+    padding: 1.55rem 1.25rem 1.4rem;
+  }
+
+  .catalog-card h3 {
+    font-size: 2rem;
+  }
+
+  .footer-divider {
+    width: calc(100% - 2rem);
+  }
+
+  .footer-divider .astral-divider-label {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .footer-main {
+    grid-template-columns: 1fr;
+    padding-top: 4rem;
+  }
+
+  .footer-brand {
+    min-height: 12rem;
+  }
+
+  .footer-orbit {
+    right: 0;
+    opacity: 0.3;
+  }
+}
+
+@media (max-width: 390px) {
+  .brand-wordmark {
+    font-size: 1rem;
+  }
+
+  .header-contact {
+    padding-right: 0.65rem;
+    padding-left: 0.65rem;
+  }
+
+  .page-hero h1,
+  .page-hero--book h1 {
+    font-size: 3.15rem;
+  }
+
+  .page-hero .back-link {
+    margin-bottom: 4rem;
+  }
+
+  .section-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading-astra {
+    position: absolute;
+    top: -1rem;
+    right: 0;
+    width: 3.5rem;
+    opacity: 0.55;
+  }
+
+  .astral-divider-label {
+    font-size: 0.55rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-portal::before,
+  .orbit-portal-halo,
+  .orbit-portal-meridian,
+  .orbit-portal-spark,
+  .section-heading-orbit,
+  .section-heading-astra > .celestial-glyph,
+  .catalog-card-orbit::before,
+  .catalog-card .button-secondary::before,
+  .header-contact::before,
+  .contact-orbit,
+  .contact-spark,
+  .page-hero::before,
+  .page-hero-stars > .celestial-glyph,
+  .primary-nav a[aria-current="page"] .nav-star {
+    animation: none !important;
+  }
+
+  .catalog-card:hover,
+  .catalog-card:nth-child(even):hover,
+  .header-contact:hover {
+    transform: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .site-header,
+  .catalog-card,
+  .site-footer {
+    background-color: var(--astral-void);
+  }
+
+  .catalog-card,
+  .catalog-card-media,
+  .header-contact,
+  .social-links a {
+    border-color: var(--astral-gold-300);
+  }
+
+  .text-link,
+  .back-link,
+  .availability-label,
+  .catalog-card-content > p:not(.category-label) {
+    color: var(--astral-pearl);
+  }
+}
+
+@media (forced-colors: active) {
+  .celestial-glyph,
+  .orbit-portal,
+  .astral-divider,
+  .catalog-card-frame,
+  .catalog-card-orbit {
+    forced-color-adjust: auto;
+  }
+
+  .catalog-card,
+  .catalog-card-media,
+  .header-contact,
+  .social-links a,
+  .brand-mark,
+  .footer-logo-mark {
+    border: 1px solid CanvasText;
+  }
+
+  .catalog-card-frame,
+  .catalog-card-media::before,
+  .catalog-card-media::after,
+  .header-contact::before {
+    display: none;
+  }
+}
+
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes portal-breathe {
+  0%, 100% { opacity: 0.65; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes meridian-sway {
+  from { transform: rotate(22deg) scaleX(0.9); }
+  to { transform: rotate(52deg) scaleX(1.06); }
+}
+
+@keyframes star-pulse {
+  0%, 100% { opacity: 0.38; transform: scale(0.76) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.15) rotate(45deg); }
+}
+
+@keyframes celestial-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-7deg); }
+  50% { transform: translate3d(0.8rem, -1.1rem, 0) rotate(8deg); }
+}
+
+@keyframes cta-comet {
+  0%, 28% { transform: translateX(-220%) rotate(22deg); }
+  54%, 100% { transform: translateX(720%) rotate(22deg); }
+}
+
+@keyframes living-button {
+  0%, 24% { transform: translateX(-120%); }
+  55%, 100% { transform: translateX(120%); }
+}
