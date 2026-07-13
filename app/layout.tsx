@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { CinematicJourney } from "@/components/site/cinematic-journey";
 import { GalaxyStage } from "@/components/site/galaxy-stage";
 import { MysticCursor } from "@/components/site/mystic-cursor";
+import "./cinematic-journey.css";
 import "./globals.css";
 import "./cosmic-components.css";
 import "./cosmic-pages.css";
@@ -122,6 +124,7 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${displayFont.variable} ${sansFont.variable}`}>
         <GalaxyStage />
+        <CinematicJourney />
         <MysticCursor />
         <script
           type="application/ld+json"

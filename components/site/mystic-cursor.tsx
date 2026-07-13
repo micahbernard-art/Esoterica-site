@@ -7,6 +7,7 @@ import "@/app/mystic-cursor.css";
 export type MysticCursorPath = "/" | "/tarot" | "/libros" | "/lecturas";
 
 type CursorMode = "default" | "link" | "card" | "text" | "drag";
+type JourneyPhase = "closing" | "covered" | "opening" | "idle";
 
 const VALID_MODES = new Set<CursorMode>([
   "default",
@@ -115,6 +116,19 @@ export function MysticCursor({ activePath }: { activePath?: MysticCursorPath } =
     let previousTime = performance.now();
     let currentMode: CursorMode = "default";
     let currentLabel = "";
+
+    const onJourney = (event: Event) => {
+      const journey = event as CustomEvent<{ phase?: JourneyPhase }>;
+      const journeyPhase = journey.detail?.phase ?? "idle";
+      cursor.dataset.journeyPhase = journeyPhase;
+      cursor.classList.remove("is-pressed");
+
+      if (journeyPhase === "closing" || journeyPhase === "opening") {
+        cursor.classList.remove("is-pulsing");
+        void cursor.offsetWidth;
+        cursor.classList.add("is-pulsing");
+      }
+    };
 
     const canRun = () =>
       finePointer.matches &&
@@ -314,6 +328,7 @@ export function MysticCursor({ activePath }: { activePath?: MysticCursorPath } =
     document.addEventListener("pointerout", onPointerOut, { passive: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
     window.addEventListener("blur", onWindowBlur);
+    window.addEventListener("esoterica:journey", onJourney);
 
     syncCapability();
 
@@ -330,6 +345,7 @@ export function MysticCursor({ activePath }: { activePath?: MysticCursorPath } =
       document.removeEventListener("pointerout", onPointerOut);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("blur", onWindowBlur);
+      window.removeEventListener("esoterica:journey", onJourney);
       removeNativeCursorOverride();
       cursor.removeAttribute("style");
     };
@@ -342,6 +358,7 @@ export function MysticCursor({ activePath }: { activePath?: MysticCursorPath } =
       data-mode="default"
       data-route={resolvedPath}
       data-cursor-ready="false"
+      data-journey-phase="idle"
       aria-hidden="true"
     >
       <span className="mystic-cursor__field">

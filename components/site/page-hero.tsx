@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AstralDivider } from "./astral-divider";
+import { AstralTitle } from "./astral-title";
 import { CelestialGlyph } from "./celestial-glyph";
 import { OrbitPortal, type OrbitPortalVariant } from "./orbit-portal";
 
@@ -15,6 +16,12 @@ const heroGlyphs: Record<PageHeroVariant, Array<"sun" | "moon" | "star">> = {
   tarot: ["moon", "star", "sun"],
   book: ["sun", "moon", "star"],
   readings: ["star", "moon", "star"],
+};
+
+const routeRelics: Record<PageHeroVariant, { label: string; coordinate: string }> = {
+  tarot: { label: "Arcano", coordinate: "ÓRBITA · I" },
+  book: { label: "Archivo", coordinate: "ÓRBITA · II" },
+  readings: { label: "Oráculo", coordinate: "ÓRBITA · III" },
 };
 
 export function PageHero({
@@ -33,7 +40,13 @@ export function PageHero({
       className={`page-hero page-hero--${variant}`}
       aria-labelledby="page-title"
       data-scroll-scene={`page-hero-${variant}`}
+      data-galaxy-anchor={`${variant}-threshold`}
+      data-route-relic={variant}
     >
+      <span className="route-relic" aria-hidden="true">
+        <span>{routeRelics[variant].label}</span>
+        <span className="route-relic__coordinate">{routeRelics[variant].coordinate}</span>
+      </span>
       <div className="page-hero-stars" aria-hidden="true">
         {heroGlyphs[variant].map((kind, index) => (
           <CelestialGlyph kind={kind} key={`${kind}-${index}`} />
@@ -46,7 +59,7 @@ export function PageHero({
         </Link>
         <div className="page-hero-copy" data-reveal="rise">
           <p className="section-eyebrow">{eyebrow}</p>
-          <h1 id="page-title">{title}</h1>
+          <AstralTitle id="page-title">{title}</AstralTitle>
           <AstralDivider className="page-hero-divider" />
           <p>{description}</p>
         </div>

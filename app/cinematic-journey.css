@@ -1,0 +1,183 @@
+html {
+  --journey-origin-x: 50vw;
+  --journey-origin-y: 50vh;
+}
+
+.route-portal {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483645;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+  clip-path: circle(0 at var(--journey-origin-x) var(--journey-origin-y));
+  contain: strict;
+  isolation: isolate;
+}
+
+html[data-journey-phase="closing"] .route-portal,
+html[data-journey-phase="covered"] .route-portal,
+html[data-journey-phase="opening"] .route-portal {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+html[data-journey-phase="closing"] .route-portal {
+  clip-path: circle(150vmax at var(--journey-origin-x) var(--journey-origin-y));
+  transition: clip-path 640ms cubic-bezier(0.7, 0, 0.16, 1);
+}
+
+html[data-journey-phase="covered"] .route-portal {
+  clip-path: circle(150vmax at var(--journey-origin-x) var(--journey-origin-y));
+}
+
+html[data-journey-phase="opening"] .route-portal {
+  clip-path: circle(0 at var(--journey-origin-x) var(--journey-origin-y));
+  transition: clip-path 680ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.route-portal__field,
+.route-portal__veil,
+.route-portal__streaks,
+.route-portal__iris {
+  position: absolute;
+  pointer-events: none;
+}
+
+.route-portal__field {
+  inset: 0;
+  background:
+    radial-gradient(circle at var(--journey-origin-x) var(--journey-origin-y), rgb(254 225 165 / 20%) 0 1px, transparent 11rem),
+    radial-gradient(circle at 62% 28%, rgb(130 94 255 / 22%), transparent 36rem),
+    radial-gradient(circle at 25% 75%, rgb(232 95 190 / 15%), transparent 32rem),
+    linear-gradient(145deg, #120626, #070b1d 50%, #180521);
+}
+
+.route-portal__field::before,
+.route-portal__field::after {
+  position: absolute;
+  inset: -30%;
+  content: "";
+  background-image:
+    radial-gradient(circle, rgb(255 239 202 / 82%) 0 1px, transparent 1.6px),
+    radial-gradient(circle, rgb(187 147 255 / 68%) 0 0.8px, transparent 1.4px);
+  background-position: 0 0, 37px 61px;
+  background-size: 83px 83px, 127px 127px;
+  transform: scale(1.05) rotate(-3deg);
+  opacity: 0.34;
+}
+
+.route-portal__field::after {
+  background-size: 173px 173px, 223px 223px;
+  filter: blur(0.45px);
+  opacity: 0.24;
+  transform: scale(1.18) rotate(7deg);
+}
+
+.route-portal__iris {
+  top: var(--journey-origin-y);
+  left: var(--journey-origin-x);
+  width: min(74vw, 48rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0) scale(0.14) rotate(-16deg);
+  opacity: 0;
+}
+
+.route-portal__lens {
+  position: absolute;
+  border: 1px solid rgb(232 195 119 / 56%);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 38px rgb(184 134 255 / 18%),
+    0 0 34px rgb(232 195 119 / 15%);
+}
+
+.route-portal__lens--outer {
+  inset: 6%;
+  transform: rotate(28deg) scaleY(0.56);
+}
+
+.route-portal__lens--inner {
+  inset: 24%;
+  border-color: rgb(211 150 255 / 62%);
+  transform: rotate(-43deg) scaleX(0.65);
+}
+
+.route-portal__star {
+  position: absolute;
+  inset: 46%;
+  border-radius: 50%;
+  background: #fff4d7;
+  box-shadow:
+    0 0 12px #fff4d7,
+    0 0 46px #cb8dff,
+    0 0 90px rgb(245 161 215 / 72%);
+}
+
+.route-portal__streaks {
+  top: var(--journey-origin-y);
+  left: var(--journey-origin-x);
+  width: 170vmax;
+  height: 170vmax;
+  background: repeating-conic-gradient(
+    from 12deg,
+    transparent 0 7deg,
+    rgb(255 225 159 / 13%) 7.2deg 7.45deg,
+    transparent 7.7deg 15deg
+  );
+  mask-image: radial-gradient(circle, transparent 0 4rem, black 23%, transparent 67%);
+  transform: translate3d(-50%, -50%, 0) scale(0.2) rotate(-12deg);
+  opacity: 0;
+}
+
+.route-portal__veil {
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0 18%, rgb(4 3 14 / 42%) 72%, rgb(4 3 14 / 84%));
+}
+
+html[data-journey-phase="closing"] .route-portal__iris {
+  animation: route-portal-departure 640ms cubic-bezier(0.7, 0, 0.16, 1) both;
+}
+
+html[data-journey-phase="closing"] .route-portal__streaks {
+  animation: route-portal-streak-in 640ms cubic-bezier(0.7, 0, 0.16, 1) both;
+}
+
+html[data-journey-phase="opening"] .route-portal__iris {
+  animation: route-portal-arrival 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html[data-journey-phase="opening"] .route-portal__streaks {
+  animation: route-portal-streak-out 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes route-portal-departure {
+  0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.12) rotate(-16deg); }
+  24% { opacity: 1; }
+  100% { opacity: 0.62; transform: translate3d(-50%, -50%, 0) scale(1.36) rotate(22deg); }
+}
+
+@keyframes route-portal-arrival {
+  0% { opacity: 0.62; transform: translate3d(-50%, -50%, 0) scale(1.36) rotate(22deg); }
+  72% { opacity: 0.86; }
+  100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.08) rotate(48deg); }
+}
+
+@keyframes route-portal-streak-in {
+  0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.18) rotate(-12deg); }
+  45% { opacity: 0.72; }
+  100% { opacity: 0.1; transform: translate3d(-50%, -50%, 0) scale(1.08) rotate(5deg); }
+}
+
+@keyframes route-portal-streak-out {
+  0% { opacity: 0.1; transform: translate3d(-50%, -50%, 0) scale(1.08) rotate(5deg); }
+  40% { opacity: 0.45; }
+  100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.5) rotate(14deg); }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .route-portal {
+    display: none !important;
+  }
+}

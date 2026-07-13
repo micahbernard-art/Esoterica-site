@@ -97,3 +97,43 @@ test("Basement Grotesque ships with its complete OFL license", async () => {
   assert.match(license, /Copyright 2021 basement grotesque/);
   assert.match(styles, /BasementGrotesque-Black\.woff2/);
 });
+
+test("constellation arrival keeps one readable H1 and restrained route relics", async () => {
+  const [title, arrival, home, pageHero] = await Promise.all([
+    read("components/site/astral-title.tsx"),
+    read("app/astral-arrival.css"),
+    read("app/page.tsx"),
+    read("components/site/page-hero.tsx"),
+  ]);
+
+  assert.equal((title.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(title, /className="sr-only"/);
+  assert.match(title, /aria-hidden="true"/);
+  assert.match(title, /data-astral-arrival="constellation"/);
+  assert.match(arrival, /data-journey-phase="opening"/);
+  assert.match(arrival, /prefers-reduced-motion:\s*reduce/);
+  assert.match(arrival, /forced-colors:\s*active/);
+  assert.match(arrival, /\.astral-title__oracle[\s\S]*font-family:\s*inherit/);
+  assert.match(arrival, /\.astral-title__oracle \.astral-title__glyph[\s\S]*background-clip:\s*text/);
+  assert.match(arrival, /\.route-relic[\s\S]*font-family:\s*var\(--font-impact/);
+  assert.match(home, /data-galaxy-anchor="home-threshold"/);
+  assert.match(home, /data-route-relic="home"/);
+  assert.match(pageHero, /data-galaxy-anchor=\{`\$\{variant\}-threshold`\}/);
+  assert.match(pageHero, /data-route-relic=\{variant\}/);
+});
+
+test("cinematic journey exposes one root mount and opening phase contract", async () => {
+  const [layout, journey, journeyCss] = await Promise.all([
+    read("app/layout.tsx"),
+    read("components/site/cinematic-journey.tsx"),
+    read("app/cinematic-journey.css"),
+  ]);
+
+  assert.equal((layout.match(/<CinematicJourney\b/g) ?? []).length, 1);
+  assert.match(journey, /dataset\.journeyPhase/);
+  assert.match(journey, /["']esoterica:journey["']/);
+  assert.match(journey, /["']opening["']/);
+  assert.match(journey, /addEventListener\(["']popstate["']/);
+  assert.match(journey, /connection\?\.saveData/);
+  assert.match(journeyCss, /data-journey-phase="covered"[\s\S]*pointer-events:\s*auto/);
+});

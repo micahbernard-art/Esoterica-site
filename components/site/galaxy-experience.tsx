@@ -13,7 +13,21 @@ import {
 import {
   NEBULA_FRAGMENT_SHADER,
   NEBULA_VERTEX_SHADER,
+  PASSAGE_FRAGMENT_SHADER,
+  PASSAGE_VERTEX_SHADER,
 } from "@/lib/galaxy/shaders";
+
+type JourneyPhase = "closing" | "covered" | "opening" | "idle";
+
+type JourneyDetail = {
+  phase: JourneyPhase;
+  from: string;
+  to: string;
+  originX: number;
+  originY: number;
+};
+
+type JourneyState = JourneyDetail;
 
 type MotionState = {
   pointerEnergy: number;
@@ -63,6 +77,34 @@ function makeStars(count: number, seed: number, depth: number) {
     positions[index * 3 + 2] = -random() * depth - 1.5;
   }
   return positions;
+}
+
+function makePassageStars(count: number) {
+  const random = seededRandom(9027);
+  const positions = new Float32Array(count * 3);
+  for (let index = 0; index < count; index += 1) {
+    const angle = random() * Math.PI * 2;
+    const radius = 0.42 + random() * 0.58;
+    positions[index * 3] = Math.cos(angle) * radius;
+    positions[index * 3 + 1] = Math.sin(angle) * radius;
+    positions[index * 3 + 2] = random();
+  }
+  return positions;
+}
+
+function isJourneyDetail(value: unknown): value is JourneyDetail {
+  if (!value || typeof value !== "object") return false;
+  const detail = value as Partial<JourneyDetail>;
+  return (
+    (detail.phase === "closing" ||
+      detail.phase === "covered" ||
+      detail.phase === "opening" ||
+      detail.phase === "idle") &&
+    typeof detail.from === "string" &&
+    typeof detail.to === "string" &&
+    Number.isFinite(detail.originX) &&
+    Number.isFinite(detail.originY)
+  );
 }
 
 function FrameScheduler({ fps }: { fps: number }) {
@@ -158,20 +200,89 @@ function StarLayer({
   );
 }
 
+function PassageStreaks({
+  color,
+  constrained,
+  journey,
+}: {
+  color: string;
+  constrained: boolean;
+  journey: React.MutableRefObject<JourneyState>;
+}) {
+  const material = useRef<THREE.ShaderMaterial>(null);
+  const strength = useRef(0);
+  const positions = useMemo(
+    () => makePassageStars(constrained ? 96 : 160),
+    [constrained],
+  );
+  const targetColor = useMemo(() => new THREE.Color(color), [color]);
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uStrength: { value: 0 },
+      uOrigin: { value: new THREE.Vector2(0.5, 0.5) },
+      uColor: { value: new THREE.Color(ROUTES["/"].colors[2]) },
+    }),
+    [],
+  );
+
+  useFrame(({ clock }, delta) => {
+    const shader = material.current;
+    if (!shader) return;
+    const state = journey.current;
+    const target =
+      state.phase === "closing" || state.phase === "covered" ? 1 : 0;
+    strength.current = THREE.MathUtils.lerp(
+      strength.current,
+      target,
+      1 - Math.exp(-Math.min(delta, 0.05) * 4.4),
+    );
+    shader.uniforms.uTime.value = clock.elapsedTime;
+    shader.uniforms.uStrength.value = strength.current;
+    shader.uniforms.uOrigin.value.set(state.originX, state.originY);
+    shader.uniforms.uColor.value.lerp(targetColor, 0.08);
+  });
+
+  return (
+    <points frustumCulled={false} renderOrder={2}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={material}
+        vertexShader={PASSAGE_VERTEX_SHADER}
+        fragmentShader={PASSAGE_FRAGMENT_SHADER}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        depthTest={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
 function GalaxyWorld({
   activePath,
+  journey,
+  journeyPhase,
+  journeyRoute,
   motion,
   quality,
   onContextLost,
 }: {
   activePath: GalaxyRoute;
+  journey: React.MutableRefObject<JourneyState>;
+  journeyPhase: JourneyPhase;
+  journeyRoute: GalaxyRoute;
   motion: React.MutableRefObject<MotionState>;
   quality: GalaxyQuality;
   onContextLost: () => void;
 }) {
   const nebula = useRef<THREE.ShaderMaterial>(null);
   const world = useRef<THREE.Group>(null);
-  const palette = ROUTES[activePath];
+  const passageAmount = useRef(0);
+  const palette = ROUTES[journeyPhase === "idle" ? activePath : journeyRoute];
   const targetA = useMemo(() => new THREE.Color(palette.colors[0]), [palette]);
   const targetB = useMemo(() => new THREE.Color(palette.colors[1]), [palette]);
   const targetC = useMemo(() => new THREE.Color(palette.colors[2]), [palette]);
@@ -186,6 +297,8 @@ function GalaxyWorld({
       uColorC: { value: new THREE.Color(ROUTES["/"].colors[2]) },
       uPointer: { value: new THREE.Vector2() },
       uPointerEnergy: { value: 0 },
+      uJourney: { value: 0 },
+      uJourneyOrigin: { value: new THREE.Vector2(0.5, 0.5) },
     }),
     [],
   );
@@ -207,24 +320,48 @@ function GalaxyWorld({
     const state = motion.current;
     const velocity =
       state.velocity * Math.exp(-(performance.now() - state.velocityTime) / 260);
+    const passage = journey.current;
+    const passageTarget =
+      passage.phase === "closing" || passage.phase === "covered" ? 1 : 0;
+    const passageEase =
+      1 - Math.exp(-safeDelta * (passage.phase === "opening" ? 3.5 : 4.8));
+    passageAmount.current = THREE.MathUtils.lerp(
+      passageAmount.current,
+      passageTarget,
+      passageEase,
+    );
+    const passageStrength = passageAmount.current;
 
-    const targetX = cameraTarget.x + state.pointerX * 0.16;
-    const targetY = cameraTarget.y - state.pointerY * 0.1 + Math.sin(state.progress * Math.PI) * 0.08;
-    const targetZ = cameraTarget.z - Math.min(Math.abs(velocity) * 0.006, 0.28);
+    const targetX =
+      cameraTarget.x +
+      state.pointerX * 0.16 +
+      (passage.originX - 0.5) * passageStrength * 0.2;
+    const targetY =
+      cameraTarget.y -
+      state.pointerY * 0.1 +
+      Math.sin(state.progress * Math.PI) * 0.08 +
+      (0.5 - passage.originY) * passageStrength * 0.14;
+    const targetZ =
+      cameraTarget.z -
+      Math.min(Math.abs(velocity) * 0.006, 0.28) -
+      passageStrength * 2.35;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, ease);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, ease);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, ease);
     camera.lookAt(0, 0, -2.5);
+    camera.rotateZ((passage.originX - 0.5) * passageStrength * 0.095);
 
     if (world.current) {
       world.current.rotation.z = THREE.MathUtils.lerp(
         world.current.rotation.z,
-        palette.phase * 0.025 + state.progress * 0.12,
+        palette.phase * 0.025 +
+          state.progress * 0.12 +
+          (passage.originX - 0.5) * passageStrength * 0.055,
         ease * 0.45,
       );
       world.current.position.z = THREE.MathUtils.lerp(
         world.current.position.z,
-        state.progress * 0.7,
+        state.progress * 0.7 + passageStrength * 0.92,
         ease,
       );
     }
@@ -246,6 +383,11 @@ function GalaxyWorld({
       material.uniforms.uPointerEnergy.value,
       pointerEnergy,
       ease * 1.8,
+    );
+    material.uniforms.uJourney.value = passageStrength;
+    material.uniforms.uJourneyOrigin.value.set(
+      passage.originX,
+      passage.originY,
     );
     material.uniforms.uColorA.value.lerp(targetA, ease);
     material.uniforms.uColorB.value.lerp(targetB, ease);
@@ -281,6 +423,13 @@ function GalaxyWorld({
         seed={4139}
         size={0.048}
       />
+      {journeyPhase !== "idle" ? (
+        <PassageStreaks
+          color={palette.colors[2]}
+          constrained={quality.constrained}
+          journey={journey}
+        />
+      ) : null}
     </group>
   );
 }
@@ -303,6 +452,15 @@ export function GalaxyExperience({
   const resolvedPath = activePath ?? routeFromPathname(pathname);
   const [quality, setQuality] = useState<GalaxyQuality | null>(initialQuality);
   const [contextLost, setContextLost] = useState(false);
+  const [journeyPhase, setJourneyPhase] = useState<JourneyPhase>("idle");
+  const [journeyRoute, setJourneyRoute] = useState<GalaxyRoute>(resolvedPath);
+  const journey = useRef<JourneyState>({
+    phase: "idle",
+    from: resolvedPath,
+    to: resolvedPath,
+    originX: 0.5,
+    originY: 0.5,
+  });
   const motion = useRef<MotionState>({
     pointerEnergy: 0,
     pointerEnergyTime: 0,
@@ -332,6 +490,31 @@ export function GalaxyExperience({
       forced.removeEventListener("change", updateQuality);
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  useEffect(() => {
+    const handleJourney = (event: Event) => {
+      const detail = (event as CustomEvent<unknown>).detail;
+      if (!isJourneyDetail(detail)) return;
+      const normalizeOrigin = (value: number, extent: number) =>
+        THREE.MathUtils.clamp(value / Math.max(extent, 1), 0, 1);
+      let destination = detail.to;
+      try {
+        destination = new URL(detail.to, window.location.href).pathname;
+      } catch {
+        // Malformed targets keep current route while passage still closes safely.
+      }
+      const nextRoute = routeFromPathname(destination);
+      journey.current.phase = detail.phase;
+      journey.current.from = detail.from;
+      journey.current.to = detail.to;
+      journey.current.originX = normalizeOrigin(detail.originX, innerWidth);
+      journey.current.originY = normalizeOrigin(detail.originY, innerHeight);
+      setJourneyRoute(nextRoute);
+      setJourneyPhase(detail.phase);
+    };
+    window.addEventListener("esoterica:journey", handleJourney);
+    return () => window.removeEventListener("esoterica:journey", handleJourney);
   }, []);
 
   useEffect(() => {
@@ -387,6 +570,7 @@ export function GalaxyExperience({
         className="galaxy-experience galaxy-experience--static"
         data-galaxy-route={resolvedPath}
         data-galaxy-state={staticReason ?? "checking"}
+        data-galaxy-journey={journeyPhase}
         aria-hidden="true"
       />
     );
@@ -398,6 +582,7 @@ export function GalaxyExperience({
       aria-hidden="true"
       data-galaxy-route={resolvedPath}
       data-galaxy-state="running"
+      data-galaxy-journey={journeyPhase}
       dpr={quality.dpr}
       frameloop="demand"
       camera={{ fov: 46, near: 0.1, far: 32, position: ROUTES[resolvedPath].camera }}
@@ -416,6 +601,9 @@ export function GalaxyExperience({
       <FrameScheduler fps={quality.fps} />
       <GalaxyWorld
         activePath={resolvedPath}
+        journey={journey}
+        journeyPhase={journeyPhase}
+        journeyRoute={journeyRoute}
         motion={motion}
         quality={quality}
         onContextLost={handleContextLost}

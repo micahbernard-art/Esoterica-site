@@ -1,0 +1,217 @@
+/* Constellation titles remain one semantic H1. Every extra point is decorative CSS. */
+.astral-title {
+  position: relative;
+}
+
+.astral-title__visual {
+  display: block;
+}
+
+.astral-title__word {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.astral-title__word::after {
+  position: absolute;
+  right: -0.13em;
+  bottom: 0.12em;
+  width: 0.09em;
+  height: 0.09em;
+  border-radius: 50%;
+  background: var(--solar-400, var(--gold-300));
+  box-shadow: 0 0 0.32em color-mix(in srgb, var(--solar-400, var(--gold-300)) 58%, transparent);
+  content: "";
+  opacity: 0;
+  transform: scale(0.2);
+}
+
+.astral-title__glyph {
+  display: inline-block;
+  opacity: 1;
+  transform: none;
+  transform-origin: 50% 82%;
+}
+
+.astral-title__oracle {
+  font-family: inherit;
+  font-style: italic;
+}
+
+.astral-title__oracle .astral-title__glyph {
+  color: transparent;
+  background: linear-gradient(105deg, var(--solar-400), var(--coral-400) 46%, var(--orchid-300));
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+html:not([data-journey-phase]) .astral-title__glyph,
+html[data-journey-phase="idle"] .astral-title__glyph,
+html[data-journey-phase="opening"] .astral-title__glyph {
+  animation: astral-glyph-arrival 880ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(95ms + var(--glyph-index) * 24ms);
+}
+
+html:not([data-journey-phase]) .astral-title__word::after,
+html[data-journey-phase="idle"] .astral-title__word::after,
+html[data-journey-phase="opening"] .astral-title__word::after {
+  animation: astral-node-arrival 620ms ease-out both;
+  animation-delay: calc(380ms + var(--glyph-index, 0) * 20ms);
+}
+
+@keyframes astral-glyph-arrival {
+  0% {
+    filter: blur(7px);
+    opacity: 0;
+    transform: translate3d(calc(var(--glyph-orbit) * 0.22em), 0.72em, 0) rotate(calc(var(--glyph-orbit) * 4deg));
+  }
+
+  58% {
+    filter: blur(0.8px);
+    opacity: 1;
+  }
+
+  100% {
+    filter: blur(0);
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes astral-node-arrival {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+
+  68% {
+    opacity: 0.78;
+    transform: scale(1.35);
+  }
+
+  100% {
+    opacity: 0.34;
+    transform: scale(1);
+  }
+}
+
+/* Route relics are quiet cartographic frames, never competing illustrations. */
+[data-route-relic] {
+  --relic-accent: var(--solar-400, var(--gold-300));
+  --relic-mark: "✦";
+}
+
+[data-route-relic="tarot"] {
+  --relic-accent: var(--comet-300, #a9c8df);
+  --relic-mark: "✦";
+}
+
+[data-route-relic="book"] {
+  --relic-accent: var(--solar-400, var(--gold-300));
+  --relic-mark: "☉";
+}
+
+[data-route-relic="readings"] {
+  --relic-accent: var(--orchid-300, #c3a2ca);
+  --relic-mark: "☾";
+}
+
+.route-relic {
+  position: absolute;
+  z-index: 2;
+  top: clamp(5.2rem, 8vw, 7.4rem);
+  right: clamp(0rem, 2.2vw, 2rem);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem 0.7rem;
+  width: clamp(7.4rem, 11vw, 10rem);
+  color: color-mix(in srgb, var(--relic-accent) 72%, var(--cream-50));
+  font-family: var(--font-impact, sans-serif);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+.route-relic::before {
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: var(--relic-accent);
+  content: var(--relic-mark);
+  font-family: var(--font-display-stack);
+  font-size: 1.05rem;
+  text-shadow: 0 0 0.7rem color-mix(in srgb, var(--relic-accent) 52%, transparent);
+}
+
+.route-relic::after {
+  position: absolute;
+  top: -0.62rem;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--relic-accent), transparent 86%);
+  content: "";
+  opacity: 0.42;
+}
+
+.route-relic__coordinate {
+  color: color-mix(in srgb, var(--cream-100) 54%, transparent);
+  font-family: var(--font-sans-stack);
+  font-size: 0.49rem;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 760px) {
+  .route-relic {
+    top: 4.6rem;
+    right: 0;
+    width: 7.2rem;
+    opacity: 0.74;
+  }
+}
+
+@media (max-width: 520px) {
+  .route-relic {
+    display: none;
+  }
+}
+
+.motion-reduced .astral-title__glyph,
+.motion-reduced .astral-title__word::after,
+.kinetic-save-data .astral-title__glyph,
+.kinetic-save-data .astral-title__word::after {
+  animation: none !important;
+  filter: none !important;
+  opacity: 1;
+  transform: none !important;
+}
+
+.kinetic-constrained:not(.motion-reduced):not(.kinetic-save-data) .astral-title__glyph {
+  animation-delay: calc(40ms + var(--glyph-index) * 10ms);
+  animation-duration: 460ms;
+  filter: none !important;
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .astral-title__glyph {
+    animation: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .astral-title__word::after {
+    display: none;
+  }
+
+  .route-relic {
+    color: CanvasText;
+    text-shadow: none;
+  }
+
+  .route-relic::after {
+    background: CanvasText;
+  }
+}

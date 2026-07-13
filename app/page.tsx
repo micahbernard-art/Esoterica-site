@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AstralDivider } from "@/components/site/astral-divider";
+import { AstralTitle } from "@/components/site/astral-title";
 import { CatalogCard } from "@/components/site/catalog-card";
 import { CelestialGlyph } from "@/components/site/celestial-glyph";
 import { OrbitPortal } from "@/components/site/orbit-portal";
@@ -77,7 +78,13 @@ export default function HomePage() {
           className="cosmos-entry"
           aria-labelledby="hero-title"
           data-scroll-scene="galaxy-entry"
+          data-galaxy-anchor="home-threshold"
+          data-route-relic="home"
         >
+          <span className="route-relic" aria-hidden="true">
+            <span>Umbral</span>
+            <span className="route-relic__coordinate">ÓRBITA · 00</span>
+          </span>
           <div className="cosmos-entry__dust" aria-hidden="true">
             <span />
             <span />
@@ -91,9 +98,9 @@ export default function HomePage() {
               <span aria-hidden="true">✦</span>
               Tarot, símbolos y guía personal
             </p>
-            <h1 id="hero-title">
-              Encuentra una pausa para escuchar tu <em>intuición</em>
-            </h1>
+            <AstralTitle id="hero-title" emphasis="intuición">
+              Encuentra una pausa para escuchar tu intuición
+            </AstralTitle>
             <p className="hero-subtitle">
               Explora herramientas simbólicas y lecturas de tarot, con atención
               directa para ayudarte a elegir con claridad.
