@@ -298,13 +298,15 @@ export default function HomePage() {
               están visibles antes de reservar.
             </p>
             <ActionLink
-              className="button button-primary astral-button"
+              className="button button-primary eclipse-cta"
               href="/lecturas"
               intent="primary"
               cursorLabel="Ver lecturas"
             >
-              <span>Ver opciones y precios</span>
-              <CelestialGlyph kind="eclipse" />
+              <span className="eclipse-cta__label">Ver opciones y precios</span>
+              <span className="eclipse-cta__orbit" aria-hidden="true">
+                <CelestialGlyph kind="eclipse" />
+              </span>
             </ActionLink>
           </div>
           <div className="readings-highlight-details" data-reveal="scale-in">

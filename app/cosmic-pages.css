@@ -38,31 +38,6 @@ body {
   text-shadow: 0 0 18px color-mix(in srgb, var(--comet-300) 32%, transparent);
 }
 
-.astral-button {
-  position: relative;
-  overflow: hidden;
-  border-radius: 0;
-  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-  isolation: isolate;
-}
-
-.astral-button::after {
-  position: absolute;
-  top: -75%;
-  left: -32%;
-  z-index: -1;
-  width: 20%;
-  height: 250%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.62), transparent);
-  content: "";
-  transform: rotate(22deg);
-}
-
-.astral-button .celestial-glyph {
-  --glyph-size: 1rem;
-  color: currentColor;
-}
-
 /* Home — crossing the threshold */
 .cosmos-entry {
   position: relative;
@@ -158,16 +133,6 @@ body {
 
 .cosmos-entry .hero-actions {
   align-items: stretch;
-}
-
-.cosmos-entry .button-primary {
-  border-color: var(--solar-400);
-  background: linear-gradient(110deg, var(--solar-400), var(--coral-400));
-}
-
-.cosmos-entry .button-secondary {
-  border-color: color-mix(in srgb, var(--comet-300) 60%, transparent);
-  background: linear-gradient(120deg, color-mix(in srgb, var(--comet-300) 12%, transparent), color-mix(in srgb, var(--violet-500) 24%, transparent));
 }
 
 .pulse-star {
@@ -626,13 +591,13 @@ body {
 .eclipse-panel .readings-highlight-copy,
 .monthly-eclipse .readings-highlight-copy {
   position: relative;
-  z-index: 3;
+  z-index: var(--z-content);
 }
 
 .eclipse-panel .readings-highlight-details,
 .monthly-eclipse .readings-highlight-details {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-raised);
   padding: 0;
   border: 0;
 }
@@ -1497,4 +1462,397 @@ body {
   .reading-chambers .reading-tier {
     border-color: var(--solar-400);
   }
+}
+
+/* Orbital glass controls — continuous mystic capsules for route actions. */
+.button.astral-button[data-ui-action],
+.button.astral-button[data-ui-action]::before,
+.button.astral-button[data-ui-action]::after,
+.button.astral-button[data-ui-action] .celestial-glyph {
+  transition:
+    transform var(--astral-control-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--astral-control-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity;
+}
+
+.button.astral-button[data-ui-action] {
+  --astral-control-duration: var(--ui-duration-medium, 520ms);
+  position: relative;
+  z-index: var(--z-action);
+  display: inline-grid;
+  min-height: 60px;
+  padding: 0.66rem 0.78rem 0.66rem 1.35rem;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 -1px rgba(1, 0, 10, 0.76),
+    0 0.9rem 2.2rem rgba(2, 0, 14, 0.3),
+    0 0 1.6rem color-mix(in srgb, var(--violet-500) 13%, transparent);
+  clip-path: none;
+  color: var(--pearl-50);
+  column-gap: 0.82rem;
+  grid-template-columns: minmax(0, auto) 1.5rem;
+  isolation: isolate;
+  pointer-events: auto;
+  text-shadow: none;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.kinetic-enabled .button.astral-button.is-kinetic-control[data-ui-action] {
+  transition:
+    translate var(--astral-control-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--astral-control-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--astral-control-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity, translate;
+}
+
+.button.astral-button.button-primary[data-ui-action="primary"] {
+  border-color: transparent;
+  background:
+    linear-gradient(142deg, rgba(53, 24, 99, 0.9), rgba(19, 8, 48, 0.95) 54%, rgba(8, 5, 27, 0.97)) padding-box,
+    linear-gradient(112deg, color-mix(in srgb, var(--solar-400) 82%, white), color-mix(in srgb, var(--orchid-300) 68%, transparent) 48%, color-mix(in srgb, var(--comet-300) 86%, white)) border-box;
+}
+
+.button.astral-button.button-secondary[data-ui-action="secondary"] {
+  border-color: transparent;
+  background:
+    linear-gradient(142deg, rgba(34, 16, 68, 0.7), rgba(10, 7, 31, 0.84)) padding-box,
+    linear-gradient(112deg, color-mix(in srgb, var(--orchid-300) 46%, transparent), color-mix(in srgb, var(--comet-300) 52%, transparent)) border-box;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 -1px rgba(1, 0, 10, 0.66),
+    0 0.75rem 1.8rem rgba(2, 0, 14, 0.22);
+  color: color-mix(in srgb, var(--pearl-50) 92%, var(--orchid-300));
+}
+
+.button.astral-button[data-ui-action]::before,
+.button.astral-button[data-ui-action]::after {
+  position: absolute;
+  z-index: var(--z-raised);
+  width: auto;
+  height: auto;
+  content: "";
+  pointer-events: none;
+  rotate: none;
+  scale: none;
+  translate: none;
+}
+
+.button.astral-button[data-ui-action]::before {
+  inset: 2px;
+  border: 1px solid color-mix(in srgb, var(--pearl-50) 14%, transparent);
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 88% 50%, color-mix(in srgb, var(--comet-300) 13%, transparent), transparent 24%),
+    linear-gradient(112deg, rgba(255, 255, 255, 0.075), transparent 38% 68%, rgba(98, 230, 232, 0.045));
+  opacity: 0.82;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.button.astral-button[data-ui-action]::after {
+  inset: -48% -18%;
+  border-radius: 50%;
+  background: linear-gradient(102deg, transparent 31%, rgba(255, 255, 255, 0.15) 45%, color-mix(in srgb, var(--comet-300) 14%, transparent) 52%, transparent 67%);
+  opacity: 0.16;
+  transform: translate3d(-38%, 0, 0) rotate(-8deg) scale(0.92);
+}
+
+.button.astral-button[data-ui-action] > span:first-child,
+.button.astral-button[data-ui-action] .celestial-glyph {
+  position: relative;
+  z-index: var(--z-badge);
+}
+
+.button.astral-button[data-ui-action] > span:first-child {
+  min-width: 0;
+  text-wrap: balance;
+}
+
+.button.astral-button[data-ui-action] .celestial-glyph {
+  --glyph-size: 1.08rem;
+  justify-self: center;
+  color: var(--comet-300);
+  pointer-events: none;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+}
+
+.button.astral-button.button-primary[data-ui-action="primary"] .celestial-glyph {
+  color: var(--solar-400);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button.astral-button[data-ui-action]:hover {
+    --astral-control-duration: var(--ui-duration-fast, 320ms);
+    transform: translate3d(0, -2px, 0) scale(1.008);
+  }
+
+  .button.astral-button[data-ui-action]:hover::before {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(0.985);
+  }
+
+  .button.astral-button[data-ui-action]:hover::after {
+    opacity: 0.36;
+    transform: translate3d(30%, 0, 0) rotate(-8deg) scale(1);
+  }
+
+  .button.astral-button[data-ui-action]:hover .celestial-glyph {
+    opacity: 1;
+    transform: translate3d(2px, 0, 0) rotate(24deg) scale(1.08);
+  }
+}
+
+.button.astral-button[data-ui-action]:active {
+  --astral-control-duration: var(--ui-duration-fast, 320ms);
+  transform: translate3d(0, 0, 0) scale(0.982);
+}
+
+.button.astral-button[data-ui-action]:active::before {
+  opacity: 0.54;
+  transform: translate3d(0, 0, 0) scale(0.965);
+}
+
+.button.astral-button[data-ui-action]:focus-visible {
+  z-index: var(--z-focus);
+  outline: 2px solid var(--comet-300);
+  outline-offset: 4px;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .button.astral-button[data-ui-action] {
+    min-height: 60px;
+  }
+
+  .button.astral-button[data-ui-action]:active {
+    transform: translate3d(0, 0, 0) scale(0.982) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .astral-page :is(.hero-actions, .contact-banner) > .button.astral-button[data-ui-action] {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button.astral-button[data-ui-action],
+  .button.astral-button[data-ui-action]::before,
+  .button.astral-button[data-ui-action]::after,
+  .button.astral-button[data-ui-action] .celestial-glyph {
+    transition: none !important;
+  }
+
+  .button.astral-button[data-ui-action],
+  .button.astral-button[data-ui-action]:active,
+  .button.astral-button[data-ui-action] .celestial-glyph {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
+
+  .button.astral-button[data-ui-action]::before {
+    opacity: 0.82;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
+
+  .button.astral-button[data-ui-action]::after {
+    opacity: 0.16;
+    transform: translate3d(-38%, 0, 0) rotate(-8deg) scale(0.92) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .button.astral-button[data-ui-action] {
+    border: 2px solid ButtonText;
+    background: ButtonFace;
+    box-shadow: none;
+    color: ButtonText;
+    forced-color-adjust: auto;
+  }
+
+  .button.astral-button[data-ui-action]::before {
+    border-color: ButtonText;
+    background: none;
+  }
+
+  .button.astral-button[data-ui-action]::after {
+    display: none;
+  }
+
+  .button.astral-button[data-ui-action] .celestial-glyph {
+    color: ButtonText;
+  }
+
+  .button.astral-button[data-ui-action]:focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+/* Eclipse gate — singular editorial CTA for the home readings portal. */
+.button.eclipse-cta[data-ui-action="primary"],
+.button.eclipse-cta[data-ui-action="primary"]::before,
+.button.eclipse-cta[data-ui-action="primary"]::after,
+.eclipse-cta__orbit,
+.eclipse-cta__orbit::before,
+.eclipse-cta__orbit .celestial-glyph {
+  transition:
+    transform var(--eclipse-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--eclipse-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity;
+}
+
+.button.eclipse-cta[data-ui-action="primary"] {
+  --eclipse-duration: var(--ui-duration-medium, 520ms);
+  position: relative;
+  z-index: var(--z-action);
+  display: inline-grid;
+  align-items: center;
+  width: min(100%, 27rem);
+  min-height: 64px;
+  padding: 0.42rem 0.42rem 0.42rem 1.4rem;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(138deg, rgba(32, 12, 68, 0.96), rgba(10, 5, 29, 0.98)) padding-box,
+    linear-gradient(112deg, var(--solar-400), var(--orchid-300), var(--comet-300)) border-box;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08), inset 0 -1px rgba(0, 0, 0, 0.76), 0 1rem 2.5rem rgba(2, 0, 12, 0.34), 0 0 1.4rem color-mix(in srgb, var(--violet-500) 18%, transparent) !important;
+  clip-path: none;
+  color: var(--pearl-50);
+  column-gap: 0.9rem;
+  grid-template-columns: minmax(0, 1fr) 3.25rem;
+  isolation: isolate;
+  pointer-events: auto;
+  text-shadow: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.kinetic-enabled .button.eclipse-cta.is-kinetic-control[data-ui-action="primary"] {
+  transition:
+    translate var(--eclipse-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--eclipse-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--eclipse-duration, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity, translate;
+}
+
+.button.eclipse-cta[data-ui-action="primary"]::before,
+.button.eclipse-cta[data-ui-action="primary"]::after {
+  position: absolute;
+  z-index: var(--z-raised);
+  width: auto;
+  height: auto;
+  content: "";
+  pointer-events: none;
+  rotate: none;
+  scale: none;
+  translate: none;
+}
+
+.button.eclipse-cta[data-ui-action="primary"]::before {
+  inset: 2px;
+  border: 1px solid color-mix(in srgb, var(--pearl-50) 13%, transparent);
+  border-radius: inherit;
+  background: linear-gradient(108deg, rgba(255, 255, 255, 0.055), transparent 36% 68%, rgba(98, 230, 232, 0.04));
+  opacity: 0.9;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.button.eclipse-cta[data-ui-action="primary"]::after {
+  inset: 0;
+  background: radial-gradient(circle at 92% 50%, color-mix(in srgb, var(--comet-300) 20%, transparent), transparent 23%), linear-gradient(105deg, transparent 24%, color-mix(in srgb, var(--solar-400) 8%, transparent) 52%, transparent 72%);
+  opacity: 0.42;
+  transform: translate3d(-2%, 0, 0) scale(1);
+}
+
+.eclipse-cta__label {
+  position: relative;
+  z-index: var(--z-badge);
+  min-width: 0;
+  color: var(--pearl-50);
+  font-family: var(--font-utility);
+  font-size: clamp(0.84rem, 1.2vw, 0.94rem);
+  font-weight: 660;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-align: left;
+  text-wrap: balance;
+}
+
+.eclipse-cta__orbit {
+  position: relative;
+  z-index: var(--z-badge);
+  display: grid;
+  width: 3.25rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--solar-400) 52%, var(--comet-300));
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--orchid-300) 16%, transparent), transparent 42%), color-mix(in srgb, var(--cosmos-950) 88%, transparent);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055), 0 0 1rem color-mix(in srgb, var(--comet-300) 12%, transparent);
+  color: var(--solar-400);
+  place-items: center;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+}
+
+.eclipse-cta__orbit::before {
+  position: absolute;
+  inset: 0.32rem;
+  border: 1px solid color-mix(in srgb, var(--comet-300) 30%, transparent);
+  border-radius: 50%;
+  content: "";
+  opacity: 0.72;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0) rotate(-18deg) scaleX(1.18);
+}
+
+.eclipse-cta__orbit .celestial-glyph {
+  --glyph-cutout: #0d0523;
+  --glyph-size: 1.32rem;
+  color: currentColor;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button.eclipse-cta[data-ui-action="primary"]:hover { --eclipse-duration: var(--ui-duration-fast, 320ms); transform: translate3d(0, -3px, 0); }
+  .button.eclipse-cta[data-ui-action="primary"]:hover::before { opacity: 1; transform: translate3d(0, 0, 0) scale(0.985); }
+  .button.eclipse-cta[data-ui-action="primary"]:hover::after { opacity: 0.9; transform: translate3d(2%, 0, 0) scale(1.02); }
+  .button.eclipse-cta[data-ui-action="primary"]:hover .eclipse-cta__orbit { transform: translate3d(-2px, 0, 0) rotate(14deg) scale(1.045); }
+  .button.eclipse-cta[data-ui-action="primary"]:hover .eclipse-cta__orbit::before { opacity: 1; transform: translate3d(0, 0, 0) rotate(18deg) scaleX(1.28); }
+  .button.eclipse-cta[data-ui-action="primary"]:hover .celestial-glyph { transform: translate3d(0, 0, 0) rotate(-14deg) scale(1.06); }
+}
+
+.button.eclipse-cta[data-ui-action="primary"]:active { --eclipse-duration: var(--ui-duration-fast, 320ms); transform: translate3d(0, 0, 0) scale(0.985); }
+.button.eclipse-cta[data-ui-action="primary"]:active::before { opacity: 0.48; transform: translate3d(0, 0, 0) scale(0.96); }
+.button.eclipse-cta[data-ui-action="primary"]:focus-visible { z-index: var(--z-focus); outline: 2px solid var(--comet-300); outline-offset: 4px; transform: translate3d(0, 0, 0); }
+
+@media (max-width: 760px) {
+  .button.eclipse-cta[data-ui-action="primary"] { width: 100%; min-height: 56px; padding: 0.36rem 0.36rem 0.36rem 1rem; grid-template-columns: minmax(0, 1fr) 3rem; }
+  .eclipse-cta__orbit { width: 3rem; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .button.eclipse-cta[data-ui-action="primary"] { min-height: 60px; }
+  .button.eclipse-cta[data-ui-action="primary"]:active { transform: translate3d(0, 0, 0) scale(0.985) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button.eclipse-cta[data-ui-action="primary"], .button.eclipse-cta[data-ui-action="primary"]::before, .button.eclipse-cta[data-ui-action="primary"]::after,
+  .eclipse-cta__orbit, .eclipse-cta__orbit::before, .eclipse-cta__orbit .celestial-glyph { transition: none !important; }
+  .button.eclipse-cta[data-ui-action="primary"],
+  .button.eclipse-cta[data-ui-action="primary"]:active { transform: translate3d(0, 0, 0) !important; }
+  .button.eclipse-cta[data-ui-action="primary"]::before { opacity: 0.9; transform: translate3d(0, 0, 0) scale(1) !important; }
+  .button.eclipse-cta[data-ui-action="primary"]::after { opacity: 0.42; transform: translate3d(-2%, 0, 0) scale(1) !important; }
+  .eclipse-cta__orbit { transform: translate3d(0, 0, 0) rotate(0deg) scale(1) !important; }
+  .eclipse-cta__orbit::before { opacity: 0.72; transform: translate3d(0, 0, 0) rotate(-18deg) scaleX(1.18) !important; }
+  .eclipse-cta__orbit .celestial-glyph { transform: translate3d(0, 0, 0) rotate(0deg) scale(1) !important; }
+}
+
+@media (forced-colors: active) {
+  .button.eclipse-cta[data-ui-action="primary"] { border: 2px solid ButtonText; background: ButtonFace; box-shadow: none !important; color: ButtonText; forced-color-adjust: auto; }
+  .button.eclipse-cta[data-ui-action="primary"]::before, .eclipse-cta__orbit { border-color: ButtonText; background: none; box-shadow: none; }
+  .eclipse-cta__label, .eclipse-cta__orbit { color: ButtonText; }
+  .button.eclipse-cta[data-ui-action="primary"]::after { display: none; }
+  .button.eclipse-cta[data-ui-action="primary"]:focus-visible { outline-color: Highlight; }
 }

@@ -75,6 +75,138 @@ test("foreground actions share one accessible interaction contract", async () =>
   assert.match(components, /--ui-duration-fast/);
 });
 
+test("astral actions use continuous orbital glass and compositor-only kinetics", async () => {
+  const pageStyles = await readFile("app/cosmic-pages.css", "utf8");
+  const kineticStyles = await readFile("app/kinetic-ui.css", "utf8");
+  const astralStyles = pageStyles.slice(
+    pageStyles.indexOf("/* Orbital glass controls"),
+    pageStyles.indexOf("/* Eclipse gate"),
+  );
+  const kineticControls = kineticStyles.slice(
+    kineticStyles.indexOf(".kinetic-enabled .is-kinetic-control.is-kinetic-active"),
+    kineticStyles.indexOf(".is-kinetic-card"),
+  );
+  const astralBase = astralStyles.match(
+    /\.button\.astral-button\[data-ui-action\]\s*\{([^}]*)\}/,
+  )?.[1];
+
+  assert.ok(astralBase, "expected a scoped astral button base");
+  assert.match(astralStyles, /\.button\.astral-button\[data-ui-action\]/);
+  assert.match(astralStyles, /min-height:\s*60px/);
+  assert.match(astralStyles, /border-radius:\s*999px/);
+  assert.match(astralStyles, /clip-path:\s*none/);
+  assert.doesNotMatch(astralStyles, /backdrop-filter/);
+  assert.match(astralStyles, /grid-template-columns:\s*minmax\(0,\s*auto\)\s+1\.5rem/);
+  assert.match(astralStyles, /z-index:\s*var\(--z-action\)/);
+  assert.match(astralStyles, /pointer-events:\s*auto/);
+  assert.doesNotMatch(
+    astralBase,
+    /\b(?:font-family|font-size|font-weight|letter-spacing|line-height)\s*:/,
+  );
+  assert.match(
+    astralStyles,
+    /\.button\.astral-button\[data-ui-action\]::before,\s*\.button\.astral-button\[data-ui-action\]::after\s*\{[^}]*width:\s*auto;[^}]*height:\s*auto;[^}]*rotate:\s*none;[^}]*scale:\s*none;[^}]*translate:\s*none;/,
+  );
+  assert.match(
+    astralStyles,
+    /\.button\.astral-button\.button-primary\[data-ui-action="primary"\]/,
+  );
+  assert.match(
+    astralStyles,
+    /\.button\.astral-button\.button-secondary\[data-ui-action="secondary"\]/,
+  );
+  assert.match(astralStyles, /--ui-duration-fast,\s*320ms/);
+  assert.match(astralStyles, /--ui-duration-medium,\s*520ms/);
+  assert.match(
+    astralStyles,
+    /cubic-bezier\(0\.16,\s*1,\s*0\.3,\s*1\)/,
+  );
+  assert.match(astralStyles, /@media \(prefers-reduced-motion:\s*reduce\)/);
+  assert.match(astralStyles, /@media \(forced-colors:\s*active\)/);
+  assert.doesNotMatch(
+    pageStyles,
+    /\.astral-button\s*\{[^}]*clip-path:\s*polygon/,
+  );
+  assert.doesNotMatch(
+    astralStyles,
+    /transition(?:-[\w-]+)?:[^;]*\b(?:width|height|margin|box-shadow|background-color|border-color|color|filter)\b/,
+  );
+  assert.match(
+    kineticControls,
+    /translate var\(--ui-duration-fast,[^;]*transform var\(--ui-duration-fast,[^;]*opacity var\(--ui-duration-fast,/,
+  );
+  assert.match(
+    kineticControls,
+    /translate var\(--ui-duration-medium,[^;]*transform var\(--ui-duration-medium,[^;]*opacity var\(--ui-duration-medium,/,
+  );
+  assert.doesNotMatch(
+    kineticControls,
+    /\b(?:box-shadow|background-color|border-color|color|filter)\b/,
+  );
+});
+
+test("readings eclipse CTA keeps scoped premium anatomy and route semantics", async () => {
+  const home = await readFile("app/page.tsx", "utf8");
+  const pageStyles = await readFile("app/cosmic-pages.css", "utf8");
+  const eclipseCta = home.match(
+    /<ActionLink\s+className="[^"]*\beclipse-cta\b[^"]*"[\s\S]*?<\/ActionLink>/,
+  )?.[0];
+  const eclipseStyles = pageStyles.slice(
+    pageStyles.indexOf("/* Eclipse gate"),
+  );
+
+  assert.ok(eclipseCta, "expected one scoped eclipse CTA on homepage");
+  assert.match(eclipseCta, /href="\/lecturas"/);
+  assert.match(eclipseCta, /intent="primary"/);
+  assert.match(eclipseCta, /cursorLabel="Ver lecturas"/);
+  assert.doesNotMatch(eclipseCta, /\bastral-button\b/);
+  assert.match(
+    eclipseCta,
+    /className="eclipse-cta__label">Ver opciones y precios<\/span>/,
+  );
+  assert.match(
+    eclipseCta,
+    /className="eclipse-cta__orbit" aria-hidden="true"/,
+  );
+  assert.match(eclipseCta, /<CelestialGlyph kind="eclipse" \/>/);
+  assert.equal((home.match(/\beclipse-cta\b/g) ?? []).length, 1);
+  assert.match(
+    eclipseStyles,
+    /\.button\.eclipse-cta\[data-ui-action="primary"\]/,
+  );
+  assert.match(
+    eclipseStyles,
+    /--eclipse-duration:\s*var\(--ui-duration-medium,\s*520ms\)/,
+  );
+  assert.match(
+    eclipseStyles,
+    /--ui-ease-snap,\s*cubic-bezier\(0\.16,\s*1,\s*0\.3,\s*1\)/,
+  );
+  assert.match(
+    eclipseStyles,
+    /--eclipse-duration:\s*var\(--ui-duration-fast,\s*320ms\)/,
+  );
+  assert.match(eclipseStyles, /@media \(prefers-reduced-motion:\s*reduce\)/);
+  assert.match(eclipseStyles, /@media \(forced-colors:\s*active\)/);
+  assert.doesNotMatch(eclipseStyles, /cubic-bezier\(0\.76,/);
+  assert.doesNotMatch(
+    eclipseStyles,
+    /transition(?:-[\w-]+)?:[^;]*\b(?:width|height|margin)\b/,
+  );
+  assert.doesNotMatch(
+    eclipseStyles,
+    /transition(?:-[\w-]+)?:[^;]*\b(?:box-shadow|background-color|border-color|color|filter)\b/,
+  );
+  assert.match(
+    eclipseStyles,
+    /\.kinetic-enabled \.button\.eclipse-cta\.is-kinetic-control\[data-ui-action="primary"\]\s*\{[^}]*translate var\(--eclipse-duration,[^}]*transform var\(--eclipse-duration,[^}]*opacity var\(--eclipse-duration,/,
+  );
+  assert.match(
+    eclipseStyles,
+    /\.button\.eclipse-cta\[data-ui-action="primary"\]::before,\s*\.button\.eclipse-cta\[data-ui-action="primary"\]::after\s*\{[^}]*width:\s*auto;[^}]*height:\s*auto;[^}]*rotate:\s*none;[^}]*scale:\s*none;[^}]*translate:\s*none;/,
+  );
+});
+
 test("catalog focal metadata and book reveals preserve readable content", async () => {
   const catalogCard = await readFile("components/site/catalog-card.tsx", "utf8");
   const siteData = await readFile("lib/site-data.ts", "utf8");

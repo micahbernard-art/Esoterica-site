@@ -68,21 +68,16 @@
   transition:
     translate var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
     transform var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
   will-change: transform, opacity, translate;
 }
 
 .kinetic-enabled .is-kinetic-control:not(.is-kinetic-active) {
   transition:
     translate var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    transform var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
-    color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+    transform var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity, translate;
 }
 
 .is-kinetic-card {
