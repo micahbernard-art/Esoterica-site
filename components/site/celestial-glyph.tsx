@@ -20,6 +20,7 @@ export function CelestialGlyph({
       aria-label={label}
       aria-hidden={label ? undefined : true}
       data-celestial-glyph={kind}
+      data-kinetic-personality={kind}
     >
       <span className="celestial-glyph-core" />
     </span>

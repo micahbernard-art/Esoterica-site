@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import "@/app/kinetic-ui.css";
 
 const SCENE_SELECTOR = "main > section, .site-footer";
 
@@ -25,6 +26,31 @@ const REVEAL_SELECTOR = [
   ".footer-bottom > *",
 ].join(",");
 
+const KINETIC_CARD_SELECTOR = [
+  ".catalog-card",
+  ".category-card",
+  ".reading-tier",
+].join(",");
+
+const KINETIC_CONTROL_SELECTOR = "a[href], button:not([disabled])";
+const KINETIC_GLYPH_SELECTOR = ".celestial-glyph";
+const KINETIC_SELECTOR = [
+  KINETIC_GLYPH_SELECTOR,
+  KINETIC_CONTROL_SELECTOR,
+  KINETIC_CARD_SELECTOR,
+].join(",");
+
+const KINETIC_PROPERTIES = [
+  "--kinetic-x",
+  "--kinetic-y",
+  "--kinetic-rotate",
+  "--kinetic-card-rx",
+  "--kinetic-card-ry",
+  "--kinetic-highlight-x",
+  "--kinetic-highlight-y",
+  "--kinetic-highlight-alpha",
+] as const;
+
 const clamp = (value: number, minimum = 0, maximum = 1) =>
   Math.min(maximum, Math.max(minimum, value));
 
@@ -32,6 +58,14 @@ export function CosmicMotion() {
   useEffect(() => {
     const root = document.documentElement;
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const forcedColorsPreference = window.matchMedia("(forced-colors: active)");
+    const coarsePointerPreference = window.matchMedia("(pointer: coarse)");
+    const hoverPreference = window.matchMedia("(hover: hover)");
+    const connection = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean };
+      }
+    ).connection;
     const scenes = Array.from(
       document.querySelectorAll<HTMLElement>(SCENE_SELECTOR),
     );
@@ -39,10 +73,71 @@ export function CosmicMotion() {
       document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR),
     );
     const visibleScenes = new Set<HTMLElement>();
+    const kineticTargets = Array.from(
+      document.querySelectorAll<HTMLElement>(KINETIC_SELECTOR),
+    );
+    const glyphTargets = kineticTargets.filter((target) =>
+      target.matches(KINETIC_GLYPH_SELECTOR),
+    );
+    const cardTargets = kineticTargets.filter((target) =>
+      target.matches(KINETIC_CARD_SELECTOR),
+    );
+    const controlTargets = kineticTargets.filter(
+      (target) =>
+        target.matches(KINETIC_CONTROL_SELECTOR) &&
+        !target.matches(KINETIC_CARD_SELECTOR),
+    );
+    const visibleGlyphs = new Set<HTMLElement>();
+    const visibleCards = new Set<HTMLElement>();
+    const visibleControls = new Set<HTMLElement>();
 
     let frameId: number | null = null;
     let lastScrollProgress = -1;
     let reducedMotion = motionPreference.matches;
+    let forcedColors = forcedColorsPreference.matches;
+    let coarsePointer =
+      coarsePointerPreference.matches || !hoverPreference.matches;
+    let pointerDirty = false;
+    let pointerAvailable = false;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    const saveData = connection?.saveData === true;
+
+    const canUseKinetics = () =>
+      !reducedMotion && !forcedColors && !coarsePointer && !saveData;
+
+    const clearKineticProperties = (target: HTMLElement) => {
+      target.classList.remove("is-kinetic-active");
+      KINETIC_PROPERTIES.forEach((property) =>
+        target.style.removeProperty(property),
+      );
+    };
+
+    const clearAllKinetics = () => {
+      glyphTargets.forEach(clearKineticProperties);
+      controlTargets.forEach(clearKineticProperties);
+      cardTargets.forEach(clearKineticProperties);
+    };
+
+    const syncKineticMode = () => {
+      const enabled = canUseKinetics();
+      root.classList.toggle("kinetic-enabled", enabled);
+      root.classList.toggle("kinetic-constrained", !enabled);
+      root.classList.toggle("kinetic-save-data", saveData);
+
+      if (!enabled) {
+        pointerAvailable = false;
+        clearAllKinetics();
+      }
+    };
+
+    glyphTargets.forEach((target) => target.classList.add("is-kinetic-glyph"));
+    controlTargets.forEach((target) =>
+      target.classList.add("is-kinetic-control"),
+    );
+    cardTargets.forEach((target) => target.classList.add("is-kinetic-card"));
+    syncKineticMode();
 
     scenes.forEach((scene) => {
       scene.dataset.cosmicScene = "";
@@ -71,25 +166,6 @@ export function CosmicMotion() {
       root.classList.add("motion-reduced");
       root.style.setProperty("--scroll-p", "0");
       revealTargets.forEach((target) => target.classList.add("is-revealed"));
-
-      return () => {
-        root.classList.remove("motion-reduced");
-        root.style.removeProperty("--scroll-p");
-
-        scenes.forEach((scene) => {
-          delete scene.dataset.cosmicScene;
-          scene.style.removeProperty("--scene-p");
-          scene.style.removeProperty("--scene-shift");
-          scene.style.removeProperty("--scene-shift-soft");
-          scene.style.removeProperty("--scene-shift-reverse");
-        });
-
-        revealTargets.forEach((target) => {
-          delete target.dataset.cosmicReveal;
-          target.classList.remove("is-revealed");
-          target.style.removeProperty("--reveal-delay");
-        });
-      };
     }
 
     const updateSceneProgress = (scene: HTMLElement) => {
@@ -143,6 +219,159 @@ export function CosmicMotion() {
 
         updateSceneProgress(scene);
       });
+
+      if (pointerDirty) {
+        pointerDirty = false;
+
+        if (!pointerAvailable || !canUseKinetics()) {
+          clearAllKinetics();
+          return;
+        }
+
+        visibleGlyphs.forEach((glyph) => {
+          const focusedControl = glyph.closest<HTMLElement>(
+            "a:focus-visible, button:focus-visible",
+          );
+
+          if (focusedControl || glyph.closest(".tarot-fan")) {
+            clearKineticProperties(glyph);
+            return;
+          }
+
+          const rect = glyph.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const deltaX = pointerX - centerX;
+          const deltaY = pointerY - centerY;
+          const distance = Math.hypot(deltaX, deltaY);
+          const radius = Math.min(190, Math.max(110, rect.width * 5));
+
+          if (distance >= radius) {
+            clearKineticProperties(glyph);
+            return;
+          }
+
+          const personality = glyph.dataset.kineticPersonality ?? "star";
+          const personalityStrength =
+            personality === "orbit"
+              ? 1
+              : personality === "sun"
+                ? 0.88
+                : personality === "moon"
+                  ? 0.72
+                  : personality === "eclipse"
+                    ? 0.82
+                    : 0.62;
+          const proximity = 1 - distance / radius;
+          const strength = (1 + proximity * 2) * personalityStrength;
+          const directionX = distance > 0 ? deltaX / distance : 0;
+          const directionY = distance > 0 ? deltaY / distance : 0;
+          const rotation =
+            (directionX * 2.4 + directionY * 0.8) * personalityStrength;
+
+          glyph.style.setProperty(
+            "--kinetic-x",
+            `${(directionX * strength).toFixed(2)}px`,
+          );
+          glyph.style.setProperty(
+            "--kinetic-y",
+            `${(directionY * strength).toFixed(2)}px`,
+          );
+          glyph.style.setProperty(
+            "--kinetic-rotate",
+            `${rotation.toFixed(2)}deg`,
+          );
+          glyph.classList.add("is-kinetic-active");
+        });
+
+        visibleControls.forEach((control) => {
+          if (control.matches(":focus-visible")) {
+            clearKineticProperties(control);
+            return;
+          }
+
+          const rect = control.getBoundingClientRect();
+          const reach = 18;
+          const isNear =
+            pointerX >= rect.left - reach &&
+            pointerX <= rect.right + reach &&
+            pointerY >= rect.top - reach &&
+            pointerY <= rect.bottom + reach;
+
+          if (!isNear) {
+            clearKineticProperties(control);
+            return;
+          }
+
+          const normalizedX = clamp(
+            (pointerX - (rect.left + rect.width / 2)) /
+              Math.max(rect.width / 2, 1),
+            -1,
+            1,
+          );
+          const normalizedY = clamp(
+            (pointerY - (rect.top + rect.height / 2)) /
+              Math.max(rect.height / 2, 1),
+            -1,
+            1,
+          );
+
+          control.style.setProperty(
+            "--kinetic-x",
+            `${(normalizedX * 5).toFixed(2)}px`,
+          );
+          control.style.setProperty(
+            "--kinetic-y",
+            `${(normalizedY * 5).toFixed(2)}px`,
+          );
+          control.classList.add("is-kinetic-active");
+        });
+
+        visibleCards.forEach((card) => {
+          if (card.matches(":focus-visible, :focus-within")) {
+            clearKineticProperties(card);
+            return;
+          }
+
+          const rect = card.getBoundingClientRect();
+          const isInside =
+            pointerX >= rect.left &&
+            pointerX <= rect.right &&
+            pointerY >= rect.top &&
+            pointerY <= rect.bottom;
+
+          if (!isInside) {
+            clearKineticProperties(card);
+            return;
+          }
+
+          const normalizedX = clamp(
+            (pointerX - rect.left) / Math.max(rect.width, 1),
+          );
+          const normalizedY = clamp(
+            (pointerY - rect.top) / Math.max(rect.height, 1),
+          );
+
+          card.style.setProperty(
+            "--kinetic-card-rx",
+            `${((0.5 - normalizedY) * 5).toFixed(2)}deg`,
+          );
+          card.style.setProperty(
+            "--kinetic-card-ry",
+            `${((normalizedX - 0.5) * 5).toFixed(2)}deg`,
+          );
+          card.style.setProperty(
+            "--kinetic-highlight-x",
+            `${(normalizedX * 100).toFixed(1)}%`,
+          );
+          card.style.setProperty(
+            "--kinetic-highlight-y",
+            `${(normalizedY * 100).toFixed(1)}%`,
+          );
+          card.style.setProperty("--kinetic-highlight-alpha", "13%");
+          card.classList.add("is-kinetic-active");
+        });
+      }
     };
 
     const requestMotionFrame = () => {
@@ -181,8 +410,30 @@ export function CosmicMotion() {
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
     );
 
+    const kineticObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const target = entry.target as HTMLElement;
+          const targetSet = target.matches(KINETIC_CARD_SELECTOR)
+            ? visibleCards
+            : target.matches(KINETIC_GLYPH_SELECTOR)
+              ? visibleGlyphs
+              : visibleControls;
+
+          if (entry.isIntersecting) {
+            targetSet.add(target);
+          } else {
+            targetSet.delete(target);
+            clearKineticProperties(target);
+          }
+        });
+      },
+      { rootMargin: "12% 8% 12% 8%", threshold: 0 },
+    );
+
     scenes.forEach((scene) => sceneObserver.observe(scene));
     revealTargets.forEach((target) => revealObserver.observe(target));
+    kineticTargets.forEach((target) => kineticObserver.observe(target));
 
     const handleMotionPreference = (event: MediaQueryListEvent) => {
       reducedMotion = event.matches;
@@ -192,6 +443,88 @@ export function CosmicMotion() {
         revealTargets.forEach((target) => target.classList.add("is-revealed"));
       }
 
+      syncKineticMode();
+      pointerDirty = true;
+      requestMotionFrame();
+    };
+
+    const handleKineticPreference = () => {
+      forcedColors = forcedColorsPreference.matches;
+      coarsePointer =
+        coarsePointerPreference.matches || !hoverPreference.matches;
+      syncKineticMode();
+      pointerDirty = true;
+      requestMotionFrame();
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!canUseKinetics() || event.pointerType === "touch") {
+        return;
+      }
+
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      pointerAvailable = true;
+      pointerDirty = true;
+      requestMotionFrame();
+    };
+
+    const handlePointerLeave = () => {
+      pointerAvailable = false;
+      pointerDirty = true;
+      requestMotionFrame();
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (event.pointerType !== "touch" && !coarsePointer) {
+        return;
+      }
+
+      const origin = event.target;
+      if (!(origin instanceof Element)) {
+        return;
+      }
+
+      const pressedTarget = origin.closest<HTMLElement>(
+        `${KINETIC_CARD_SELECTOR}, ${KINETIC_CONTROL_SELECTOR}`,
+      );
+      pressedTarget?.classList.add("is-kinetic-pressed");
+    };
+
+    const releasePressedTargets = () => {
+      kineticTargets.forEach((target) =>
+        target.classList.remove("is-kinetic-pressed"),
+      );
+    };
+
+    const handleFocusIn = (event: FocusEvent) => {
+      const origin = event.target;
+      if (!(origin instanceof HTMLElement)) {
+        return;
+      }
+
+      const focusedCard = origin.closest<HTMLElement>(KINETIC_CARD_SELECTOR);
+      const focusedControl = origin.closest<HTMLElement>(
+        KINETIC_CONTROL_SELECTOR,
+      );
+      if (focusedCard) {
+        clearKineticProperties(focusedCard);
+      }
+      if (focusedControl) {
+        clearKineticProperties(focusedControl);
+      }
+      origin
+        .querySelectorAll<HTMLElement>(KINETIC_GLYPH_SELECTOR)
+        .forEach(clearKineticProperties);
+    };
+
+    const handleResize = () => {
+      pointerDirty = true;
+      requestMotionFrame();
+    };
+
+    const handleScroll = () => {
+      pointerDirty = pointerAvailable;
       requestMotionFrame();
     };
 
@@ -199,6 +532,8 @@ export function CosmicMotion() {
       root.classList.toggle("motion-paused", document.hidden);
 
       if (document.hidden) {
+        pointerAvailable = false;
+        clearAllKinetics();
         if (frameId !== null) {
           window.cancelAnimationFrame(frameId);
           frameId = null;
@@ -206,6 +541,7 @@ export function CosmicMotion() {
         return;
       }
 
+      pointerDirty = true;
       requestMotionFrame();
     };
 
@@ -218,10 +554,21 @@ export function CosmicMotion() {
       root.classList.add("motion-ready");
     });
 
-    window.addEventListener("scroll", requestMotionFrame, { passive: true });
-    window.addEventListener("resize", requestMotionFrame, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    document.documentElement.addEventListener("pointerleave", handlePointerLeave);
+    document.addEventListener("pointerdown", handlePointerDown, { passive: true });
+    document.addEventListener("pointerup", releasePressedTargets, { passive: true });
+    document.addEventListener("pointercancel", releasePressedTargets, {
+      passive: true,
+    });
+    document.addEventListener("focusin", handleFocusIn);
     document.addEventListener("visibilitychange", handleVisibility);
     motionPreference.addEventListener("change", handleMotionPreference);
+    forcedColorsPreference.addEventListener("change", handleKineticPreference);
+    coarsePointerPreference.addEventListener("change", handleKineticPreference);
+    hoverPreference.addEventListener("change", handleKineticPreference);
 
     return () => {
       window.cancelAnimationFrame(readyFrame);
@@ -229,14 +576,40 @@ export function CosmicMotion() {
         window.cancelAnimationFrame(frameId);
       }
 
-      window.removeEventListener("scroll", requestMotionFrame);
-      window.removeEventListener("resize", requestMotionFrame);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("pointermove", handlePointerMove);
+      document.documentElement.removeEventListener(
+        "pointerleave",
+        handlePointerLeave,
+      );
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("pointerup", releasePressedTargets);
+      document.removeEventListener("pointercancel", releasePressedTargets);
+      document.removeEventListener("focusin", handleFocusIn);
       document.removeEventListener("visibilitychange", handleVisibility);
       motionPreference.removeEventListener("change", handleMotionPreference);
+      forcedColorsPreference.removeEventListener(
+        "change",
+        handleKineticPreference,
+      );
+      coarsePointerPreference.removeEventListener(
+        "change",
+        handleKineticPreference,
+      );
+      hoverPreference.removeEventListener("change", handleKineticPreference);
       sceneObserver.disconnect();
       revealObserver.disconnect();
+      kineticObserver.disconnect();
 
-      root.classList.remove("motion-ready", "motion-reduced", "motion-paused");
+      root.classList.remove(
+        "motion-ready",
+        "motion-reduced",
+        "motion-paused",
+        "kinetic-enabled",
+        "kinetic-constrained",
+        "kinetic-save-data",
+      );
       root.style.removeProperty("--scroll-p");
 
       scenes.forEach((scene) => {
@@ -251,6 +624,17 @@ export function CosmicMotion() {
         delete target.dataset.cosmicReveal;
         target.classList.remove("is-revealed");
         target.style.removeProperty("--reveal-delay");
+      });
+
+      kineticTargets.forEach((target) => {
+        target.classList.remove(
+          "is-kinetic-glyph",
+          "is-kinetic-control",
+          "is-kinetic-card",
+          "is-kinetic-active",
+          "is-kinetic-pressed",
+        );
+        clearKineticProperties(target);
       });
     };
   }, []);

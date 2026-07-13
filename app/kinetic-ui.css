@@ -1,0 +1,283 @@
+/*
+ * Kinetic UI is event-driven by CosmicMotion's existing shared RAF.
+ * Nothing here starts a JavaScript loop; only three hero ornaments use a slow
+ * compositor-only ambient cycle.
+ */
+
+.is-kinetic-glyph {
+  --kinetic-x: 0px;
+  --kinetic-y: 0px;
+  --kinetic-rotate: 0deg;
+  --kinetic-glyph-glow: var(--comet-300);
+  pointer-events: none;
+}
+
+.is-kinetic-glyph[data-kinetic-personality="sun"] {
+  --kinetic-glyph-glow: var(--solar-400);
+}
+
+.is-kinetic-glyph[data-kinetic-personality="moon"],
+.is-kinetic-glyph[data-kinetic-personality="eclipse"] {
+  --kinetic-glyph-glow: var(--orchid-300);
+}
+
+.is-kinetic-glyph[data-kinetic-personality="orbit"] {
+  --kinetic-glyph-glow: var(--dawn-400);
+}
+
+.kinetic-enabled .is-kinetic-glyph {
+  translate: var(--kinetic-x) var(--kinetic-y);
+  rotate: var(--kinetic-rotate);
+  transition:
+    translate 460ms cubic-bezier(0.16, 1, 0.3, 1),
+    rotate 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 360ms ease;
+}
+
+.kinetic-enabled .is-kinetic-glyph.is-kinetic-active {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--kinetic-glyph-glow) 55%, transparent));
+  transition-duration: 90ms, 110ms, 160ms;
+  transition-timing-function: linear, linear, ease-out;
+  will-change: translate, rotate;
+}
+
+/* Each constellation gets a slightly different return cadence. */
+.astral-divider .is-kinetic-glyph:nth-child(2n),
+.page-hero-stars > .is-kinetic-glyph:nth-child(2) {
+  transition-duration: 560ms, 620ms, 380ms;
+}
+
+.page-hero-stars > .is-kinetic-glyph:nth-child(3),
+.reading-tier__sky .is-kinetic-glyph:nth-child(odd) {
+  transition-timing-function:
+    cubic-bezier(0.22, 1.35, 0.36, 1),
+    cubic-bezier(0.22, 1.35, 0.36, 1),
+    ease;
+}
+
+.is-kinetic-control {
+  --kinetic-x: 0px;
+  --kinetic-y: 0px;
+}
+
+.kinetic-enabled .is-kinetic-control.is-kinetic-active {
+  translate: var(--kinetic-x) var(--kinetic-y);
+  transition:
+    translate 90ms linear,
+    transform 180ms ease,
+    box-shadow 220ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+  will-change: translate;
+}
+
+.kinetic-enabled .is-kinetic-control:not(.is-kinetic-active) {
+  transition:
+    translate 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 180ms ease,
+    box-shadow 220ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.is-kinetic-card {
+  --kinetic-card-rx: 0deg;
+  --kinetic-card-ry: 0deg;
+  --kinetic-highlight-x: 50%;
+  --kinetic-highlight-y: 42%;
+  --kinetic-highlight-alpha: 0%;
+}
+
+.catalog-card.is-kinetic-card {
+  background:
+    radial-gradient(
+      circle 10rem at var(--kinetic-highlight-x) var(--kinetic-highlight-y),
+      color-mix(in srgb, var(--comet-300) var(--kinetic-highlight-alpha), transparent),
+      transparent 70%
+    ),
+    linear-gradient(155deg, rgba(66, 21, 126, 0.26), transparent 44%),
+    linear-gradient(180deg, rgba(22, 6, 50, 0.93), rgba(8, 4, 20, 0.96));
+}
+
+.orbital-categories .category-card.is-kinetic-card {
+  background:
+    radial-gradient(
+      circle 9rem at var(--kinetic-highlight-x) var(--kinetic-highlight-y),
+      color-mix(in srgb, var(--solar-400) var(--kinetic-highlight-alpha), transparent),
+      transparent 72%
+    ),
+    color-mix(in srgb, var(--cosmos-800) 72%, transparent);
+}
+
+.reading-chambers .reading-tier.is-kinetic-card {
+  background:
+    radial-gradient(
+      circle 11rem at var(--kinetic-highlight-x) var(--kinetic-highlight-y),
+      color-mix(in srgb, var(--comet-300) var(--kinetic-highlight-alpha), transparent),
+      transparent 74%
+    ),
+    radial-gradient(circle at 50% 13%, color-mix(in srgb, var(--violet-500) 38%, transparent), transparent 9rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--cosmos-800) 92%, transparent), color-mix(in srgb, var(--cosmos-950) 96%, transparent));
+}
+
+.reading-chambers .reading-tier.is-featured.is-kinetic-card {
+  background:
+    radial-gradient(
+      circle 11rem at var(--kinetic-highlight-x) var(--kinetic-highlight-y),
+      color-mix(in srgb, var(--solar-400) var(--kinetic-highlight-alpha), transparent),
+      transparent 74%
+    ),
+    radial-gradient(circle at 50% 13%, color-mix(in srgb, var(--solar-400) 24%, transparent), transparent 9rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--nebula-700) 78%, var(--cosmos-950)), var(--cosmos-950));
+}
+
+.kinetic-enabled .is-kinetic-card.is-kinetic-active {
+  transform:
+    perspective(900px)
+    rotateX(var(--kinetic-card-rx))
+    rotateY(var(--kinetic-card-ry))
+    translateY(-8px);
+  transition:
+    transform 110ms linear,
+    box-shadow 260ms ease;
+  will-change: transform;
+}
+
+.kinetic-enabled .reading-tier.is-featured.is-kinetic-card.is-kinetic-active {
+  transform:
+    perspective(900px)
+    translateY(-2rem)
+    rotateX(var(--kinetic-card-rx))
+    rotateY(var(--kinetic-card-ry));
+}
+
+.kinetic-enabled .is-kinetic-card:not(.is-kinetic-active) {
+  transition:
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 480ms ease;
+}
+
+/* Keep keyboard focus geometry still and predictable. */
+.is-kinetic-control:focus-visible,
+.is-kinetic-card:focus-visible,
+.is-kinetic-card:focus-within .is-kinetic-control {
+  translate: 0 0 !important;
+}
+
+.catalog-card.is-kinetic-card:focus-within,
+.category-card.is-kinetic-card:focus-visible,
+.reading-tier.is-kinetic-card:focus-within {
+  transform: none !important;
+}
+
+.reading-tier.is-featured.is-kinetic-card:focus-within {
+  transform: translateY(-2rem) !important;
+}
+
+/* Touch has a single tactile press state; it does not track the finger. */
+.kinetic-constrained .is-kinetic-control.is-kinetic-pressed,
+.kinetic-constrained :is(.catalog-card, .category-card).is-kinetic-pressed {
+  transform: scale(0.985);
+  transition: transform 90ms ease-out;
+}
+
+.kinetic-constrained .reading-tier.is-kinetic-pressed {
+  transform: scale(0.99);
+  transition: transform 90ms ease-out;
+}
+
+.kinetic-constrained .reading-tier.is-featured.is-kinetic-pressed {
+  transform: translateY(-2rem) scale(0.99);
+}
+
+/* Three hero-card sigils breathe at different astronomical cadences. */
+.tarot-fan .tarot-back--left .celestial-glyph {
+  animation: kinetic-hero-left 12s ease-in-out infinite;
+}
+
+.tarot-fan .tarot-back--center .celestial-glyph {
+  animation: kinetic-hero-center 9s ease-in-out infinite;
+}
+
+.tarot-fan .tarot-back--right .celestial-glyph {
+  animation: kinetic-hero-right 14s ease-in-out infinite;
+}
+
+@keyframes kinetic-hero-left {
+  0%,
+  100% { opacity: 0.72; transform: translate3d(-1px, 1px, 0) rotate(-4deg); }
+  50% { opacity: 1; transform: translate3d(2px, -2px, 0) rotate(4deg); }
+}
+
+@keyframes kinetic-hero-center {
+  0%,
+  100% { opacity: 0.82; transform: translate3d(0, 1px, 0) scale(0.97); }
+  50% { opacity: 1; transform: translate3d(0, -2px, 0) scale(1.035); }
+}
+
+@keyframes kinetic-hero-right {
+  0%,
+  100% { opacity: 0.68; transform: translate3d(1px, 1px, 0) rotate(5deg); }
+  50% { opacity: 0.96; transform: translate3d(-2px, -1px, 0) rotate(-3deg); }
+}
+
+.motion-paused .tarot-fan .celestial-glyph {
+  animation-play-state: paused;
+}
+
+@media (max-width: 1100px) {
+  .kinetic-enabled .reading-tier.is-featured.is-kinetic-card.is-kinetic-active,
+  .reading-tier.is-featured.is-kinetic-card:focus-within,
+  .kinetic-constrained .reading-tier.is-featured.is-kinetic-pressed {
+    transform:
+      perspective(900px)
+      rotateX(var(--kinetic-card-rx, 0deg))
+      rotateY(var(--kinetic-card-ry, 0deg));
+  }
+}
+
+@media (pointer: coarse),
+  (hover: none),
+  (prefers-reduced-motion: reduce),
+  (forced-colors: active) {
+  .is-kinetic-glyph,
+  .is-kinetic-control {
+    translate: 0 0 !important;
+    rotate: 0deg !important;
+    filter: none !important;
+  }
+
+  .is-kinetic-card {
+    --kinetic-highlight-alpha: 0% !important;
+  }
+
+  .tarot-fan .celestial-glyph {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .is-kinetic-card,
+  .is-kinetic-card.is-kinetic-active,
+  .is-kinetic-card.is-kinetic-pressed {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .reading-tier.is-featured.is-kinetic-card {
+    transform: translateY(-2rem) !important;
+  }
+}
+
+@media (max-width: 1100px) and (prefers-reduced-motion: reduce),
+  (max-width: 1100px) and (forced-colors: active) {
+  .reading-tier.is-featured.is-kinetic-card {
+    transform: none !important;
+  }
+}
+
+.kinetic-save-data .tarot-fan .celestial-glyph {
+  animation: none !important;
+}
