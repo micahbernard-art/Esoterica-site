@@ -1,0 +1,299 @@
+/*
+ * The Living Constellation
+ * A route-aware, event-driven scroll score. Every value is written by the
+ * single CosmicMotion frame; this sheet creates no additional JS timeline.
+ */
+
+[data-cosmic-scene] {
+  --chapter-accent: var(--orchid-300);
+  --chapter-cross: var(--comet-300);
+  --chapter-turn: calc((var(--scene-p) - 0.5) * 5deg);
+  --chapter-drift: calc((var(--scene-p) - 0.5) * 26px);
+  --chapter-velocity: calc(var(--scene-velocity) * 8px);
+  position: relative;
+  isolation: isolate;
+}
+
+[data-cosmic-chapter="threshold"] {
+  --chapter-accent: var(--solar-400);
+  --chapter-cross: var(--dawn-400);
+}
+
+[data-cosmic-chapter="orbit"] {
+  --chapter-accent: var(--comet-300);
+  --chapter-cross: var(--orchid-300);
+}
+
+[data-cosmic-chapter="eclipse"] {
+  --chapter-accent: var(--dawn-400);
+  --chapter-cross: var(--solar-400);
+}
+
+[data-cosmic-chapter="archive"] {
+  --chapter-accent: var(--orchid-300);
+  --chapter-cross: var(--comet-300);
+}
+
+[data-cosmic-chapter="finale"] {
+  --chapter-accent: var(--solar-400);
+  --chapter-cross: var(--comet-300);
+}
+
+/* Basement Grotesque is reserved for cartographic metadata, never the oracle voice. */
+:is(.coordinate-strip, .catalog-star, .category-orbit-index, .process-number, .eclipse-number, .page-hero-portal-caption) {
+  font-family: var(--font-impact, var(--astral-body));
+  font-variation-settings: "wght" 580;
+  letter-spacing: 0.13em;
+}
+
+/* One section owns the visual sentence at a time. */
+[data-cosmic-scene].is-cosmic-visible {
+  --chapter-presence: 1;
+}
+
+[data-cosmic-scene].is-cosmic-focus {
+  --chapter-focal-glow: calc(var(--scene-focus) * 1%);
+}
+
+[data-cosmic-scene].is-cosmic-focus :is(.section-heading-divider, .page-hero-divider, .astral-divider) {
+  filter: drop-shadow(0 0 0.8rem color-mix(in srgb, var(--chapter-accent) 42%, transparent));
+}
+
+/* Headings arrive as celestial shutters; copy follows on a quieter vector. */
+.motion-ready [data-cosmic-role="heading"] {
+  clip-path: inset(0 0 0 0 round 0.04em);
+  filter: blur(0);
+  transform-origin: 0 70%;
+  transition:
+    clip-path 780ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 520ms ease,
+    translate 760ms cubic-bezier(0.16, 1, 0.3, 1),
+    rotate 760ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 620ms ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.motion-ready [data-cosmic-role="heading"]:not(.is-revealed) {
+  clip-path: inset(0 0 100% 0 round 0.04em);
+  filter: blur(5px);
+  opacity: 0;
+  translate: 0 0.85em;
+}
+
+.motion-ready [data-cosmic-role="body"] {
+  transition:
+    opacity 620ms ease,
+    translate 720ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 620ms ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.motion-ready [data-cosmic-role="body"]:not(.is-revealed) {
+  filter: blur(3px);
+  opacity: 0;
+  translate: calc(var(--scene-direction, 1) * -0.8rem) 1.25rem;
+}
+
+/* Each chapter has one intentional grammar. */
+[data-cosmic-chapter="threshold"] [data-cosmic-role="heading"]:not(.is-revealed) {
+  rotate: -1.4deg;
+  translate: 0 1.1em;
+}
+
+[data-cosmic-chapter="orbit"] [data-cosmic-role="heading"]:not(.is-revealed) {
+  rotate: 1.8deg;
+  translate: -0.5em 0.6em;
+}
+
+[data-cosmic-chapter="eclipse"] [data-cosmic-role="heading"]:not(.is-revealed) {
+  clip-path: inset(48% 0 48% 0 round 50%);
+  scale: 0.97;
+  translate: 0 0;
+}
+
+[data-cosmic-chapter="archive"] [data-cosmic-role="heading"]:not(.is-revealed) {
+  clip-path: inset(0 100% 0 0);
+  translate: -1.4rem 0;
+}
+
+[data-cosmic-chapter="finale"] [data-cosmic-role="heading"]:not(.is-revealed) {
+  clip-path: inset(50% 50% 50% 50% round 50%);
+  scale: 0.92;
+  translate: 0 0;
+}
+
+.motion-ready [data-cosmic-role="heading"].is-revealed {
+  clip-path: inset(0 0 0 0);
+  filter: blur(0);
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+  translate: 0 0;
+}
+
+/* Glyphs trace a small, readable arc rather than free-floating randomly. */
+[data-cosmic-scene] [data-cosmic-role="glyph"] {
+  transform: rotate(var(--chapter-turn));
+  transform-origin: 50% calc(50% + 1.25rem);
+}
+
+[data-cosmic-chapter="orbit"] [data-cosmic-role="glyph"] {
+  transform: rotate(calc(var(--chapter-turn) * 2.2)) translateY(calc(var(--scene-focus) * -2px));
+}
+
+[data-cosmic-chapter="eclipse"] [data-cosmic-role="glyph"] {
+  opacity: calc(0.68 + var(--scene-focus) * 0.32);
+  transform: rotate(calc(var(--chapter-turn) * -1));
+}
+
+[data-cosmic-chapter="archive"] [data-cosmic-role="glyph"] {
+  transform: translateX(calc(var(--chapter-drift) * -0.32)) rotate(calc(var(--chapter-turn) * 0.45));
+}
+
+[data-cosmic-chapter="finale"] [data-cosmic-role="glyph"] {
+  filter: drop-shadow(0 0 calc(var(--scene-focus) * 0.7rem) color-mix(in srgb, var(--chapter-accent) 58%, transparent));
+  transform: scale(calc(0.96 + var(--scene-focus) * 0.04)) rotate(var(--chapter-turn));
+}
+
+/* Cards form and relax as a single constellation. Pointer tilt remains additive. */
+.motion-ready [data-cosmic-role="card"] {
+  --card-lane: 0;
+  transform-origin: 50% 90%;
+}
+
+.motion-ready [data-cosmic-role="card"]:nth-child(3n + 1) {
+  --card-lane: -1;
+}
+
+.motion-ready [data-cosmic-role="card"]:nth-child(3n) {
+  --card-lane: 1;
+}
+
+.motion-ready [data-cosmic-role="card"]:not(.is-revealed) {
+  rotate: calc(var(--card-lane) * 2.8deg);
+  translate: calc(var(--card-lane) * 1.1rem) 2rem;
+}
+
+.motion-ready [data-cosmic-role="card"].is-revealed {
+  rotate: calc(var(--card-lane) * var(--chapter-turn) * 0.18);
+  translate:
+    calc(var(--card-lane) * var(--chapter-drift) * 0.16)
+    calc(var(--chapter-velocity) * -0.25);
+}
+
+[data-cosmic-scene].is-cosmic-focus [data-cosmic-role="card"] {
+  box-shadow:
+    var(--shadow-card),
+    0 0 calc(var(--scene-focus) * 2rem) color-mix(in srgb, var(--chapter-accent) 10%, transparent);
+}
+
+/* The rail is a quiet astronomical coordinate, not navigation. */
+.cosmic-journey-rail {
+  position: fixed;
+  z-index: 24;
+  top: 50%;
+  right: clamp(0.6rem, 1.4vw, 1.4rem);
+  display: grid;
+  gap: 0.55rem;
+  pointer-events: none;
+  translate: 0 -50%;
+}
+
+.cosmic-journey-rail::before {
+  position: absolute;
+  z-index: -1;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--orchid-300) 34%, transparent), transparent);
+  content: "";
+  translate: -50% 0;
+}
+
+.cosmic-journey-rail > span {
+  display: block;
+  width: 0.35rem;
+  height: 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--mist-200) 48%, transparent);
+  border-radius: 50%;
+  background: var(--cosmos-950);
+  box-shadow: 0 0 0 transparent;
+  opacity: 0.48;
+  scale: 0.72;
+  transition:
+    border-color 360ms ease,
+    box-shadow 360ms ease,
+    opacity 360ms ease,
+    scale 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cosmic-journey-rail > span.is-active {
+  border-color: var(--solar-400);
+  box-shadow:
+    0 0 0 0.2rem color-mix(in srgb, var(--solar-400) 11%, transparent),
+    0 0 0.8rem color-mix(in srgb, var(--comet-300) 46%, transparent);
+  opacity: 1;
+  scale: 1;
+}
+
+/* Focused interaction must never inherit moving geometry. */
+[data-cosmic-scene] :focus-visible,
+[data-cosmic-role="card"]:focus-within {
+  rotate: 0deg !important;
+  translate: 0 0 !important;
+}
+
+.motion-paused [data-cosmic-scene] *,
+.motion-paused .cosmic-journey-rail > span {
+  transition: none !important;
+}
+
+@media (max-width: 900px), (pointer: coarse), (hover: none) {
+  .cosmic-journey-rail {
+    right: 0.45rem;
+    gap: 0.4rem;
+    opacity: 0.7;
+  }
+
+  [data-cosmic-scene] [data-cosmic-role="glyph"],
+  .motion-ready [data-cosmic-role="card"].is-revealed {
+    transform: none;
+    rotate: 0deg;
+    translate: 0 0;
+  }
+}
+
+.kinetic-save-data .cosmic-journey-rail,
+.motion-reduced .cosmic-journey-rail {
+  display: none;
+}
+
+.kinetic-save-data [data-cosmic-scene] [data-cosmic-role],
+.motion-reduced [data-cosmic-scene] [data-cosmic-role] {
+  clip-path: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  rotate: 0deg !important;
+  scale: 1 !important;
+  transform: none !important;
+  translate: 0 0 !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .cosmic-journey-rail {
+    display: none;
+  }
+
+  [data-cosmic-scene] [data-cosmic-role] {
+    clip-path: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    rotate: 0deg !important;
+    scale: 1 !important;
+    transform: none !important;
+    translate: 0 0 !important;
+    transition: none !important;
+  }
+}

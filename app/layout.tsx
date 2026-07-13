@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { GalaxyStage } from "@/components/site/galaxy-stage";
+import { MysticCursor } from "@/components/site/mystic-cursor";
 import "./globals.css";
 import "./cosmic-components.css";
 import "./cosmic-pages.css";
+import "./galaxy-experience.css";
 
 const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -118,6 +121,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${displayFont.variable} ${sansFont.variable}`}>
+        <GalaxyStage />
+        <MysticCursor />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

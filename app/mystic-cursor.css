@@ -1,0 +1,232 @@
+/*
+ * The astral cursor activates only after a fine pointer is detected and moved.
+ * Its physics are event-driven; there is no perpetual animation loop.
+ */
+
+.mystic-cursor {
+  --cursor-x: -100px;
+  --cursor-y: -100px;
+  --cursor-angle: 0deg;
+  --cursor-stretch: 1;
+  --cursor-squash: 1;
+  --cursor-orbit-shift: 0px;
+  --cursor-accent: #b88cff;
+  --cursor-glint: #ffeac0;
+  --cursor-ember: #f5a2d2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483646;
+  width: 38px;
+  height: 38px;
+  pointer-events: none;
+  opacity: 0;
+  contain: layout style paint;
+  transform:
+    translate3d(var(--cursor-x), var(--cursor-y), 0)
+    translate3d(-50%, -50%, 0);
+  transform-origin: center;
+  transition: opacity 160ms ease-out;
+  will-change: transform, opacity;
+}
+
+.mystic-cursor[data-route="/tarot"] {
+  --cursor-accent: #d09cff;
+  --cursor-glint: #ffd678;
+  --cursor-ember: #f37bc0;
+}
+
+.mystic-cursor[data-route="/libros"] {
+  --cursor-accent: #79d8ff;
+  --cursor-glint: #d9c7ff;
+  --cursor-ember: #82fff0;
+}
+
+.mystic-cursor[data-route="/lecturas"] {
+  --cursor-accent: #f19bd8;
+  --cursor-glint: #ffc985;
+  --cursor-ember: #c785ff;
+}
+
+.mystic-cursor[data-cursor-ready="true"].is-visible {
+  opacity: 1;
+}
+
+.mystic-cursor__core,
+.mystic-cursor__orbit,
+.mystic-cursor__pulse,
+.mystic-cursor__label {
+  position: absolute;
+  pointer-events: none;
+}
+
+.mystic-cursor__field {
+  position: absolute;
+  inset: 0;
+  transform:
+    rotate(var(--cursor-angle))
+    scaleX(var(--cursor-stretch))
+    scaleY(var(--cursor-squash));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.mystic-cursor__core {
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid color-mix(in srgb, var(--cursor-glint) 88%, white);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, white 0 14%, transparent 18%),
+    radial-gradient(circle, var(--cursor-glint) 0 32%, var(--cursor-accent) 58%, transparent 72%);
+  box-shadow:
+    0 0 5px color-mix(in srgb, var(--cursor-glint) 82%, transparent),
+    0 0 11px color-mix(in srgb, var(--cursor-accent) 58%, transparent);
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mystic-cursor__orbit {
+  top: 50%;
+  left: 50%;
+  border: 1px solid color-mix(in srgb, var(--cursor-accent) 64%, transparent);
+  border-radius: 50%;
+  opacity: 0.78;
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 160ms ease-out;
+}
+
+.mystic-cursor__orbit--outer {
+  width: 31px;
+  height: 16px;
+  transform:
+    translate3d(calc(-50% + var(--cursor-orbit-shift)), -50%, 0)
+    rotate(28deg)
+    scale(1);
+}
+
+.mystic-cursor__orbit--inner {
+  width: 21px;
+  height: 28px;
+  border-color: color-mix(in srgb, var(--cursor-ember) 58%, transparent);
+  transform:
+    translate3d(calc(-50% - var(--cursor-orbit-shift)), -50%, 0)
+    rotate(-34deg)
+    scale(1);
+}
+
+.mystic-cursor__pulse {
+  inset: 2px;
+  border: 1px solid var(--cursor-glint);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.45);
+}
+
+.mystic-cursor__label {
+  top: 29px;
+  left: 28px;
+  min-width: max-content;
+  padding: 0.28rem 0.48rem;
+  border: 1px solid color-mix(in srgb, var(--cursor-accent) 42%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, #0c041c 88%, transparent);
+  color: color-mix(in srgb, var(--cursor-glint) 90%, white);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 0.58rem;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translate3d(-5px, -5px, 0) scale(0.92);
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 120ms ease-out;
+}
+
+.mystic-cursor.has-label .mystic-cursor__label {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.mystic-cursor[data-mode="link"] .mystic-cursor__core {
+  transform: translate3d(-50%, -50%, 0) scale(1.35);
+}
+
+.mystic-cursor[data-mode="link"] .mystic-cursor__orbit--outer {
+  transform:
+    translate3d(calc(-50% + var(--cursor-orbit-shift)), -50%, 0)
+    rotate(20deg)
+    scale(1.15);
+}
+
+.mystic-cursor[data-mode="card"] .mystic-cursor__orbit {
+  opacity: 1;
+}
+
+.mystic-cursor[data-mode="card"] .mystic-cursor__orbit--outer {
+  transform:
+    translate3d(calc(-50% + var(--cursor-orbit-shift)), -50%, 0)
+    rotate(42deg)
+    scale(1.22);
+}
+
+.mystic-cursor[data-mode="text"] .mystic-cursor__core {
+  border-radius: 2px;
+  transform: translate3d(-50%, -50%, 0) scale3d(0.42, 1.65, 1);
+}
+
+.mystic-cursor[data-mode="text"] .mystic-cursor__orbit {
+  opacity: 0.24;
+  transform: translate3d(-50%, -50%, 0) scale(0.7);
+}
+
+.mystic-cursor[data-mode="drag"] .mystic-cursor__orbit--outer {
+  transform:
+    translate3d(calc(-50% + var(--cursor-orbit-shift)), -50%, 0)
+    rotate(62deg)
+    scale(1.32);
+}
+
+.mystic-cursor.is-pressed .mystic-cursor__core {
+  transform: translate3d(-50%, -50%, 0) scale(0.68);
+}
+
+.mystic-cursor.is-pressed .mystic-cursor__orbit {
+  opacity: 1;
+}
+
+.mystic-cursor.is-pulsing .mystic-cursor__pulse {
+  animation: mystic-cursor-pulse 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes mystic-cursor-pulse {
+  0% {
+    opacity: 0.78;
+    transform: scale(0.42);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.42);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.mystic-cursor-enabled,
+  html.mystic-cursor-enabled * {
+    cursor: none !important;
+  }
+}
+
+@media (pointer: coarse),
+  (hover: none),
+  (prefers-reduced-motion: reduce),
+  (forced-colors: active) {
+  .mystic-cursor {
+    display: none !important;
+  }
+}

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Basement Grotesque";
+  src: url("/fonts/BasementGrotesque-Black.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --ink-950: #070b13;
   --ink-900: #0b1120;
@@ -28,6 +36,7 @@
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 22px;
+  --font-impact: "Basement Grotesque", Impact, "Arial Black", sans-serif;
 }
 
 * {
@@ -132,12 +141,12 @@ select:focus-visible {
   overflow: clip;
   background:
     radial-gradient(circle at 78% 4%, rgba(118, 85, 111, 0.16), transparent 28rem),
-    linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 58%, #090d16 100%);
+    linear-gradient(180deg, rgb(11 17 32 / 58%) 0%, rgb(7 11 19 / 72%) 58%, rgb(9 13 22 / 78%) 100%);
 }
 
 .site-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .celestial-backdrop {

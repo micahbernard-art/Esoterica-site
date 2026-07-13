@@ -1,5 +1,13 @@
 # Third-party notices
 
+## Basement Grotesque
+
+The impact display accent uses
+[Basement Grotesque](https://github.com/basementstudio/basement-grotesque),
+Copyright 2021 basement.studio and its original designers. The font is
+distributed under the SIL Open Font License 1.1. The complete license is
+included at `public/fonts/OFL-Basement-Grotesque.txt`.
+
 ## WebGL Fluid Simulation
 
 The astral fluid background in this project is adapted from

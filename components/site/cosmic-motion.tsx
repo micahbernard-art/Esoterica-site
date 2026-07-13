@@ -2,29 +2,12 @@
 
 import { useEffect } from "react";
 import "@/app/kinetic-ui.css";
+import "@/app/galaxy-choreography.css";
 
 const SCENE_SELECTOR = "main > section, .site-footer";
+const CHAPTERS = ["threshold", "orbit", "eclipse", "archive", "finale"] as const;
 
-const REVEAL_SELECTOR = [
-  "[data-reveal]",
-  ".hero-copy > *",
-  ".hero-feature",
-  ".section-heading > *",
-  ".catalog-card",
-  ".category-card",
-  ".readings-highlight > *",
-  ".process-card",
-  ".about-copy > *",
-  ".about-principles > *",
-  ".contact-banner > *",
-  ".page-hero-copy > *",
-  ".book-cover",
-  ".book-copy > *",
-  ".reading-tier",
-  ".booking-note > *",
-  ".footer-main > *",
-  ".footer-bottom > *",
-].join(",");
+const REVEAL_SELECTOR = "[data-reveal]";
 
 const KINETIC_CARD_SELECTOR = [
   ".catalog-card",
@@ -53,6 +36,39 @@ const KINETIC_PROPERTIES = [
 
 const clamp = (value: number, minimum = 0, maximum = 1) =>
   Math.min(maximum, Math.max(minimum, value));
+
+const CHAPTER_SCENES: Record<(typeof CHAPTERS)[number], string[]> = {
+  threshold: ["entry", "hero"],
+  orbit: ["catalog", "category", "constellation", "recommendation"],
+  eclipse: ["reading", "eclipse", "question"],
+  archive: ["book", "artifact", "path", "about", "wayfinding", "chambers"],
+  finale: ["close", "portal", "footer"],
+};
+
+const getChapter = (scene: HTMLElement, index: number, total: number) => {
+  if (index === 0) return CHAPTERS[0];
+  if (index === total - 1) return CHAPTERS[4];
+
+  const sceneName = scene.dataset.scrollScene?.toLowerCase() ?? "";
+  return (
+    CHAPTERS.find((chapter) =>
+      CHAPTER_SCENES[chapter].some((word) => sceneName.includes(word)),
+    ) ?? CHAPTERS[Math.min(index, CHAPTERS.length - 1)]
+  );
+};
+
+const getRevealRole = (target: HTMLElement) => {
+  if (
+    target.matches("h1, h2, h3") ||
+    target.querySelector(":scope > h1, :scope > h2, :scope > h3")
+  ) {
+    return "heading";
+  }
+  if (target.matches(KINETIC_GLYPH_SELECTOR)) return "glyph";
+  if (target.matches(KINETIC_CARD_SELECTOR)) return "card";
+  if (target.matches("p, li, dd, dt")) return "body";
+  return "focal";
+};
 
 export function CosmicMotion() {
   useEffect(() => {
@@ -90,9 +106,16 @@ export function CosmicMotion() {
     const visibleGlyphs = new Set<HTMLElement>();
     const visibleCards = new Set<HTMLElement>();
     const visibleControls = new Set<HTMLElement>();
+    const journeyRail = document.createElement("div");
+    const journeyPoints: HTMLSpanElement[] = [];
 
     let frameId: number | null = null;
+    let velocityResetId: number | null = null;
     let lastScrollProgress = -1;
+    let lastScrollY = window.scrollY;
+    let lastScrollTime = performance.now();
+    let scrollVelocity = 0;
+    let scrollDirection = 1;
     let reducedMotion = motionPreference.matches;
     let forcedColors = forcedColorsPreference.matches;
     let coarsePointer =
@@ -103,6 +126,16 @@ export function CosmicMotion() {
     let pointerY = 0;
 
     const saveData = connection?.saveData === true;
+
+    journeyRail.className = "cosmic-journey-rail";
+    journeyRail.setAttribute("aria-hidden", "true");
+    scenes.forEach((_, index) => {
+      const point = document.createElement("span");
+      point.style.setProperty("--journey-index", `${index}`);
+      journeyRail.append(point);
+      journeyPoints.push(point);
+    });
+    document.body.append(journeyRail);
 
     const canUseKinetics = () =>
       !reducedMotion && !forcedColors && !coarsePointer && !saveData;
@@ -139,9 +172,15 @@ export function CosmicMotion() {
     cardTargets.forEach((target) => target.classList.add("is-kinetic-card"));
     syncKineticMode();
 
-    scenes.forEach((scene) => {
+    scenes.forEach((scene, index) => {
       scene.dataset.cosmicScene = "";
+      scene.dataset.cosmicChapter = getChapter(scene, index, scenes.length);
+      scene.style.setProperty("--chapter-index", `${index}`);
+      scene.style.setProperty("--chapter-count", `${scenes.length}`);
       scene.style.setProperty("--scene-p", "0.5");
+      scene.style.setProperty("--scene-focus", "0");
+      scene.style.setProperty("--scene-velocity", "0");
+      scene.style.setProperty("--scene-direction", "1");
       scene.style.setProperty("--scene-shift", "0px");
       scene.style.setProperty("--scene-shift-soft", "0px");
       scene.style.setProperty("--scene-shift-reverse", "0px");
@@ -152,9 +191,18 @@ export function CosmicMotion() {
       }
     });
 
-    revealTargets.forEach((target, index) => {
+    const revealSequence = new Map<HTMLElement, number>();
+    revealTargets.forEach((target) => {
       target.dataset.cosmicReveal = "";
-      target.style.setProperty("--reveal-delay", `${(index % 6) * 65}ms`);
+      target.dataset.cosmicRole = getRevealRole(target);
+      const scene = target.closest<HTMLElement>(SCENE_SELECTOR);
+      const sequence = scene ? revealSequence.get(scene) ?? 0 : 0;
+      target.style.setProperty("--reveal-order", `${sequence}`);
+      target.style.setProperty(
+        "--reveal-delay",
+        `${Math.min(sequence, 8) * 54}ms`,
+      );
+      if (scene) revealSequence.set(scene, sequence + 1);
 
       const rect = target.getBoundingClientRect();
       if (rect.bottom > 0 && rect.top < window.innerHeight * 0.96) {
@@ -174,6 +222,12 @@ export function CosmicMotion() {
       const progress = clamp((window.innerHeight - rect.top) / Math.max(travel, 1));
 
       scene.style.setProperty("--scene-p", progress.toFixed(4));
+      scene.style.setProperty(
+        "--scene-focus",
+        clamp(1 - Math.abs(0.5 - progress) * 2).toFixed(4),
+      );
+      scene.style.setProperty("--scene-velocity", scrollVelocity.toFixed(3));
+      scene.style.setProperty("--scene-direction", `${scrollDirection}`);
       scene.style.setProperty(
         "--scene-shift",
         `${((0.5 - progress) * 84).toFixed(2)}px`,
@@ -214,11 +268,31 @@ export function CosmicMotion() {
           scene.style.setProperty("--scene-shift", "0px");
           scene.style.setProperty("--scene-shift-soft", "0px");
           scene.style.setProperty("--scene-shift-reverse", "0px");
+          scene.style.setProperty("--scene-focus", "1");
+          scene.style.setProperty("--scene-velocity", "0");
           return;
         }
 
         updateSceneProgress(scene);
       });
+
+      if (!reducedMotion && visibleScenes.size > 0) {
+        let activeScene: HTMLElement | null = null;
+        let activeDistance = Number.POSITIVE_INFINITY;
+        visibleScenes.forEach((scene) => {
+          const rect = scene.getBoundingClientRect();
+          const distance = Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2);
+          if (distance < activeDistance) {
+            activeDistance = distance;
+            activeScene = scene;
+          }
+        });
+        scenes.forEach((scene, index) => {
+          const active = scene === activeScene;
+          scene.classList.toggle("is-cosmic-focus", active);
+          journeyPoints[index]?.classList.toggle("is-active", active);
+        });
+      }
 
       if (pointerDirty) {
         pointerDirty = false;
@@ -386,8 +460,10 @@ export function CosmicMotion() {
           const scene = entry.target as HTMLElement;
           if (entry.isIntersecting) {
             visibleScenes.add(scene);
+            scene.classList.add("is-cosmic-visible");
           } else {
             visibleScenes.delete(scene);
+            scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
           }
         });
         requestMotionFrame();
@@ -524,6 +600,19 @@ export function CosmicMotion() {
     };
 
     const handleScroll = () => {
+      const now = performance.now();
+      const elapsed = Math.max(now - lastScrollTime, 16);
+      const delta = window.scrollY - lastScrollY;
+      scrollVelocity = clamp(delta / elapsed / 1.25, -1, 1);
+      if (Math.abs(delta) > 0.5) scrollDirection = delta > 0 ? 1 : -1;
+      lastScrollY = window.scrollY;
+      lastScrollTime = now;
+
+      if (velocityResetId !== null) window.clearTimeout(velocityResetId);
+      velocityResetId = window.setTimeout(() => {
+        scrollVelocity = 0;
+        requestMotionFrame();
+      }, 120);
       pointerDirty = pointerAvailable;
       requestMotionFrame();
     };
@@ -575,6 +664,9 @@ export function CosmicMotion() {
       if (frameId !== null) {
         window.cancelAnimationFrame(frameId);
       }
+      if (velocityResetId !== null) {
+        window.clearTimeout(velocityResetId);
+      }
 
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
@@ -611,10 +703,18 @@ export function CosmicMotion() {
         "kinetic-save-data",
       );
       root.style.removeProperty("--scroll-p");
+      journeyRail.remove();
 
       scenes.forEach((scene) => {
         delete scene.dataset.cosmicScene;
+        delete scene.dataset.cosmicChapter;
+        scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
+        scene.style.removeProperty("--chapter-index");
+        scene.style.removeProperty("--chapter-count");
         scene.style.removeProperty("--scene-p");
+        scene.style.removeProperty("--scene-focus");
+        scene.style.removeProperty("--scene-velocity");
+        scene.style.removeProperty("--scene-direction");
         scene.style.removeProperty("--scene-shift");
         scene.style.removeProperty("--scene-shift-soft");
         scene.style.removeProperty("--scene-shift-reverse");
@@ -622,8 +722,10 @@ export function CosmicMotion() {
 
       revealTargets.forEach((target) => {
         delete target.dataset.cosmicReveal;
+        delete target.dataset.cosmicRole;
         target.classList.remove("is-revealed");
         target.style.removeProperty("--reveal-delay");
+        target.style.removeProperty("--reveal-order");
       });
 
       kineticTargets.forEach((target) => {
