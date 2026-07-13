@@ -87,7 +87,8 @@ test("cosmic reveal observers rebind by route and cannot strand mobile copy", as
   const motion = await read("components/site/cosmic-motion.tsx");
 
   assert.match(motion, /const pathname = usePathname\(\)/);
-  assert.match(motion, /\}, \[pathname\]\)/);
+  assert.match(motion, /\}, \[mode, pathname, ready\]\)/);
+  assert.match(motion, /if \(!ready \|\| mode === "lite"\)/);
   assert.match(motion, /pendingRevealTargets = new Set<HTMLElement>\(\)/);
   assert.match(motion, /pendingRevealTargets\.forEach/);
   assert.match(motion, /rect\.bottom > 0 && rect\.top < window\.innerHeight \* 0\.98/);

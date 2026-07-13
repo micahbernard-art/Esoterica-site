@@ -4,6 +4,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { PERFORMANCE_PRESSURE_EVENT } from "@/components/providers/performance-provider";
 import {
   readGalaxyQuality,
   seededRandom,
@@ -561,7 +562,14 @@ export function GalaxyExperience({
     };
   }, [contextLost, quality]);
 
-  const handleContextLost = useCallback(() => setContextLost(true), []);
+  const handleContextLost = useCallback(() => {
+    setContextLost(true);
+    window.dispatchEvent(
+      new CustomEvent(PERFORMANCE_PRESSURE_EVENT, {
+        detail: { reason: "webgl-context-loss" },
+      }),
+    );
+  }, []);
 
   const staticReason = contextLost ? "webgl" : quality?.staticReason;
   if (!quality || staticReason) {

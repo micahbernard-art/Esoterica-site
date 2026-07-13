@@ -3,6 +3,7 @@
 import { ReactLenis, useLenis } from "lenis/react";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { usePerformanceMode } from "@/components/providers/performance-provider";
 
 type JourneyPhase = "closing" | "covered" | "opening" | "idle";
 
@@ -88,12 +89,14 @@ function JourneyScrollControl({ enabled }: { enabled: boolean }) {
 }
 
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
+  const { mode, ready } = usePerformanceMode();
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     const queries = mediaQueries.map((query) => window.matchMedia(query));
     const dataConnection = connection();
-    const update = () => setEnabled(allowsSmoothWheel());
+    const update = () =>
+      setEnabled(ready && mode === "full" && allowsSmoothWheel());
 
     update();
     queries.forEach((query) => query.addEventListener("change", update));
@@ -103,7 +106,7 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       queries.forEach((query) => query.removeEventListener("change", update));
       dataConnection?.removeEventListener("change", update);
     };
-  }, []);
+  }, [mode, ready]);
 
   useEffect(() => {
     const root = document.documentElement;

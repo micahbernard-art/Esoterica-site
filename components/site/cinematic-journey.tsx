@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { usePerformanceMode } from "@/components/providers/performance-provider";
 import {
   RoutePortalOverlay,
   type JourneyDetail,
@@ -28,6 +29,7 @@ function isModifiedClick(event: MouseEvent) {
 export function CinematicJourney() {
   const pathname = usePathname();
   const router = useRouter();
+  const { mode, ready } = usePerformanceMode();
   const [phase, setPhase] = useState<JourneyPhase>("idle");
   const phaseRef = useRef<JourneyPhase>("idle");
   const previousPathRef = useRef(pathname);
@@ -100,6 +102,10 @@ export function CinematicJourney() {
 
   useEffect(() => {
     const previousPath = previousPathRef.current;
+    if (!ready || mode === "lite") {
+      previousPathRef.current = pathname;
+      return;
+    }
     if (pathname === previousPath) return;
 
     previousPathRef.current = pathname;
@@ -126,9 +132,18 @@ export function CinematicJourney() {
       committed: true,
     };
     openPortal();
-  }, [openPortal, pathname]);
+  }, [mode, openPortal, pathname, ready]);
 
   useEffect(() => {
+    if (!ready || mode !== "lite") return;
+
+    previousPathRef.current = pathname;
+    if (phaseRef.current !== "idle" || activeRef.current) finishJourney();
+  }, [finishJourney, mode, pathname, ready]);
+
+  useEffect(() => {
+    if (!ready || mode === "lite") return;
+
     const finePointer = window.matchMedia("(pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const forcedColors = window.matchMedia("(forced-colors: active)");
@@ -258,7 +273,7 @@ export function CinematicJourney() {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("popstate", onPopState);
     };
-  }, [finishJourney, openPortal, publishPhase, router]);
+  }, [finishJourney, mode, openPortal, publishPhase, ready, router]);
 
-  return <RoutePortalOverlay phase={phase} />;
+  return ready && mode === "full" ? <RoutePortalOverlay phase={phase} /> : null;
 }

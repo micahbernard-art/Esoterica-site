@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { usePerformanceMode } from "@/components/providers/performance-provider";
 import "@/app/kinetic-ui.css";
 import "@/app/galaxy-choreography.css";
 
@@ -74,6 +75,7 @@ const getRevealRole = (target: HTMLElement) => {
 
 export function CosmicMotion() {
   const pathname = usePathname();
+  const { mode, ready } = usePerformanceMode();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -108,6 +110,90 @@ export function CosmicMotion() {
         target.matches(KINETIC_CONTROL_SELECTOR) &&
         !target.matches(KINETIC_CARD_SELECTOR),
     );
+
+    if (!ready || mode === "lite") {
+      root.classList.add(
+        "motion-ready",
+        "motion-reduced",
+        "kinetic-constrained",
+      );
+      root.classList.remove("motion-paused", "kinetic-enabled");
+      root.style.setProperty("--scroll-p", "0");
+
+      scenes.forEach((scene, index) => {
+        scene.dataset.cosmicScene = "";
+        scene.dataset.cosmicChapter = getChapter(scene, index, scenes.length);
+        scene.classList.add("is-cosmic-visible", "is-cosmic-focus");
+        scene.style.setProperty("--scene-p", "0.5");
+        scene.style.setProperty("--scene-focus", "1");
+        scene.style.setProperty("--scene-velocity", "0");
+        scene.style.setProperty("--scene-direction", "1");
+        scene.style.setProperty("--scene-shift", "0px");
+        scene.style.setProperty("--scene-shift-soft", "0px");
+        scene.style.setProperty("--scene-shift-reverse", "0px");
+      });
+
+      revealTargets.forEach((target) => {
+        target.dataset.cosmicReveal = "";
+        target.dataset.cosmicRole = getRevealRole(target);
+        target.classList.add("is-revealed");
+        target.style.setProperty("--reveal-delay", "0ms");
+        target.style.setProperty("--reveal-order", "0");
+      });
+
+      glyphTargets.forEach((target) => target.classList.add("is-kinetic-glyph"));
+      controlTargets.forEach((target) =>
+        target.classList.add("is-kinetic-control"),
+      );
+      cardTargets.forEach((target) => target.classList.add("is-kinetic-card"));
+
+      return () => {
+        root.classList.remove(
+          "motion-ready",
+          "motion-reduced",
+          "motion-paused",
+          "kinetic-enabled",
+          "kinetic-constrained",
+          "kinetic-save-data",
+        );
+        root.style.removeProperty("--scroll-p");
+
+        scenes.forEach((scene) => {
+          delete scene.dataset.cosmicScene;
+          delete scene.dataset.cosmicChapter;
+          scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
+          scene.style.removeProperty("--scene-p");
+          scene.style.removeProperty("--scene-focus");
+          scene.style.removeProperty("--scene-velocity");
+          scene.style.removeProperty("--scene-direction");
+          scene.style.removeProperty("--scene-shift");
+          scene.style.removeProperty("--scene-shift-soft");
+          scene.style.removeProperty("--scene-shift-reverse");
+        });
+
+        revealTargets.forEach((target) => {
+          delete target.dataset.cosmicReveal;
+          delete target.dataset.cosmicRole;
+          target.classList.remove("is-revealed");
+          target.style.removeProperty("--reveal-delay");
+          target.style.removeProperty("--reveal-order");
+        });
+
+        kineticTargets.forEach((target) => {
+          target.classList.remove(
+            "is-kinetic-glyph",
+            "is-kinetic-control",
+            "is-kinetic-card",
+            "is-kinetic-active",
+            "is-kinetic-pressed",
+          );
+          KINETIC_PROPERTIES.forEach((property) =>
+            target.style.removeProperty(property),
+          );
+        });
+      };
+    }
+
     const visibleGlyphs = new Set<HTMLElement>();
     const visibleCards = new Set<HTMLElement>();
     const visibleControls = new Set<HTMLElement>();
@@ -759,7 +845,7 @@ export function CosmicMotion() {
         clearKineticProperties(target);
       });
     };
-  }, [pathname]);
+  }, [mode, pathname, ready]);
 
   return null;
 }

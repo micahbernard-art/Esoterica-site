@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Geist } from "next/font/google";
+import { PerformanceProvider } from "@/components/providers/performance-provider";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 import { CinematicJourney } from "@/components/site/cinematic-journey";
 import { GalaxyStage } from "@/components/site/galaxy-stage";
@@ -10,6 +11,7 @@ import "./globals.css";
 import "./cosmic-components.css";
 import "./cosmic-pages.css";
 import "./galaxy-experience.css";
+import "./performance-guardian.css";
 
 const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -124,16 +126,18 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${displayFont.variable} ${sansFont.variable}`}>
-        <GalaxyStage />
-        <CinematicJourney />
-        <MysticCursor />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
-          }}
-        />
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <PerformanceProvider>
+          <GalaxyStage />
+          <CinematicJourney />
+          <MysticCursor />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+            }}
+          />
+          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        </PerformanceProvider>
       </body>
     </html>
   );

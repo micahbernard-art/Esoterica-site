@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { usePerformanceMode } from "@/components/providers/performance-provider";
 import "@/app/mystic-cursor.css";
 
 export type MysticCursorPath = "/" | "/tarot" | "/libros" | "/lecturas";
@@ -73,6 +74,7 @@ function routeFromPathname(pathname: string | null): MysticCursorPath {
 
 export function MysticCursor({ activePath }: { activePath?: MysticCursorPath } = {}) {
   const pathname = usePathname();
+  const { mode, ready } = usePerformanceMode();
   const resolvedPath = activePath ?? routeFromPathname(pathname);
   const cursorRef = useRef<HTMLDivElement>(null);
 
@@ -349,7 +351,9 @@ export function MysticCursor({ activePath }: { activePath?: MysticCursorPath } =
       removeNativeCursorOverride();
       cursor.removeAttribute("style");
     };
-  }, []);
+  }, [mode, ready]);
+
+  if (!ready || mode === "lite") return null;
 
   return (
     <div
