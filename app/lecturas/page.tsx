@@ -1,4 +1,5 @@
 import { AstralDivider } from "@/components/site/astral-divider";
+import { ActionLink } from "@/components/ui/action-link";
 import { CelestialGlyph } from "@/components/site/celestial-glyph";
 import { OrbitPortal } from "@/components/site/orbit-portal";
 import { PageHero } from "@/components/site/page-hero";
@@ -85,16 +86,17 @@ export default function LecturasPage() {
                       </li>
                     ))}
                   </ul>
-                  <a
+                  <ActionLink
                     className={`button astral-button ${tier.featured ? "button-primary" : "button-secondary"}`}
                     href={bookingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Consultar disponibilidad de ${tier.name} por WhatsApp (abre en una pestaña nueva)`}
+                    intent={tier.featured ? "primary" : "secondary"}
+                    external
+                    cursorLabel="Reservar lectura"
+                    ariaLabel={`Consultar disponibilidad de ${tier.name} por WhatsApp (abre en una pestaña nueva)`}
                   >
                     <span>Consultar disponibilidad</span>
                     <CelestialGlyph kind={tier.featured ? "sun" : "star"} />
-                  </a>
+                  </ActionLink>
                 </article>
               );
             })}
@@ -116,16 +118,17 @@ export default function LecturasPage() {
               organiza este acompañamiento mes a mes. No hay cobro ni renovación
               automática desde este sitio.
             </p>
-            <a
+            <ActionLink
               className="button button-primary astral-button"
               href={monthlySupportUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Consultar el acompañamiento mensual por WhatsApp (abre en una pestaña nueva)"
+              intent="primary"
+              external
+              cursorLabel="Abrir WhatsApp"
+              ariaLabel="Consultar el acompañamiento mensual por WhatsApp (abre en una pestaña nueva)"
             >
               <span>Consultar el acompañamiento mensual</span>
               <CelestialGlyph kind="eclipse" />
-            </a>
+            </ActionLink>
           </div>
           <div className="readings-highlight-details" data-reveal="scale-in">
             <div className="monthly-eclipse__stage">
@@ -177,16 +180,17 @@ export default function LecturasPage() {
             <h2 id="reading-help-title">¿No sabes cuál lectura reservar?</h2>
             <p>Cuéntanos brevemente qué deseas explorar y te orientaremos.</p>
           </div>
-          <a
+          <ActionLink
             className="button button-primary astral-button"
             href={generalReadingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Pedir orientación sobre lecturas por WhatsApp (abre en una pestaña nueva)"
+            intent="primary"
+            external
+            cursorLabel="Abrir WhatsApp"
+            ariaLabel="Pedir orientación sobre lecturas por WhatsApp (abre en una pestaña nueva)"
           >
             <span>Pedir orientación</span>
             <CelestialGlyph kind="star" />
-          </a>
+          </ActionLink>
         </section>
       </main>
     </SiteFrame>

@@ -37,6 +37,14 @@
   --radius-md: 14px;
   --radius-lg: 22px;
   --font-impact: "Basement Grotesque", Impact, "Arial Black", sans-serif;
+  --font-utility: var(--font-sans), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-editorial: var(--font-display), "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --ui-duration-fast: 320ms;
+  --ui-duration-medium: 520ms;
+  --ui-duration-slow: 680ms;
+  --ui-duration-cinematic: 720ms;
+  --ui-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ui-focus: #fff2b8;
 }
 
 * {
@@ -50,9 +58,15 @@ html {
   scroll-behavior: smooth;
 }
 
+html[data-scroll-engine="lenis"] {
+  scroll-behavior: auto;
+}
+
 body {
   --font-display-stack: var(--font-display), "Iowan Old Style", Georgia, serif;
   --font-sans-stack: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-editorial: var(--font-display-stack);
+  --font-utility: var(--font-sans-stack);
   min-width: 320px;
   margin: 0;
   overflow-x: hidden;
@@ -144,9 +158,15 @@ select:focus-visible {
     linear-gradient(180deg, rgb(11 17 32 / 58%) 0%, rgb(7 11 19 / 72%) 58%, rgb(9 13 22 / 78%) 100%);
 }
 
-.site-content {
+.site-content,
+.site-interface {
   position: relative;
-  z-index: 2;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.site-interface [aria-hidden="true"]:not([data-ui-action] *) {
+  pointer-events: none;
 }
 
 .celestial-backdrop {

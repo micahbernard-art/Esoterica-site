@@ -1,4 +1,7 @@
+"use client";
+
 import type { CSSProperties } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import "@/app/astral-arrival.css";
 
 type AstralTitleProps = {
@@ -20,6 +23,7 @@ const trimWord = (word: string) =>
  * constellation. Cormorant remains the voice; every coordinate is CSS-only.
  */
 export function AstralTitle({ id, children, emphasis }: AstralTitleProps) {
+  const reduceMotion = useReducedMotion();
   let glyphIndex = 0;
   const words = children.split(/(\s+)/);
   const emphasizedWord = emphasis?.normalize("NFC").toLocaleLowerCase("es");
@@ -66,9 +70,24 @@ export function AstralTitle({ id, children, emphasis }: AstralTitleProps) {
   return (
     <h1 id={id} className="astral-title" data-astral-arrival="constellation">
       <span className="sr-only">{children}</span>
-      <span className="astral-title__visual" aria-hidden="true">
+      <motion.span
+        className="astral-title__visual"
+        aria-hidden="true"
+        initial={false}
+        whileInView={
+          reduceMotion
+            ? undefined
+            : {
+                opacity: [0.74, 1],
+                y: [14, 0],
+                filter: ["blur(5px)", "blur(0px)"],
+              }
+        }
+        viewport={{ once: true, amount: 0.32 }}
+        transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
+      >
         {visualTitle}
-      </span>
+      </motion.span>
     </h1>
   );
 }

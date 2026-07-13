@@ -1,4 +1,5 @@
 import { AstralDivider } from "@/components/site/astral-divider";
+import { ActionLink } from "@/components/ui/action-link";
 import { CatalogCard } from "@/components/site/catalog-card";
 import { CelestialGlyph } from "@/components/site/celestial-glyph";
 import { OrbitPortal } from "@/components/site/orbit-portal";
@@ -82,16 +83,17 @@ export default function TarotPage() {
               las opciones disponibles para que puedas compararlas.
             </p>
           </div>
-          <a
+          <ActionLink
             className="button button-primary astral-button"
             href={recommendationUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Pedir una recomendación por WhatsApp (abre en una pestaña nueva)"
+            intent="primary"
+            external
+            cursorLabel="Abrir WhatsApp"
+            ariaLabel="Pedir una recomendación por WhatsApp (abre en una pestaña nueva)"
           >
             <span>Pedir recomendación</span>
             <CelestialGlyph kind="star" />
-          </a>
+          </ActionLink>
         </section>
       </main>
     </SiteFrame>

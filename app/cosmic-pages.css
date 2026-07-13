@@ -1288,6 +1288,54 @@ body {
   }
 }
 
+/* Foreground depth stays deterministic above frozen ambient layers. */
+.astral-page {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.astral-page :is(
+  .hero-actions,
+  .section-action,
+  .catalog-card-footer,
+  .purchase-links,
+  .contact-banner > [data-ui-action]
+) {
+  position: relative;
+  z-index: 4;
+  pointer-events: auto;
+}
+
+.astral-page :is(
+  .cosmos-entry__dust,
+  .coordinate-strip,
+  .page-hero-stars,
+  .constellation-path,
+  .route-relic,
+  .category-orbit__core,
+  .phase-sequence,
+  .process-planet,
+  .crescent-scene__moon
+) {
+  pointer-events: none;
+}
+
+.astral-page :is(.section-eyebrow, .hero-kicker, .category-label, .availability-label) {
+  font-family: var(--font-utility);
+  letter-spacing: 0.18em;
+}
+
+.astral-page :is(h1, h2, h3, .category-copy strong, .purchase-link strong) {
+  font-family: var(--font-editorial);
+}
+
+@media (max-width: 760px) {
+  .astral-page :is(.hero-actions, .contact-banner) > [data-ui-action] {
+    width: 100%;
+  }
+}
+
 @media (prefers-contrast: more) {
   .cosmos-entry .hero-feature,
   .orbital-categories .category-card,

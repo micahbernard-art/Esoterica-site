@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ActionLink } from "@/components/ui/action-link";
 import type { CatalogItem } from "@/lib/site-data";
 import { whatsappUrl } from "@/lib/site-data";
 import { AstralDivider } from "./astral-divider";
@@ -32,16 +33,17 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
         <p>{item.description}</p>
         <div className="catalog-card-footer">
           <span className="availability-label">Disponibilidad por confirmar</span>
-          <a
+          <ActionLink
             className="button button-secondary compact"
             href={inquiryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Consultar ${item.name} por WhatsApp (abre en una pestaña nueva)`}
+            intent="secondary"
+            external
+            cursorLabel="Consultar"
+            ariaLabel={`Consultar ${item.name} por WhatsApp (abre en una pestaña nueva)`}
           >
             <CelestialGlyph kind="orbit" />
             Consultar
-          </a>
+          </ActionLink>
         </div>
       </div>
     </article>

@@ -13,13 +13,17 @@ export function SiteFrame({
   children: ReactNode;
 }) {
   return (
-    <div className="site-shell">
+    <div
+      className="site-shell site-interface"
+      data-interface-layer="foreground"
+      data-interface-route={activePath}
+    >
       <a className="skip-link" href="#main-content">
         Saltar al contenido
       </a>
       <CelestialBackdrop />
       <CosmicMotion />
-      <div className="site-content">
+      <div className="site-content" data-interface-plane="content">
         <Header activePath={activePath} />
         {children}
         <Footer />

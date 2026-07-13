@@ -15,7 +15,8 @@ const KINETIC_CARD_SELECTOR = [
   ".reading-tier",
 ].join(",");
 
-const KINETIC_CONTROL_SELECTOR = "a[href], button:not([disabled])";
+const KINETIC_CONTROL_SELECTOR =
+  "[data-ui-action]:not([aria-disabled='true']):not(:disabled)";
 const KINETIC_GLYPH_SELECTOR = ".celestial-glyph";
 const KINETIC_SELECTOR = [
   KINETIC_GLYPH_SELECTOR,

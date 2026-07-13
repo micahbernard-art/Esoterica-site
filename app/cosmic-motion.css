@@ -348,13 +348,21 @@
   translate: 0 0;
 }
 
-:is(.button, .header-contact, .purchase-link) {
+:is(
+  [data-ui-action="primary"],
+  [data-ui-action="secondary"],
+  [data-ui-action="gateway"]
+) {
   position: relative;
   overflow: clip;
   isolation: isolate;
 }
 
-:is(.button, .header-contact, .purchase-link)::after {
+:is(
+  [data-ui-action="primary"],
+  [data-ui-action="secondary"],
+  [data-ui-action="gateway"]
+)::after {
   position: absolute;
   z-index: -1;
   top: -140%;
@@ -366,7 +374,7 @@
   pointer-events: none;
   rotate: 18deg;
   translate: -300% 0;
-  transition: translate 680ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: translate var(--ui-duration-slow, 680ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .motion-paused .celestial-backdrop * {
@@ -374,12 +382,19 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :is(.button, .header-contact, .purchase-link):hover {
+  :is(
+    [data-ui-action="primary"],
+    [data-ui-action="secondary"],
+    [data-ui-action="gateway"]
+  ):hover {
     box-shadow: 0 0.8rem 2.4rem color-mix(in srgb, var(--comet) 18%, transparent);
-    translate: 0 -3px;
   }
 
-  :is(.button, .header-contact, .purchase-link):hover::after {
+  :is(
+    [data-ui-action="primary"],
+    [data-ui-action="secondary"],
+    [data-ui-action="gateway"]
+  ):hover::after {
     translate: 520% 0;
   }
 
@@ -472,7 +487,11 @@
 
 .motion-reduced .celestial-backdrop *,
 .motion-reduced :is(.brand-mark, .hero-feature-icon, .book-cover-ornament, .booking-note-icon, .readings-highlight-details > span),
-.motion-reduced :is(.button, .header-contact, .purchase-link)::after {
+.motion-reduced :is(
+  [data-ui-action="primary"],
+  [data-ui-action="secondary"],
+  [data-ui-action="gateway"]
+)::after {
   animation: none !important;
   transition-duration: 1ms !important;
 }
@@ -493,7 +512,11 @@
 @media (prefers-reduced-motion: reduce) {
   .celestial-backdrop *,
   :is(.brand-mark, .hero-feature-icon, .book-cover-ornament, .booking-note-icon, .readings-highlight-details > span),
-  :is(.button, .header-contact, .purchase-link)::after {
+  :is(
+    [data-ui-action="primary"],
+    [data-ui-action="secondary"],
+    [data-ui-action="gateway"]
+  )::after {
     animation: none !important;
     transition-duration: 1ms !important;
   }

@@ -59,3 +59,18 @@ test("monthly accompaniment is presented without automatic billing claims", asyn
   assert.match(readings, /No hay cobro ni renovación\s+automática/);
   assert.match(readings, /monthlySupportUrl/);
 });
+
+test("foreground actions share one accessible interaction contract", async () => {
+  const actionLink = await readFile("components/ui/action-link.tsx", "utf8");
+  const motion = await readFile("components/site/cosmic-motion.tsx", "utf8");
+  const components = await readFile("app/cosmic-components.css", "utf8");
+
+  assert.match(actionLink, /data-ui-action/);
+  assert.match(actionLink, /data-cursor-label/);
+  assert.match(actionLink, /noopener noreferrer/);
+  assert.match(motion, /\[data-ui-action\]/);
+  assert.doesNotMatch(motion, /KINETIC_CONTROL_SELECTOR\s*=\s*["']a\[href\]/);
+  assert.match(components, /min-height:\s*48px/);
+  assert.match(components, /\[data-ui-action\]:focus-visible/);
+  assert.match(components, /--ui-duration-fast/);
+});

@@ -63,23 +63,23 @@
 .kinetic-enabled .is-kinetic-control.is-kinetic-active {
   translate: var(--kinetic-x) var(--kinetic-y);
   transition:
-    translate 90ms linear,
-    transform 180ms ease,
-    box-shadow 220ms ease,
-    background-color 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease;
+    translate var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
   will-change: translate;
 }
 
 .kinetic-enabled .is-kinetic-control:not(.is-kinetic-active) {
   transition:
-    translate 520ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 180ms ease,
-    box-shadow 220ms ease,
-    background-color 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease;
+    translate var(--ui-duration-medium, 520ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .is-kinetic-card {
@@ -180,12 +180,12 @@
 .kinetic-constrained .is-kinetic-control.is-kinetic-pressed,
 .kinetic-constrained :is(.catalog-card, .category-card).is-kinetic-pressed {
   transform: scale(0.985);
-  transition: transform 90ms ease-out;
+  transition: transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .kinetic-constrained .reading-tier.is-kinetic-pressed {
   transform: scale(0.99);
-  transition: transform 90ms ease-out;
+  transition: transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .kinetic-constrained .reading-tier.is-featured.is-kinetic-pressed {

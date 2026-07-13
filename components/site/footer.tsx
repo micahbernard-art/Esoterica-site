@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ActionLink } from "@/components/ui/action-link";
 import { socialLinks, whatsappUrl } from "@/lib/site-data";
 import { AstralDivider } from "./astral-divider";
 import { CelestialGlyph } from "./celestial-glyph";
@@ -20,12 +20,17 @@ export function Footer() {
       <AstralDivider label="El umbral permanece abierto" className="footer-divider" />
       <div className="footer-main">
         <div className="footer-brand" data-reveal="rise">
-          <Link className="footer-logo" href="/">
+          <ActionLink
+            className="footer-logo"
+            href="/"
+            intent="brand"
+            cursorLabel="Ir al inicio"
+          >
             <span className="footer-logo-mark" aria-hidden="true">
               <CelestialGlyph kind="eclipse" />
             </span>
             <span className="brand-wordmark">Esoterica</span>
-          </Link>
+          </ActionLink>
           <p>
             Tarot, herramientas simbólicas y lecturas para acompañar tu práctica
             personal.
@@ -42,10 +47,14 @@ export function Footer() {
           <ul>
             {footerNavigation.map((item) => (
               <li key={item.href}>
-                <Link href={item.href}>
+                <ActionLink
+                  href={item.href}
+                  intent="nav"
+                  cursorLabel="Explorar"
+                >
                   <span aria-hidden="true">✦</span>
                   {item.label}
-                </Link>
+                </ActionLink>
               </li>
             ))}
           </ul>
@@ -54,40 +63,43 @@ export function Footer() {
         <div className="footer-contact" data-reveal="rise">
           <h2><CelestialGlyph kind="moon" />Conversemos</h2>
           <p>Consulta disponibilidad, entregas o agenda directamente por WhatsApp.</p>
-          <a
+          <ActionLink
             className="text-link"
             href={contactUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Escribir por WhatsApp (abre en una pestaña nueva)"
+            intent="text"
+            external
+            cursorLabel="Abrir WhatsApp"
+            ariaLabel="Escribir por WhatsApp (abre en una pestaña nueva)"
           >
             <CelestialGlyph kind="orbit" />
             Escribir por WhatsApp
-          </a>
+          </ActionLink>
         </div>
       </div>
 
       <div className="footer-bottom">
         <p>© 2026 Esoterica. Todos los derechos reservados.</p>
         <nav className="social-links" aria-label="Redes sociales">
-          <a
+          <ActionLink
             href={socialLinks.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Esoterica en Instagram (abre en una pestaña nueva)"
+            intent="text"
+            external
+            cursorLabel="Abrir Instagram"
+            ariaLabel="Esoterica en Instagram (abre en una pestaña nueva)"
           >
             <CelestialGlyph kind="star" />
             Instagram
-          </a>
-          <a
+          </ActionLink>
+          <ActionLink
             href={socialLinks.tiktok}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Esoterica en TikTok (abre en una pestaña nueva)"
+            intent="text"
+            external
+            cursorLabel="Abrir TikTok"
+            ariaLabel="Esoterica en TikTok (abre en una pestaña nueva)"
           >
             <CelestialGlyph kind="moon" />
             TikTok
-          </a>
+          </ActionLink>
         </nav>
       </div>
     </footer>

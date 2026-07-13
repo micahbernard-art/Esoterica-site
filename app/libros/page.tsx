@@ -1,4 +1,5 @@
 import { AstralDivider } from "@/components/site/astral-divider";
+import { ActionLink } from "@/components/ui/action-link";
 import { CelestialGlyph } from "@/components/site/celestial-glyph";
 import { OrbitPortal } from "@/components/site/orbit-portal";
 import { PageHero } from "@/components/site/page-hero";
@@ -79,12 +80,13 @@ export default function LibrosPage() {
               <div className="book-purchase">
                 <p>Elige una plataforma de compra:</p>
                 <div className="purchase-links celestial-gateways">
-                  <a
+                  <ActionLink
                     className="purchase-link amazon"
                     href={bookLinks.amazon}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Comprar el libro en Amazon (abre en una pestaña nueva)"
+                    intent="gateway"
+                    external
+                    cursorLabel="Abrir Amazon"
+                    ariaLabel="Comprar el libro en Amazon (abre en una pestaña nueva)"
                   >
                     <CelestialGlyph kind="sun" />
                     <span>
@@ -92,13 +94,14 @@ export default function LibrosPage() {
                       <small>Ver edición disponible</small>
                     </span>
                     <span className="gateway-arrow" aria-hidden="true">↗</span>
-                  </a>
-                  <a
+                  </ActionLink>
+                  <ActionLink
                     className="purchase-link hotmart"
                     href={bookLinks.hotmart}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Comprar el libro en Hotmart (abre en una pestaña nueva)"
+                    intent="gateway"
+                    external
+                    cursorLabel="Abrir Hotmart"
+                    ariaLabel="Comprar el libro en Hotmart (abre en una pestaña nueva)"
                   >
                     <CelestialGlyph kind="moon" />
                     <span>
@@ -106,7 +109,7 @@ export default function LibrosPage() {
                       <small>Ver producto digital</small>
                     </span>
                     <span className="gateway-arrow" aria-hidden="true">↗</span>
-                  </a>
+                  </ActionLink>
                 </div>
                 <p className="external-purchase-note">
                   La compra se completa en la plataforma elegida. Sus precios y
@@ -128,16 +131,17 @@ export default function LibrosPage() {
             <h2 id="book-help-title">Pregunta por el libro</h2>
             <p>Si necesitas orientación antes de comprar, escríbenos por WhatsApp.</p>
           </div>
-          <a
+          <ActionLink
             className="button button-secondary astral-button"
             href={bookInquiryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Consultar por WhatsApp sobre el libro (abre en una pestaña nueva)"
+            intent="secondary"
+            external
+            cursorLabel="Abrir WhatsApp"
+            ariaLabel="Consultar por WhatsApp sobre el libro (abre en una pestaña nueva)"
           >
             <span>Consultar por WhatsApp</span>
             <CelestialGlyph kind="orbit" />
-          </a>
+          </ActionLink>
         </section>
       </main>
     </SiteFrame>

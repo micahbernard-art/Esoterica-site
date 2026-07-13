@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ActionLink } from "@/components/ui/action-link";
 import { AstralDivider } from "./astral-divider";
 import { AstralTitle } from "./astral-title";
 import { CelestialGlyph } from "./celestial-glyph";
@@ -53,10 +53,16 @@ export function PageHero({
         ))}
       </div>
       <div className="page-hero-inner">
-        <Link className="back-link" href="/" data-reveal="fade">
+        <ActionLink
+          className="back-link"
+          href="/"
+          intent="text"
+          cursorLabel="Volver al inicio"
+          reveal="fade"
+        >
           <CelestialGlyph kind="star" />
           Volver al inicio
-        </Link>
+        </ActionLink>
         <div className="page-hero-copy" data-reveal="rise">
           <p className="section-eyebrow">{eyebrow}</p>
           <AstralTitle id="page-title">{title}</AstralTitle>

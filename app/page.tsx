@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ActionLink } from "@/components/ui/action-link";
 import { AstralDivider } from "@/components/site/astral-divider";
 import { AstralTitle } from "@/components/site/astral-title";
 import { CatalogCard } from "@/components/site/catalog-card";
@@ -106,14 +106,24 @@ export default function HomePage() {
               directa para ayudarte a elegir con claridad.
             </p>
             <div className="hero-actions">
-              <Link className="button button-primary astral-button" href="/tarot">
+              <ActionLink
+                className="button button-primary astral-button"
+                href="/tarot"
+                intent="primary"
+                cursorLabel="Explorar Tarot"
+              >
                 <span>Ver colección de Tarot</span>
                 <CelestialGlyph kind="star" />
-              </Link>
-              <Link className="button button-secondary astral-button" href="/lecturas">
+              </ActionLink>
+              <ActionLink
+                className="button button-secondary astral-button"
+                href="/lecturas"
+                intent="secondary"
+                cursorLabel="Ver lecturas"
+              >
                 <span>Reservar una lectura</span>
                 <CelestialGlyph kind="moon" />
-              </Link>
+              </ActionLink>
             </div>
             <p className="hero-note">
               <span className="pulse-star" aria-hidden="true" />
@@ -147,14 +157,15 @@ export default function HomePage() {
                 Sin carritos ni cobros automáticos. Confirmamos contigo cada detalle
                 antes de coordinar.
               </p>
-              <a
+              <ActionLink
                 className="text-link"
                 href={catalogContactUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                intent="text"
+                external
+                cursorLabel="Abrir WhatsApp"
               >
                 Iniciar una consulta
-              </a>
+              </ActionLink>
             </aside>
           </div>
 
@@ -179,9 +190,14 @@ export default function HomePage() {
             titleId="featured-title"
             description="Las imágenes son referenciales. Consulta por WhatsApp para confirmar modelos, disponibilidad y detalles."
             action={
-              <Link className="text-link" href="/tarot">
+              <ActionLink
+                className="text-link"
+                href="/tarot"
+                intent="text"
+                cursorLabel="Ver Tarot"
+              >
                 Ver todo el Tarot
-              </Link>
+              </ActionLink>
             }
           />
           <div className="catalog-grid featured-catalog-grid">
@@ -237,26 +253,29 @@ export default function HomePage() {
                 );
 
                 return category.external ? (
-                  <a
+                  <ActionLink
                     className="category-card"
                     href={category.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    intent="card"
+                    external
+                    cursorLabel="Consultar"
                     key={category.title}
-                    data-reveal={index % 2 ? "from-right" : "from-left"}
-                    aria-label={`${category.title}: consultar por WhatsApp (abre en una pestaña nueva)`}
+                    reveal={index % 2 ? "from-right" : "from-left"}
+                    ariaLabel={`${category.title}: consultar por WhatsApp (abre en una pestaña nueva)`}
                   >
                     {content}
-                  </a>
+                  </ActionLink>
                 ) : (
-                  <Link
+                  <ActionLink
                     className="category-card"
                     href={category.href}
+                    intent="card"
+                    cursorLabel={`Ver ${category.title}`}
                     key={category.title}
-                    data-reveal={index % 2 ? "from-right" : "from-left"}
+                    reveal={index % 2 ? "from-right" : "from-left"}
                   >
                     {content}
-                  </Link>
+                  </ActionLink>
                 );
               })}
             </div>
@@ -278,10 +297,15 @@ export default function HomePage() {
               sesión extendida o un acompañamiento coordinado mes a mes. Los precios
               están visibles antes de reservar.
             </p>
-            <Link className="button button-primary astral-button" href="/lecturas">
+            <ActionLink
+              className="button button-primary astral-button"
+              href="/lecturas"
+              intent="primary"
+              cursorLabel="Ver lecturas"
+            >
               <span>Ver opciones y precios</span>
               <CelestialGlyph kind="eclipse" />
-            </Link>
+            </ActionLink>
           </div>
           <div className="readings-highlight-details" data-reveal="scale-in">
             <div className="eclipse-stage">
@@ -381,16 +405,17 @@ export default function HomePage() {
               disponibilidad.
             </p>
           </div>
-          <a
+          <ActionLink
             className="button button-primary astral-button"
             href={catalogContactUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Iniciar consulta por WhatsApp (abre en una pestaña nueva)"
+            intent="primary"
+            external
+            cursorLabel="Abrir WhatsApp"
+            ariaLabel="Iniciar consulta por WhatsApp (abre en una pestaña nueva)"
           >
             <span>Iniciar consulta</span>
             <CelestialGlyph kind="star" />
-          </a>
+          </ActionLink>
         </section>
       </main>
     </SiteFrame>

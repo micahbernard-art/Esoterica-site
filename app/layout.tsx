@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Cormorant_Garamond, Geist } from "next/font/google";
+import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 import { CinematicJourney } from "@/components/site/cinematic-journey";
 import { GalaxyStage } from "@/components/site/galaxy-stage";
 import { MysticCursor } from "@/components/site/mystic-cursor";
+import "lenis/dist/lenis.css";
 import "./cinematic-journey.css";
 import "./globals.css";
 import "./cosmic-components.css";
@@ -22,9 +24,8 @@ const displayFont = Cormorant_Garamond({
   display: "swap",
 });
 
-const sansFont = Manrope({
+const sansFont = Geist({
   subsets: ["latin"],
-  weight: "variable",
   variable: "--font-sans",
   display: "swap",
 });
@@ -132,7 +133,7 @@ export default function RootLayout({
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        {children}
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>
   );

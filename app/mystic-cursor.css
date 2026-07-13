@@ -26,7 +26,7 @@
     translate3d(var(--cursor-x), var(--cursor-y), 0)
     translate3d(-50%, -50%, 0);
   transform-origin: center;
-  transition: opacity 160ms ease-out;
+  transition: opacity var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
   will-change: transform, opacity;
 }
 
@@ -85,7 +85,7 @@
     0 0 5px color-mix(in srgb, var(--cursor-glint) 82%, transparent),
     0 0 11px color-mix(in srgb, var(--cursor-accent) 58%, transparent);
   transform: translate3d(-50%, -50%, 0) scale(1);
-  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .mystic-cursor__orbit {
@@ -95,8 +95,8 @@
   border-radius: 50%;
   opacity: 0.78;
   transition:
-    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 160ms ease-out;
+    transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .mystic-cursor__orbit--outer {
@@ -135,17 +135,17 @@
   border-radius: 999px;
   background: color-mix(in srgb, #0c041c 88%, transparent);
   color: color-mix(in srgb, var(--cursor-glint) 90%, white);
-  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-family: var(--font-utility, "Geist", ui-sans-serif, system-ui, sans-serif);
   font-size: 0.58rem;
   font-weight: 650;
   line-height: 1;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0;
   transform: translate3d(-5px, -5px, 0) scale(0.92);
   transition:
-    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 120ms ease-out;
+    transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .mystic-cursor.has-label .mystic-cursor__label {

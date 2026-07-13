@@ -1492,3 +1492,104 @@
     display: none;
   }
 }
+
+/* Premium foreground action contract — shared by every route and navigation rail. */
+:where([data-ui-action]) {
+  min-height: 48px;
+  font-family: var(--font-utility);
+  font-weight: 680;
+  letter-spacing: 0.055em;
+  -webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  transform-origin: center;
+  transition:
+    color var(--ui-duration-fast) var(--ui-ease-out),
+    border-color var(--ui-duration-fast) var(--ui-ease-out),
+    background-color var(--ui-duration-fast) var(--ui-ease-out),
+    box-shadow var(--ui-duration-medium) var(--ui-ease-out),
+    transform var(--ui-duration-fast) var(--ui-ease-out);
+}
+
+/* Match legacy element-level selectors so they cannot shrink the hit area. */
+a[data-ui-action] {
+  min-height: 48px;
+}
+
+[data-ui-action="brand"] {
+  min-height: 48px;
+  font-family: var(--font-editorial);
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+:is([data-ui-action="nav"], [data-ui-action="text"]) {
+  min-height: 48px;
+  letter-spacing: 0.065em;
+}
+
+:is(a[data-ui-action="primary"], a[data-ui-action="secondary"]) {
+  min-height: 52px;
+  padding-inline: 1.35rem;
+  letter-spacing: 0.075em;
+}
+
+:is([data-ui-action="gateway"], [data-ui-action="card"]) {
+  letter-spacing: 0.04em;
+}
+
+:where([data-ui-action]) :is(.brand-wordmark, .category-copy strong, .purchase-link strong) {
+  font-family: var(--font-editorial);
+}
+
+[data-ui-action]:focus-visible {
+  z-index: 12;
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 4px;
+  box-shadow:
+    0 0 0 1px var(--cosmos-950),
+    0 0 0 5px color-mix(in srgb, var(--ui-focus) 30%, transparent),
+    0 0 2rem color-mix(in srgb, var(--comet-300) 24%, transparent);
+  transform: translate3d(0, 0, 0);
+}
+
+:is([data-ui-action]:disabled, [data-ui-action][aria-disabled="true"]) {
+  cursor: not-allowed;
+  filter: saturate(0.35);
+  opacity: 0.48;
+  pointer-events: none;
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-ui-action]:not([data-ui-action="card"]):not([aria-disabled="true"]):hover {
+    transform: translate3d(0, -2px, 0);
+  }
+
+  :is([data-ui-action="text"]:hover, [data-ui-action="nav"]:hover) {
+    color: var(--pearl-50);
+    text-shadow: 0 0 1.1rem color-mix(in srgb, var(--comet-300) 32%, transparent);
+  }
+}
+
+[data-ui-action]:not([data-ui-action="card"]):not([aria-disabled="true"]):active {
+  box-shadow: none;
+  transform: translate3d(0, 1px, 0) scale(0.985);
+  transition-duration: var(--ui-duration-fast);
+}
+
+.button.compact[data-ui-action] {
+  min-height: 48px;
+}
+
+@media (pointer: coarse), (hover: none) {
+  :where([data-ui-action]) {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where([data-ui-action]) {
+    transition-duration: 1ms !important;
+  }
+}
