@@ -48,6 +48,50 @@ test("site frame publishes a stable foreground interface contract", async () => 
   assert.match(frame, /data-interface-layer="foreground"/);
   assert.match(frame, /data-interface-route=\{activePath\}/);
   assert.match(frame, /data-interface-plane="content"/);
-  assert.match(globals, /\.site-interface[\s\S]*z-index:\s*10/);
+  assert.match(globals, /\.site-interface[\s\S]*z-index:\s*var\(--z-content\)/);
   assert.match(globals, /html\[data-scroll-engine="lenis"\][\s\S]*scroll-behavior:\s*auto/);
+});
+
+test("foreground kinetics use tokenized premium easing without layout animation", async () => {
+  const [globals, kinetic, cosmic, cursor] = await Promise.all([
+    read("app/globals.css"),
+    read("app/kinetic-ui.css"),
+    read("app/cosmic-motion.css"),
+    read("app/mystic-cursor.css"),
+  ]);
+  const foregroundStyles = [globals, kinetic, cosmic, cursor].join("\n");
+
+  assert.match(globals, /--ui-ease-snap:\s*cubic-bezier\(0\.16, 1, 0\.3, 1\)/);
+  assert.match(globals, /--ui-ease-structural:\s*cubic-bezier\(0\.76, 0, 0\.24, 1\)/);
+  assert.match(globals, /--z-content:\s*10/);
+  assert.match(globals, /--z-action:\s*12/);
+  assert.match(globals, /--z-focus:\s*18/);
+  assert.match(globals, /--z-sticky:\s*30/);
+  assert.match(globals, /--z-skip:\s*100/);
+  assert.match(globals, /--z-transition:\s*2147483645/);
+  assert.match(globals, /-moz-osx-font-smoothing:\s*grayscale/);
+  assert.match(
+    globals,
+    /:is\(\[data-ui-action="nav"\], \[data-ui-action="text"\]\)[\s\S]*min-height:\s*48px/,
+  );
+  assert.match(kinetic, /will-change:\s*transform, opacity/);
+  assert.doesNotMatch(cosmic, /\):hover\s*\{\s*box-shadow:/);
+  assert.doesNotMatch(
+    foregroundStyles,
+    /transition(?:-property)?:[^;]*(?:width|height|margin)/,
+  );
+  assert.doesNotMatch(kinetic, /\s(?:linear|ease-in-out|ease-out|ease)\s*[,;]/);
+});
+
+test("cosmic reveal observers rebind by route and cannot strand mobile copy", async () => {
+  const motion = await read("components/site/cosmic-motion.tsx");
+
+  assert.match(motion, /const pathname = usePathname\(\)/);
+  assert.match(motion, /\}, \[pathname\]\)/);
+  assert.match(motion, /pendingRevealTargets = new Set<HTMLElement>\(\)/);
+  assert.match(motion, /pendingRevealTargets\.forEach/);
+  assert.match(motion, /rect\.bottom > 0 && rect\.top < window\.innerHeight \* 0\.98/);
+  assert.match(motion, /pendingRevealTargets\.delete\(target\)/);
+  assert.match(motion, /revealObserver\?\.unobserve\(target\)/);
+  assert.match(motion, /rootMargin: "0px 0px 12% 0px", threshold: 0\.01/);
 });

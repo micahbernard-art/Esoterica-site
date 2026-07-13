@@ -74,3 +74,19 @@ test("foreground actions share one accessible interaction contract", async () =>
   assert.match(components, /\[data-ui-action\]:focus-visible/);
   assert.match(components, /--ui-duration-fast/);
 });
+
+test("catalog focal metadata and book reveals preserve readable content", async () => {
+  const catalogCard = await readFile("components/site/catalog-card.tsx", "utf8");
+  const siteData = await readFile("lib/site-data.ts", "utf8");
+  const books = await readFile("app/libros/page.tsx", "utf8");
+
+  assert.match(siteData, /imagePosition\?:\s*string/);
+  assert.match(siteData, /imageScale\?:\s*number/);
+  assert.equal((siteData.match(/imagePosition:/g) ?? []).length, 7);
+  assert.match(catalogCard, /--catalog-image-position/);
+  assert.match(catalogCard, /--catalog-image-scale/);
+  assert.match(catalogCard, /catalog-card-action/);
+  assert.doesNotMatch(books, /className="book-copy"\s+data-reveal/);
+  assert.match(books, /className="book-copy-intro"\s+data-reveal/);
+  assert.match(books, /className="book-purchase"\s+data-reveal/);
+});

@@ -1,0 +1,22 @@
+# Frontend Design System Guardrails (System Skill Matrix)
+
+## 1. Kinetic Micro-Interaction Physics
+- **Zero-Linear Transition Rule:** Absolutely no linear or basic `ease-in-out` transitions. Enforce custom, high-end cubic-bezier easing curves for all interactive states.
+  - *Ultra-Responsive Snap:* `cubic-bezier(0.16, 1, 0.3, 1)` (easeOutExpo) for snappy interactions (buttons, tabs, dropdowns).
+  - *Deliberate/Cinematic:* `cubic-bezier(0.76, 0, 0.24, 1)` (easeInOutQuart) for panel reveals and structural page transitions.
+- **Hardware Acceleration Guard:** All interactive transforms (scales, translates, opacities) must utilize hardware-accelerated properties (`will-change: transform, opacity`). Never animate geometric structural layouts (e.g., `width`, `height`, `margin`) to eliminate layout thrashing.
+- **State Continuity:** Hover, focus, active, and idle states must gracefully interpolate into one another without visual snapping or animation frame truncation.
+
+## 2. Spatial Layout & Stacking Context Isolation
+- **Hitbox Ergonomics:** Interactive target zones must remain physically accessible. Expand clickable bounding boxes using padding rather than structural margins.
+- **Pointer-Event Delegation:** Explicitly enforce inheritance across overlapping layers:
+  - `pointer-events: none` on ambient, structural, and ornamental overlay wrapper containers.
+  - `pointer-events: auto` strictly isolated on actionable leaf nodes.
+- **Strict Z-Index Layering:** Maintain a centralized, tokenized z-index scale (e.g., base, interactive, dropdown, overlay, modal) rather than arbitrary inline assignment (`z-[9999]`), ensuring interactive controls never drop beneath non-interactive visual layers.
+
+## 3. Advanced Typographic Rendering & Reflow Prevention
+- **Subpixel Optimization:** Enforce smooth text rendering profiles globally across modern engines:
+  ```css
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;

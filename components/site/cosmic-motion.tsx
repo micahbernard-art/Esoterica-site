@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import "@/app/kinetic-ui.css";
 import "@/app/galaxy-choreography.css";
@@ -72,6 +73,8 @@ const getRevealRole = (target: HTMLElement) => {
 };
 
 export function CosmicMotion() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const root = document.documentElement;
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -89,6 +92,7 @@ export function CosmicMotion() {
     const revealTargets = Array.from(
       document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR),
     );
+    const pendingRevealTargets = new Set<HTMLElement>();
     const visibleScenes = new Set<HTMLElement>();
     const kineticTargets = Array.from(
       document.querySelectorAll<HTMLElement>(KINETIC_SELECTOR),
@@ -125,6 +129,7 @@ export function CosmicMotion() {
     let pointerAvailable = false;
     let pointerX = 0;
     let pointerY = 0;
+    let revealObserver: IntersectionObserver | null = null;
 
     const saveData = connection?.saveData === true;
 
@@ -192,6 +197,12 @@ export function CosmicMotion() {
       }
     });
 
+    const revealTarget = (target: HTMLElement) => {
+      target.classList.add("is-revealed");
+      pendingRevealTargets.delete(target);
+      revealObserver?.unobserve(target);
+    };
+
     const revealSequence = new Map<HTMLElement, number>();
     revealTargets.forEach((target) => {
       target.dataset.cosmicReveal = "";
@@ -207,14 +218,16 @@ export function CosmicMotion() {
 
       const rect = target.getBoundingClientRect();
       if (rect.bottom > 0 && rect.top < window.innerHeight * 0.96) {
-        target.classList.add("is-revealed");
+        revealTarget(target);
+      } else {
+        pendingRevealTargets.add(target);
       }
     });
 
     if (reducedMotion) {
       root.classList.add("motion-reduced");
       root.style.setProperty("--scroll-p", "0");
-      revealTargets.forEach((target) => target.classList.add("is-revealed"));
+      revealTargets.forEach(revealTarget);
     }
 
     const updateSceneProgress = (scene: HTMLElement) => {
@@ -249,6 +262,13 @@ export function CosmicMotion() {
       if (document.hidden) {
         return;
       }
+
+      pendingRevealTargets.forEach((target) => {
+        const rect = target.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight * 0.98) {
+          revealTarget(target);
+        }
+      });
 
       const maximumScroll = Math.max(
         document.documentElement.scrollHeight - window.innerHeight,
@@ -472,19 +492,17 @@ export function CosmicMotion() {
       { rootMargin: "15% 0px 15% 0px", threshold: 0 },
     );
 
-    const revealObserver = new IntersectionObserver(
+    revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) {
             return;
           }
 
-          const target = entry.target as HTMLElement;
-          target.classList.add("is-revealed");
-          revealObserver.unobserve(target);
+          revealTarget(entry.target as HTMLElement);
         });
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+      { rootMargin: "0px 0px 12% 0px", threshold: 0.01 },
     );
 
     const kineticObserver = new IntersectionObserver(
@@ -509,7 +527,7 @@ export function CosmicMotion() {
     );
 
     scenes.forEach((scene) => sceneObserver.observe(scene));
-    revealTargets.forEach((target) => revealObserver.observe(target));
+    pendingRevealTargets.forEach((target) => revealObserver?.observe(target));
     kineticTargets.forEach((target) => kineticObserver.observe(target));
 
     const handleMotionPreference = (event: MediaQueryListEvent) => {
@@ -517,7 +535,7 @@ export function CosmicMotion() {
       root.classList.toggle("motion-reduced", reducedMotion);
 
       if (reducedMotion) {
-        revealTargets.forEach((target) => target.classList.add("is-revealed"));
+        revealTargets.forEach(revealTarget);
       }
 
       syncKineticMode();
@@ -692,8 +710,9 @@ export function CosmicMotion() {
       );
       hoverPreference.removeEventListener("change", handleKineticPreference);
       sceneObserver.disconnect();
-      revealObserver.disconnect();
+      revealObserver?.disconnect();
       kineticObserver.disconnect();
+      pendingRevealTargets.clear();
 
       root.classList.remove(
         "motion-ready",
@@ -740,7 +759,7 @@ export function CosmicMotion() {
         clearKineticProperties(target);
       });
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

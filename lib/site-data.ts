@@ -23,6 +23,8 @@ export type CatalogItem = {
   description: string;
   image: string;
   imageAlt: string;
+  imagePosition?: string;
+  imageScale?: number;
   featured?: boolean;
 };
 
@@ -38,6 +40,8 @@ export const featuredCatalog: CatalogItem[] = [
       "Consulta por los mazos disponibles y recibe orientación para elegir el más adecuado para ti.",
     image: unsplashImage("photo-1671013033219-c5f37fc92a71"),
     imageAlt: "Cartas de tarot sobre una mesa",
+    imagePosition: "60% 50%",
+    imageScale: 1.04,
   },
   {
     id: "cristales",
@@ -68,6 +72,8 @@ export const tarotCatalog: CatalogItem[] = [
       "Una opción reconocible para quienes desean comenzar o profundizar su práctica.",
     image: unsplashImage("photo-1671013033219-c5f37fc92a71"),
     imageAlt: "Cartas de tarot de estilo clásico",
+    imagePosition: "60% 50%",
+    imageScale: 1.04,
     featured: true,
   },
   {
@@ -78,6 +84,8 @@ export const tarotCatalog: CatalogItem[] = [
       "Una alternativa visual para quienes conectan con el simbolismo lunar y celestial.",
     image: unsplashImage("photo-1761706280224-9b7ded86c42d"),
     imageAlt: "Mazo de tarot con detalles de inspiración celestial",
+    imagePosition: "50% 50%",
+    imageScale: 1.02,
     featured: true,
   },
   {
@@ -88,6 +96,8 @@ export const tarotCatalog: CatalogItem[] = [
       "Cartas pensadas para acompañar la reflexión personal y la práctica intuitiva.",
     image: unsplashImage("photo-1637757960303-6b152b77e161"),
     imageAlt: "Cartas oráculo dispuestas para una lectura",
+    imagePosition: "70% 52%",
+    imageScale: 1.06,
   },
   {
     id: "ediciones-especiales",
@@ -97,6 +107,8 @@ export const tarotCatalog: CatalogItem[] = [
       "Consulta por mazos con acabados, ilustraciones y estilos fuera de las ediciones clásicas.",
     image: unsplashImage("photo-1736594533033-13a135f687cf"),
     imageAlt: "Cartas de tarot de edición ilustrada",
+    imagePosition: "38% 58%",
+    imageScale: 1.02,
   },
   {
     id: "kit-tarot",
@@ -106,6 +118,8 @@ export const tarotCatalog: CatalogItem[] = [
       "Pregunta por combinaciones disponibles de mazo y complementos para tu práctica.",
     image: unsplashImage("photo-1761706280230-e2a1067451f3"),
     imageAlt: "Elementos organizados para una lectura de tarot",
+    imagePosition: "50% 50%",
+    imageScale: 1.02,
   },
   {
     id: "tarot-oscuro",
@@ -115,6 +129,8 @@ export const tarotCatalog: CatalogItem[] = [
       "Una propuesta de estética intensa para quienes prefieren una baraja de tonos profundos.",
     image: unsplashImage("photo-1616410080709-f3514d88666a"),
     imageAlt: "Cartas de tarot en una composición de tonos oscuros",
+    imagePosition: "50% 45%",
+    imageScale: 1.03,
   },
 ];
 

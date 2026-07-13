@@ -43,8 +43,22 @@
   --ui-duration-medium: 520ms;
   --ui-duration-slow: 680ms;
   --ui-duration-cinematic: 720ms;
-  --ui-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ui-ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --ui-ease-structural: cubic-bezier(0.76, 0, 0.24, 1);
+  --ui-ease-out: var(--ui-ease-snap);
   --ui-focus: #fff2b8;
+  --z-underlay: -1;
+  --z-raised: 1;
+  --z-badge: 2;
+  --z-content: 10;
+  --z-action: 12;
+  --z-focus: 18;
+  --z-journey-rail: 24;
+  --z-sticky: 30;
+  --z-overlay: 80;
+  --z-skip: 100;
+  --z-transition: 2147483645;
+  --z-cursor: 2147483646;
 }
 
 * {
@@ -78,6 +92,7 @@ body {
   line-height: 1.65;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -95,6 +110,7 @@ select {
 button,
 a {
   -webkit-tap-highlight-color: rgba(226, 195, 124, 0.22);
+  pointer-events: auto;
 }
 
 button {
@@ -134,7 +150,7 @@ select:focus-visible {
   position: fixed;
   top: 10px;
   left: 16px;
-  z-index: 100;
+  z-index: var(--z-skip);
   min-height: 44px;
   padding: 10px 16px;
   border-radius: var(--radius-sm);
@@ -143,6 +159,8 @@ select:focus-visible {
   font-weight: 800;
   text-decoration: none;
   transform: translateY(-160%);
+  transition: transform var(--ui-duration-fast) var(--ui-ease-snap);
+  will-change: transform, opacity;
 }
 
 .skip-link:focus {
@@ -161,12 +179,36 @@ select:focus-visible {
 .site-content,
 .site-interface {
   position: relative;
-  z-index: 10;
+  z-index: var(--z-content);
   pointer-events: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .site-interface [aria-hidden="true"]:not([data-ui-action] *) {
   pointer-events: none;
+}
+
+.site-interface :is(a, button, input, textarea, select, summary, [role="button"], [data-ui-action]) {
+  pointer-events: auto;
+}
+
+.site-interface [data-ui-action] {
+  position: relative;
+  z-index: var(--z-action);
+}
+
+.site-interface :is([data-ui-action="nav"], [data-ui-action="text"]) {
+  min-height: 48px;
+}
+
+.site-interface [data-ui-action]:focus-visible {
+  z-index: var(--z-focus);
+}
+
+.site-interface :is(a, button, [role="button"], [data-ui-action]):is(:hover, :focus-visible, :active) {
+  will-change: transform, opacity;
 }
 
 .celestial-backdrop {
@@ -216,7 +258,7 @@ select:focus-visible {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: var(--z-sticky);
   border-bottom: 1px solid var(--line);
   background: rgba(7, 11, 19, 0.96);
 }
@@ -291,7 +333,9 @@ select:focus-visible {
   content: "";
   opacity: 0;
   transform: scaleX(0.55);
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition:
+    opacity var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap);
 }
 
 .primary-nav a[aria-current="page"] {
@@ -317,7 +361,10 @@ select:focus-visible {
   font-size: 0.87rem;
   font-weight: 850;
   text-decoration: none;
-  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  transition:
+    background-color var(--ui-duration-fast) var(--ui-ease-snap),
+    border-color var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap);
 }
 
 .hero-section {
@@ -345,7 +392,7 @@ select:focus-visible {
 .hero-copy,
 .hero-feature {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-raised);
 }
 
 .hero-kicker,
@@ -419,7 +466,13 @@ select:focus-visible {
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+  transform: translate3d(0, 0, 0);
+  transition:
+    background-color var(--ui-duration-fast) var(--ui-ease-snap),
+    border-color var(--ui-duration-fast) var(--ui-ease-snap),
+    color var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap),
+    opacity var(--ui-duration-fast) var(--ui-ease-snap);
 }
 
 .button-primary {
@@ -519,7 +572,10 @@ select:focus-visible {
   font-weight: 800;
   text-decoration-color: transparent;
   text-underline-offset: 5px;
-  transition: color 180ms ease, text-decoration-color 180ms ease;
+  transition:
+    color var(--ui-duration-fast) var(--ui-ease-snap),
+    text-decoration-color var(--ui-duration-fast) var(--ui-ease-snap),
+    opacity var(--ui-duration-fast) var(--ui-ease-snap);
 }
 
 .content-section,
@@ -618,14 +674,15 @@ select:focus-visible {
 
 .catalog-card-media img {
   object-fit: cover;
-  transition: transform 420ms ease;
+  transition: transform var(--ui-duration-medium) var(--ui-ease-snap);
+  will-change: transform, opacity;
 }
 
 .reference-label,
 .featured-badge,
 .popular-badge {
   position: absolute;
-  z-index: 2;
+  z-index: var(--z-badge);
   display: inline-flex;
   align-items: center;
   min-height: 30px;
@@ -715,7 +772,12 @@ select:focus-visible {
   background: var(--surface-2);
   color: var(--cream-50);
   text-decoration: none;
-  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  transform: translate3d(0, 0, 0);
+  transition:
+    background-color var(--ui-duration-fast) var(--ui-ease-snap),
+    border-color var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap),
+    opacity var(--ui-duration-fast) var(--ui-ease-snap);
 }
 
 .category-copy {
@@ -1150,7 +1212,12 @@ select:focus-visible {
   background: rgba(255, 250, 240, 0.035);
   color: var(--cream-50);
   text-decoration: none;
-  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  transform: translate3d(0, 0, 0);
+  transition:
+    background-color var(--ui-duration-fast) var(--ui-ease-snap),
+    border-color var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap),
+    opacity var(--ui-duration-fast) var(--ui-ease-snap);
 }
 
 .purchase-link span {
@@ -1384,7 +1451,13 @@ select:focus-visible {
   font-weight: 800;
   letter-spacing: 0.035em;
   text-decoration: none;
-  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+  transform: translate3d(0, 0, 0);
+  transition:
+    background-color var(--ui-duration-fast) var(--ui-ease-snap),
+    border-color var(--ui-duration-fast) var(--ui-ease-snap),
+    color var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap),
+    opacity var(--ui-duration-fast) var(--ui-ease-snap);
 }
 
 @media (hover: hover) and (pointer: fine) {

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { ActionLink } from "@/components/ui/action-link";
 import type { CatalogItem } from "@/lib/site-data";
@@ -9,10 +10,14 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
   const inquiryUrl = whatsappUrl(
     `Hola, quisiera consultar la disponibilidad de ${item.name}. ¿Podrían darme más información?`,
   );
+  const mediaStyle = {
+    "--catalog-image-position": item.imagePosition ?? "50% 50%",
+    "--catalog-image-scale": item.imageScale ?? 1.015,
+  } as CSSProperties;
 
   return (
     <article className="catalog-card" data-reveal="card" data-scroll-scene="catalog-card">
-      <div className="catalog-card-media">
+      <div className="catalog-card-media" style={mediaStyle}>
         <Image
           src={item.image}
           alt={item.imageAlt}
@@ -34,7 +39,7 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
         <div className="catalog-card-footer">
           <span className="availability-label">Disponibilidad por confirmar</span>
           <ActionLink
-            className="button button-secondary compact"
+            className="button button-secondary compact catalog-card-action"
             href={inquiryUrl}
             intent="secondary"
             external
@@ -42,7 +47,8 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
             ariaLabel={`Consultar ${item.name} por WhatsApp (abre en una pestaña nueva)`}
           >
             <CelestialGlyph kind="orbit" />
-            Consultar
+            <span>Consultar</span>
+            <span className="catalog-card-action-arrow" aria-hidden="true">↗</span>
           </ActionLink>
         </div>
       </div>

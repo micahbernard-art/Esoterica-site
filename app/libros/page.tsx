@@ -57,18 +57,20 @@ export default function LibrosPage() {
               </div>
             </div>
 
-            <div className="book-copy" data-reveal="from-right">
-              <p className="section-eyebrow">Guía en español</p>
-              <h2 id="book-title">Un punto de partida para acercarte al Tarot</h2>
-              <p>
-                Accede al libro desde una de sus páginas oficiales. Allí encontrarás
-                la información vigente sobre formatos, precio y condiciones de compra.
-              </p>
+            <div className="book-copy">
+              <div className="book-copy-intro" data-reveal="from-right">
+                <p className="section-eyebrow">Guía en español</p>
+                <h2 id="book-title">Un punto de partida para acercarte al Tarot</h2>
+                <p>
+                  Accede al libro desde una de sus páginas oficiales. Allí encontrarás
+                  la información vigente sobre formatos, precio y condiciones de compra.
+                </p>
+              </div>
 
               <h3>Una guía para comenzar con:</h3>
               <ul className="check-list moon-phase-topics">
                 {topics.map((topic, index) => (
-                  <li data-reveal="rise" key={topic}>
+                  <li key={topic}>
                     <span className={`moon-phase moon-phase--${index + 1}`} aria-hidden="true">
                       <CelestialGlyph kind={index === 1 ? "eclipse" : "moon"} />
                     </span>
@@ -77,7 +79,7 @@ export default function LibrosPage() {
                 ))}
               </ul>
 
-              <div className="book-purchase">
+              <div className="book-purchase" data-reveal="rise">
                 <p>Elige una plataforma de compra:</p>
                 <div className="purchase-links celestial-gateways">
                   <ActionLink

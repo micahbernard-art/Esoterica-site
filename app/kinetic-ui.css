@@ -29,16 +29,19 @@
   translate: var(--kinetic-x) var(--kinetic-y);
   rotate: var(--kinetic-rotate);
   transition:
-    translate 460ms cubic-bezier(0.16, 1, 0.3, 1),
-    rotate 520ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 360ms ease;
+    translate 460ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    rotate 520ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    filter 360ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .kinetic-enabled .is-kinetic-glyph.is-kinetic-active {
   filter: drop-shadow(0 0 5px color-mix(in srgb, var(--kinetic-glyph-glow) 55%, transparent));
   transition-duration: 90ms, 110ms, 160ms;
-  transition-timing-function: linear, linear, ease-out;
-  will-change: translate, rotate;
+  transition-timing-function:
+    var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity, translate, rotate, filter;
 }
 
 /* Each constellation gets a slightly different return cadence. */
@@ -50,9 +53,9 @@
 .page-hero-stars > .is-kinetic-glyph:nth-child(3),
 .reading-tier__sky .is-kinetic-glyph:nth-child(odd) {
   transition-timing-function:
-    cubic-bezier(0.22, 1.35, 0.36, 1),
-    cubic-bezier(0.22, 1.35, 0.36, 1),
-    ease;
+    var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .is-kinetic-control {
@@ -63,23 +66,23 @@
 .kinetic-enabled .is-kinetic-control.is-kinetic-active {
   translate: var(--kinetic-x) var(--kinetic-y);
   transition:
-    translate var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
-  will-change: translate;
+    translate var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity, translate;
 }
 
 .kinetic-enabled .is-kinetic-control:not(.is-kinetic-active) {
   transition:
-    translate var(--ui-duration-medium, 520ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
-    color var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+    translate var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    background-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    color var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .is-kinetic-card {
@@ -140,9 +143,10 @@
     rotateY(var(--kinetic-card-ry))
     translateY(-8px);
   transition:
-    transform 110ms linear,
-    box-shadow 260ms ease;
-  will-change: transform;
+    transform 110ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow 260ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity 260ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity;
 }
 
 .kinetic-enabled .reading-tier.is-featured.is-kinetic-card.is-kinetic-active {
@@ -155,8 +159,9 @@
 
 .kinetic-enabled .is-kinetic-card:not(.is-kinetic-active) {
   transition:
-    transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 480ms ease;
+    transform 620ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow 480ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity 480ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 /* Keep keyboard focus geometry still and predictable. */
@@ -180,12 +185,12 @@
 .kinetic-constrained .is-kinetic-control.is-kinetic-pressed,
 .kinetic-constrained :is(.catalog-card, .category-card).is-kinetic-pressed {
   transform: scale(0.985);
-  transition: transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: transform var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .kinetic-constrained .reading-tier.is-kinetic-pressed {
   transform: scale(0.99);
-  transition: transform var(--ui-duration-fast, 320ms) var(--ui-ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: transform var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .kinetic-constrained .reading-tier.is-featured.is-kinetic-pressed {
@@ -194,15 +199,15 @@
 
 /* Three hero-card sigils breathe at different astronomical cadences. */
 .tarot-fan .tarot-back--left .celestial-glyph {
-  animation: kinetic-hero-left 12s ease-in-out infinite;
+  animation: kinetic-hero-left 12s var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1)) infinite;
 }
 
 .tarot-fan .tarot-back--center .celestial-glyph {
-  animation: kinetic-hero-center 9s ease-in-out infinite;
+  animation: kinetic-hero-center 9s var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1)) infinite;
 }
 
 .tarot-fan .tarot-back--right .celestial-glyph {
-  animation: kinetic-hero-right 14s ease-in-out infinite;
+  animation: kinetic-hero-right 14s var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1)) infinite;
 }
 
 @keyframes kinetic-hero-left {

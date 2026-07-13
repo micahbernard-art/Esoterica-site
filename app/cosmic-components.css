@@ -511,7 +511,10 @@
   color: var(--astral-gold-300);
   opacity: 0;
   transform: scale(0.2) rotate(-45deg);
-  transition: opacity 240ms ease, transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
 .primary-nav a[aria-current="page"] {
@@ -824,7 +827,10 @@
     linear-gradient(180deg, rgba(22, 6, 50, 0.93), rgba(8, 4, 20, 0.96));
   box-shadow: var(--astral-shadow);
   isolation: isolate;
-  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 600ms ease;
+  transition:
+    transform 680ms cubic-bezier(0.76, 0, 0.24, 1),
+    opacity 680ms cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform, opacity;
 }
 
 .catalog-card::before,
@@ -885,9 +891,19 @@
 }
 
 .catalog-card-media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--catalog-image-position, 50% 50%);
   filter: none;
-  transform: scale(1.015);
-  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease;
+  transform: translate3d(0, 0, 0) scale(var(--catalog-image-scale, 1.015));
+  transition:
+    transform 680ms cubic-bezier(0.76, 0, 0.24, 1),
+    opacity 680ms cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform, opacity;
 }
 
 .catalog-card-frame {
@@ -976,6 +992,12 @@
   padding: 1.8rem 1.6rem 1.65rem;
 }
 
+.catalog-card-footer {
+  padding-top: 1.15rem;
+  border-top: 1px solid color-mix(in srgb, var(--comet-300) 16%, transparent);
+  gap: 1rem;
+}
+
 .catalog-card .category-label {
   color: var(--astral-cyan-300);
   letter-spacing: 0.2em;
@@ -1004,6 +1026,7 @@
 
 .availability-label {
   color: var(--astral-muted);
+  letter-spacing: 0.06em;
 }
 
 .catalog-card .button-secondary {
@@ -1015,6 +1038,45 @@
   color: var(--astral-pearl);
   clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
   isolation: isolate;
+  min-width: 9rem;
+  flex: 0 0 auto;
+}
+
+.catalog-card .catalog-card-action {
+  display: grid;
+  min-width: 10.5rem;
+  min-height: 48px;
+  padding: 0.65rem 0.72rem 0.65rem 0.9rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.62rem;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.13),
+    inset 0 -1px rgba(2, 0, 10, 0.72),
+    0 0.8rem 1.8rem rgba(2, 0, 10, 0.22);
+}
+
+.catalog-card-action > span:not(.catalog-card-action-arrow) {
+  letter-spacing: 0.075em;
+  text-align: left;
+}
+
+.catalog-card-action-arrow {
+  display: inline-grid;
+  min-width: 1.7rem;
+  min-height: 1.7rem;
+  border-left: 1px solid color-mix(in srgb, var(--comet-300) 24%, transparent);
+  color: var(--comet-300);
+  font-size: 0.8rem;
+  line-height: 1;
+  opacity: 0.78;
+  place-items: center;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
 .catalog-card .button-secondary::before {
@@ -1112,7 +1174,8 @@
 .footer-nav a > span {
   color: var(--astral-gold-300);
   font-size: 0.65rem;
-  transition: transform 300ms ease;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
 .footer-contact .text-link .celestial-glyph {
@@ -1163,10 +1226,6 @@
   }
 
   .catalog-card:hover {
-    box-shadow:
-      0 44px 100px rgba(2, 0, 10, 0.62),
-      0 0 0 1px rgba(131, 245, 255, 0.28),
-      0 0 76px rgba(131, 56, 236, 0.27);
     transform: translateY(-12px) rotate(0.35deg);
   }
 
@@ -1175,8 +1234,7 @@
   }
 
   .catalog-card:hover .catalog-card-media img {
-    filter: saturate(1.05) contrast(1.08) hue-rotate(0deg);
-    transform: scale(1.09);
+    transform: translate3d(0, 0, 0) scale(calc(var(--catalog-image-scale, 1.015) + 0.055));
   }
 
   .catalog-card:hover .catalog-card-orbit {
@@ -1187,13 +1245,22 @@
   .catalog-card .button-secondary:hover {
     border-color: var(--astral-gold-300);
     background: linear-gradient(110deg, rgba(25, 214, 232, 0.2), rgba(131, 56, 236, 0.36));
-    box-shadow: 0 0 24px rgba(25, 214, 232, 0.16);
     color: var(--astral-pearl);
+  }
+
+  .catalog-card-action:hover .catalog-card-action-arrow {
+    opacity: 1;
+    transform: translate3d(2px, -2px, 0);
   }
 
   .footer-nav a:hover > span {
     transform: rotate(90deg) scale(1.25);
   }
+}
+
+.catalog-card-action:active .catalog-card-action-arrow {
+  opacity: 0.62;
+  transform: translate3d(0, 0, 0) scale(0.92);
 }
 
 @media (max-width: 1100px) {
@@ -1495,20 +1562,44 @@
 
 /* Premium foreground action contract — shared by every route and navigation rail. */
 :where([data-ui-action]) {
+  position: relative;
   min-height: 48px;
   font-family: var(--font-utility);
   font-weight: 680;
   letter-spacing: 0.055em;
   -webkit-font-smoothing: antialiased;
   backface-visibility: hidden;
+  isolation: isolate;
+  pointer-events: auto;
   transform: translate3d(0, 0, 0);
   transform-origin: center;
   transition:
-    color var(--ui-duration-fast) var(--ui-ease-out),
-    border-color var(--ui-duration-fast) var(--ui-ease-out),
-    background-color var(--ui-duration-fast) var(--ui-ease-out),
-    box-shadow var(--ui-duration-medium) var(--ui-ease-out),
-    transform var(--ui-duration-fast) var(--ui-ease-out);
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+:where([data-ui-action])::before,
+:where([data-ui-action])::after,
+:where([data-ui-action]) :is(.celestial-glyph, .nav-star, .gateway-arrow) {
+  pointer-events: none;
+}
+
+.site-header::after,
+.brand-mark::after,
+.footer-logo-mark::after,
+.header-contact::before,
+.page-hero-stars,
+.section-heading-astra,
+.section-heading-orbit,
+.catalog-card::before,
+.catalog-card::after,
+.catalog-card-media::before,
+.catalog-card-media::after,
+.catalog-card-frame,
+.catalog-card-orbit,
+.site-footer::before {
+  pointer-events: none;
 }
 
 /* Match legacy element-level selectors so they cannot shrink the hit area. */
@@ -1534,6 +1625,52 @@ a[data-ui-action] {
   letter-spacing: 0.075em;
 }
 
+:is(.button[data-ui-action="primary"], .button[data-ui-action="secondary"]) {
+  overflow: hidden;
+  border: 1px solid transparent;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(5, 3, 20, 0.72),
+    0 0.75rem 2rem rgba(2, 0, 10, 0.28);
+}
+
+.button[data-ui-action="primary"] {
+  border-color: color-mix(in srgb, var(--solar-400) 86%, white);
+  background:
+    linear-gradient(118deg, rgba(255, 239, 177, 0.24), transparent 38%),
+    linear-gradient(135deg, #f7d77f, var(--solar-400) 56%, #d99c3d);
+  color: var(--cosmos-950);
+  text-shadow: 0 1px rgba(255, 255, 255, 0.28);
+}
+
+.button[data-ui-action="secondary"] {
+  border-color: color-mix(in srgb, var(--comet-300) 48%, var(--orchid-300));
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(135deg, rgba(28, 13, 61, 0.96), rgba(12, 8, 34, 0.98));
+  color: var(--pearl-50);
+}
+
+:is(.button[data-ui-action="primary"], .button[data-ui-action="secondary"])::before {
+  position: absolute;
+  inset: 2px;
+  z-index: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(105deg, rgba(255, 255, 255, 0.1), transparent 36% 68%, rgba(98, 230, 232, 0.08));
+  content: "";
+  opacity: 0.62;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+:is(.button[data-ui-action="primary"], .button[data-ui-action="secondary"]) > * {
+  position: relative;
+  z-index: var(--z-badge, 2);
+}
+
 :is([data-ui-action="gateway"], [data-ui-action="card"]) {
   letter-spacing: 0.04em;
 }
@@ -1543,7 +1680,7 @@ a[data-ui-action] {
 }
 
 [data-ui-action]:focus-visible {
-  z-index: 12;
+  z-index: var(--z-focus, 12);
   outline: 2px solid var(--ui-focus);
   outline-offset: 4px;
   box-shadow:
@@ -1570,12 +1707,22 @@ a[data-ui-action] {
     color: var(--pearl-50);
     text-shadow: 0 0 1.1rem color-mix(in srgb, var(--comet-300) 32%, transparent);
   }
+
+  :is(.button[data-ui-action="primary"], .button[data-ui-action="secondary"]):hover::before {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(0.975);
+  }
 }
 
 [data-ui-action]:not([data-ui-action="card"]):not([aria-disabled="true"]):active {
   box-shadow: none;
   transform: translate3d(0, 1px, 0) scale(0.985);
   transition-duration: var(--ui-duration-fast);
+}
+
+:is(.button[data-ui-action="primary"], .button[data-ui-action="secondary"]):active::before {
+  opacity: 0.42;
+  transform: translate3d(0, 0, 0) scale(0.95);
 }
 
 .button.compact[data-ui-action] {
@@ -1585,6 +1732,13 @@ a[data-ui-action] {
 @media (pointer: coarse), (hover: none) {
   :where([data-ui-action]) {
     transform: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .catalog-card .button-secondary[data-ui-action] {
+    width: 100%;
+    min-width: 0;
   }
 }
 
