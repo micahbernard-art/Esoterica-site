@@ -1,1123 +1,292 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePerformanceMode } from "@/components/providers/performance-provider";
 import "@/app/kinetic-ui.css";
-import "@/app/galaxy-choreography.css";
 
-const SCENE_SELECTOR = "main > section, .site-footer";
-const CHAPTERS = ["threshold", "orbit", "eclipse", "archive", "finale"] as const;
-type CosmicChapter = (typeof CHAPTERS)[number];
-const COSMIC_BEATS = [
-  "arrival",
-  "specimen",
-  "choice",
-  "clarity",
-  "portal",
-] as const;
-type CosmicBeat = (typeof COSMIC_BEATS)[number];
+type JourneyAct =
+  | "thesis"
+  | "specimen"
+  | "matrix"
+  | "evidence"
+  | "portal"
+  | "quiet";
 
-const COSMIC_BEAT_LABELS: Record<CosmicBeat, string> = {
-  arrival: "Llegada",
-  specimen: "Observación",
-  choice: "Elección",
-  clarity: "Claridad",
-  portal: "Portal",
+type NavigatorConnection = EventTarget & {
+  saveData?: boolean;
 };
 
-const SPECIMEN_SCENES = new Set(["catalog-arches", "reading-chambers"]);
-const CHOICE_SCENES = new Set([
-  "category-orbit",
-  "readings-eclipse",
-  "monthly-eclipse",
-]);
-const CLARITY_SCENES = new Set([
-  "planet-path",
-  "crescent-about",
-  "wayfinding",
-]);
-const PORTAL_SCENES = new Set([
-  "portal-close",
-  "recommendation-portal",
-  "book-question",
-  "reading-close",
-]);
-
-const PORTAL_PEAK = 0.62;
-const PORTAL_RESTING_GLOW = 0.12;
-
-const ENVIRONMENT_PROPERTIES = [
-  "--beat-p",
-  "--environment-p",
-  "--environment-focus",
-  "--environment-velocity",
-  "--finale-p",
+const JOURNEY_SCENE_SELECTOR = "[data-journey-scene]";
+const JOURNEY_VARIABLES = [
+  "--journey-p",
+  "--chapter-p",
+  "--act-p",
+  "--act-focus",
+  "--journey-velocity",
+  "--portal-p",
 ] as const;
-
-const REVEAL_SELECTOR = "[data-reveal]";
-
-const KINETIC_CARD_SELECTOR = [
-  ".catalog-card",
-  ".category-card",
-  ".reading-tier",
-].join(",");
-
-const KINETIC_CONTROL_SELECTOR =
-  "[data-ui-action]:not([aria-disabled='true']):not(:disabled)";
-const KINETIC_GLYPH_SELECTOR = ".celestial-glyph";
-const KINETIC_SELECTOR = [
-  KINETIC_GLYPH_SELECTOR,
-  KINETIC_CONTROL_SELECTOR,
-  KINETIC_CARD_SELECTOR,
-].join(",");
-
-const KINETIC_PROPERTIES = [
-  "--kinetic-x",
-  "--kinetic-y",
-  "--kinetic-rotate",
-  "--kinetic-card-rx",
-  "--kinetic-card-ry",
-  "--kinetic-highlight-x",
-  "--kinetic-highlight-y",
-  "--kinetic-highlight-alpha",
-] as const;
+const ACTIVE_HYSTERESIS_RATIO = 0.08;
 
 const clamp = (value: number, minimum = 0, maximum = 1) =>
   Math.min(maximum, Math.max(minimum, value));
 
-const normalizeBeatProgress = (progress: number, start: number, end: number) =>
-  clamp((progress - start) / Math.max(end - start, 0.001));
-
-const getCosmicBeat = (
-  scene: HTMLElement,
-  progress: number,
-): { beat: CosmicBeat; progress: number } => {
-  const sceneName = scene.dataset.scrollScene?.toLowerCase() ?? "";
-  const sceneProgress = clamp(progress);
-
-  if (sceneName === "galaxy-entry" || sceneName.startsWith("page-hero-")) {
-    return { beat: "arrival", progress: sceneProgress };
-  }
-
-  if (sceneName === "tarot-constellation") {
-    if (sceneProgress < 0.34) {
-      return {
-        beat: "specimen",
-        progress: normalizeBeatProgress(sceneProgress, 0, 0.34),
-      };
+const connection = () =>
+  (
+    navigator as Navigator & {
+      connection?: NavigatorConnection;
     }
-    if (sceneProgress < 0.72) {
-      return {
-        beat: "choice",
-        progress: normalizeBeatProgress(sceneProgress, 0.34, 0.72),
-      };
-    }
-    return {
-      beat: "clarity",
-      progress: normalizeBeatProgress(sceneProgress, 0.72, 1),
-    };
-  }
+  ).connection;
 
-  if (sceneName === "book-artifact") {
-    if (sceneProgress < 0.35) {
-      return {
-        beat: "specimen",
-        progress: normalizeBeatProgress(sceneProgress, 0, 0.35),
-      };
-    }
-    if (sceneProgress < 0.7) {
-      return {
-        beat: "choice",
-        progress: normalizeBeatProgress(sceneProgress, 0.35, 0.7),
-      };
-    }
-    return {
-      beat: "clarity",
-      progress: normalizeBeatProgress(sceneProgress, 0.7, 1),
-    };
-  }
-
-  if (SPECIMEN_SCENES.has(sceneName)) {
-    return { beat: "specimen", progress: sceneProgress };
-  }
-  if (CHOICE_SCENES.has(sceneName)) {
-    return { beat: "choice", progress: sceneProgress };
-  }
-  if (CLARITY_SCENES.has(sceneName)) {
-    return { beat: "clarity", progress: sceneProgress };
-  }
-  if (PORTAL_SCENES.has(sceneName)) {
-    return { beat: "portal", progress: sceneProgress };
-  }
-  if (sceneName === "footer") {
-    return { beat: "portal", progress: 1 };
-  }
-
-  return { beat: "clarity", progress: sceneProgress };
-};
-
-const getPortalBloom = (beat: CosmicBeat, progress: number) => {
-  if (beat !== "portal") return 0;
-
-  const distance = Math.abs(progress - PORTAL_PEAK);
-  const spread = progress <= PORTAL_PEAK ? PORTAL_PEAK : 1 - PORTAL_PEAK;
-  const peak = clamp(1 - distance / spread);
-  return PORTAL_RESTING_GLOW + peak * (1 - PORTAL_RESTING_GLOW);
-};
-
-const CHAPTER_SCENES: Record<CosmicChapter, string[]> = {
-  threshold: ["entry", "hero"],
-  orbit: ["catalog", "category", "constellation", "recommendation"],
-  eclipse: ["reading", "eclipse", "question"],
-  archive: ["book", "artifact", "path", "about", "wayfinding", "chambers"],
-  finale: ["close", "portal", "footer"],
-};
-
-const FINALE_SCENES = new Set([
-  "recommendation-portal",
-  "book-question",
-  "reading-close",
-  "portal-close",
-]);
-
-const getChapter = (scene: HTMLElement, index: number, total: number) => {
-  if (index === 0) return CHAPTERS[0];
-  if (index === total - 1) return CHAPTERS[4];
-
-  const sceneName = scene.dataset.scrollScene?.toLowerCase() ?? "";
-  if (FINALE_SCENES.has(sceneName)) return CHAPTERS[4];
-  return (
-    CHAPTERS.find((chapter) =>
-      CHAPTER_SCENES[chapter].some((word) => sceneName.includes(word)),
-    ) ?? CHAPTERS[Math.min(index, CHAPTERS.length - 1)]
-  );
-};
-
-const getRevealRole = (target: HTMLElement) => {
-  if (
-    target.matches("h1, h2, h3") ||
-    target.querySelector(":scope > h1, :scope > h2, :scope > h3")
-  ) {
-    return "heading";
-  }
-  if (target.matches(KINETIC_GLYPH_SELECTOR)) return "glyph";
-  if (target.matches(KINETIC_CARD_SELECTOR)) return "card";
-  if (target.matches("p, li, dd, dt")) return "body";
-  return "focal";
+const sceneAct = (scene: HTMLElement): JourneyAct => {
+  const act = scene.dataset.journeyAct;
+  return act === "thesis" ||
+    act === "specimen" ||
+    act === "matrix" ||
+    act === "evidence" ||
+    act === "portal" ||
+    act === "quiet"
+    ? act
+    : "evidence";
 };
 
 export function CosmicMotion() {
   const pathname = usePathname();
   const { mode, ready } = usePerformanceMode();
+  const [capabilityVersion, setCapabilityVersion] = useState(0);
 
   useEffect(() => {
     const root = document.documentElement;
-    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const forcedColorsPreference = window.matchMedia("(forced-colors: active)");
-    const coarsePointerPreference = window.matchMedia("(pointer: coarse)");
-    const hoverPreference = window.matchMedia("(hover: hover)");
-    const connection = (
-      navigator as Navigator & {
-        connection?: { saveData?: boolean };
-      }
-    ).connection;
     const scenes = Array.from(
-      document.querySelectorAll<HTMLElement>(SCENE_SELECTOR),
+      document.querySelectorAll<HTMLElement>(JOURNEY_SCENE_SELECTOR),
     );
-    const revealTargets = Array.from(
-      document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR),
+    if (scenes.length === 0) return;
+
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const forcedColors = matchMedia("(forced-colors: active)");
+    const dataConnection = connection();
+    const staticExperience =
+      !ready ||
+      mode === "lite" ||
+      reducedMotion.matches ||
+      forcedColors.matches ||
+      dataConnection?.saveData === true;
+    const anchors = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>("[data-journey-anchor]"),
     );
-    const pendingRevealTargets = new Set<HTMLElement>();
-    const visibleScenes = new Set<HTMLElement>();
-    const kineticTargets = Array.from(
-      document.querySelectorAll<HTMLElement>(KINETIC_SELECTOR),
-    );
-    const glyphTargets = kineticTargets.filter((target) =>
-      target.matches(KINETIC_GLYPH_SELECTOR),
-    );
-    const cardTargets = kineticTargets.filter((target) =>
-      target.matches(KINETIC_CARD_SELECTOR),
-    );
-    const controlTargets = kineticTargets.filter(
-      (target) =>
-        target.matches(KINETIC_CONTROL_SELECTOR) &&
-        !target.matches(KINETIC_CARD_SELECTOR),
-    );
-
-    if (!ready || mode === "lite") {
-      const initialScene = scenes[0] ?? document.body;
-      const initialBeat = getCosmicBeat(initialScene, 0.5);
-      root.classList.add(
-        "motion-ready",
-        "motion-reduced",
-        "kinetic-constrained",
-      );
-      root.classList.remove("motion-paused", "kinetic-enabled");
-      root.style.setProperty("--scroll-p", "0");
-      root.dataset.cosmicChapter = getChapter(
-        initialScene,
-        0,
-        Math.max(scenes.length, 1),
-      );
-      root.dataset.cosmicBeat = initialBeat.beat;
-      root.style.setProperty("--beat-p", "0.5");
-      root.style.setProperty("--environment-p", "0.5");
-      root.style.setProperty("--environment-focus", "0.14");
-      root.style.setProperty("--environment-velocity", "0");
-      root.style.setProperty("--finale-p", "0");
-
-      scenes.forEach((scene, index) => {
-        scene.dataset.cosmicScene = "";
-        scene.dataset.cosmicChapter = getChapter(scene, index, scenes.length);
-        scene.dataset.cosmicBeat = getCosmicBeat(scene, 0.5).beat;
-        scene.classList.add("is-cosmic-visible", "is-cosmic-focus");
-        scene.style.setProperty("--scene-p", "0.5");
-        scene.style.setProperty("--scene-focus", "1");
-        scene.style.setProperty("--scene-velocity", "0");
-        scene.style.setProperty("--scene-direction", "1");
-        scene.style.setProperty("--scene-shift", "0px");
-        scene.style.setProperty("--scene-shift-soft", "0px");
-        scene.style.setProperty("--scene-shift-reverse", "0px");
-      });
-
-      revealTargets.forEach((target) => {
-        target.dataset.cosmicReveal = "";
-        target.dataset.cosmicRole = getRevealRole(target);
-        target.classList.add("is-revealed");
-        target.style.setProperty("--reveal-delay", "0ms");
-        target.style.setProperty("--reveal-order", "0");
-      });
-
-      glyphTargets.forEach((target) => target.classList.add("is-kinetic-glyph"));
-      controlTargets.forEach((target) =>
-        target.classList.add("is-kinetic-control"),
-      );
-      cardTargets.forEach((target) => target.classList.add("is-kinetic-card"));
-
-      return () => {
-        root.classList.remove(
-          "motion-ready",
-          "motion-reduced",
-          "motion-paused",
-          "kinetic-enabled",
-          "kinetic-constrained",
-          "kinetic-save-data",
-        );
-        root.style.removeProperty("--scroll-p");
-        delete root.dataset.cosmicChapter;
-        delete root.dataset.cosmicBeat;
-        ENVIRONMENT_PROPERTIES.forEach((property) =>
-          root.style.removeProperty(property),
-        );
-
-        scenes.forEach((scene) => {
-          delete scene.dataset.cosmicScene;
-          delete scene.dataset.cosmicChapter;
-          delete scene.dataset.cosmicBeat;
-          scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
-          scene.style.removeProperty("--scene-p");
-          scene.style.removeProperty("--scene-focus");
-          scene.style.removeProperty("--scene-velocity");
-          scene.style.removeProperty("--scene-direction");
-          scene.style.removeProperty("--scene-shift");
-          scene.style.removeProperty("--scene-shift-soft");
-          scene.style.removeProperty("--scene-shift-reverse");
-        });
-
-        revealTargets.forEach((target) => {
-          delete target.dataset.cosmicReveal;
-          delete target.dataset.cosmicRole;
-          target.classList.remove("is-revealed");
-          target.style.removeProperty("--reveal-delay");
-          target.style.removeProperty("--reveal-order");
-        });
-
-        kineticTargets.forEach((target) => {
-          target.classList.remove(
-            "is-kinetic-glyph",
-            "is-kinetic-control",
-            "is-kinetic-card",
-            "is-kinetic-active",
-            "is-kinetic-pressed",
-          );
-          KINETIC_PROPERTIES.forEach((property) =>
-            target.style.removeProperty(property),
-          );
-        });
-      };
-    }
-
-    const visibleGlyphs = new Set<HTMLElement>();
-    const visibleCards = new Set<HTMLElement>();
-    const visibleControls = new Set<HTMLElement>();
-    const journeyRail = document.createElement("div");
-    const journeyPoints = new Map<CosmicBeat, HTMLSpanElement>();
 
     let frameId: number | null = null;
-    let velocityResetId: number | null = null;
-    let lastScrollProgress = -1;
-    let lastScrollY = window.scrollY;
-    let lastScrollTime = performance.now();
-    let scrollVelocity = 0;
-    let scrollDirection = 1;
-    let reducedMotion = motionPreference.matches;
-    let forcedColors = forcedColorsPreference.matches;
-    let coarsePointer =
-      coarsePointerPreference.matches || !hoverPreference.matches;
-    let pointerDirty = false;
-    let pointerAvailable = false;
-    let pointerX = 0;
-    let pointerY = 0;
-    let revealObserver: IntersectionObserver | null = null;
-    let activeChapter: CosmicChapter = getChapter(
-      scenes[0] ?? document.body,
-      0,
-      Math.max(scenes.length, 1),
-    );
-    let activeBeat: CosmicBeat = getCosmicBeat(
-      scenes[0] ?? document.body,
-      0.5,
-    ).beat;
+    let activeScene: HTMLElement | null = null;
+    let activeIndex = 0;
+    let previousScrollY = window.scrollY;
+    let previousFrameTime = performance.now();
 
-    const saveData = connection?.saveData === true;
-
-    journeyRail.className = "cosmic-journey-rail cosmic-beat-hud";
-    journeyRail.dataset.cosmicHud = "oracle-observatory";
-    journeyRail.setAttribute("aria-hidden", "true");
-    COSMIC_BEATS.forEach((beat, index) => {
-      const point = document.createElement("span");
-      point.style.setProperty("--journey-index", `${index}`);
-      point.dataset.cosmicBeatMarker = beat;
-      point.dataset.beatLabel = COSMIC_BEAT_LABELS[beat];
-      point.dataset.beatState = beat === activeBeat ? "active" : "idle";
-      journeyRail.append(point);
-      journeyPoints.set(beat, point);
-    });
-    document.body.append(journeyRail);
-
-    const canUseKinetics = () =>
-      !reducedMotion && !forcedColors && !coarsePointer && !saveData;
-
-    const clearKineticProperties = (target: HTMLElement) => {
-      target.classList.remove("is-kinetic-active");
-      KINETIC_PROPERTIES.forEach((property) =>
-        target.style.removeProperty(property),
-      );
-    };
-
-    const clearAllKinetics = () => {
-      glyphTargets.forEach(clearKineticProperties);
-      controlTargets.forEach(clearKineticProperties);
-      cardTargets.forEach(clearKineticProperties);
-    };
-
-    const syncKineticMode = () => {
-      const enabled = canUseKinetics();
-      root.classList.toggle("kinetic-enabled", enabled);
-      root.classList.toggle("kinetic-constrained", !enabled);
-      root.classList.toggle("kinetic-save-data", saveData);
-
-      if (!enabled) {
-        pointerAvailable = false;
-        clearAllKinetics();
-      }
-    };
-
-    glyphTargets.forEach((target) => target.classList.add("is-kinetic-glyph"));
-    controlTargets.forEach((target) =>
-      target.classList.add("is-kinetic-control"),
-    );
-    cardTargets.forEach((target) => target.classList.add("is-kinetic-card"));
-    syncKineticMode();
-
-    scenes.forEach((scene, index) => {
-      scene.dataset.cosmicScene = "";
-      scene.dataset.cosmicChapter = getChapter(scene, index, scenes.length);
-      scene.dataset.cosmicBeat = getCosmicBeat(scene, 0.5).beat;
-      scene.style.setProperty("--chapter-index", `${index}`);
-      scene.style.setProperty("--chapter-count", `${scenes.length}`);
-      scene.style.setProperty("--scene-p", "0.5");
-      scene.style.setProperty("--scene-focus", "0");
-      scene.style.setProperty("--scene-velocity", "0");
-      scene.style.setProperty("--scene-direction", "1");
-      scene.style.setProperty("--scene-shift", "0px");
-      scene.style.setProperty("--scene-shift-soft", "0px");
-      scene.style.setProperty("--scene-shift-reverse", "0px");
-
-      const rect = scene.getBoundingClientRect();
-      if (rect.bottom > -window.innerHeight * 0.3 && rect.top < window.innerHeight * 1.3) {
-        visibleScenes.add(scene);
-      }
-    });
-
-    const revealTarget = (target: HTMLElement) => {
-      target.classList.add("is-revealed");
-      pendingRevealTargets.delete(target);
-      revealObserver?.unobserve(target);
-    };
-
-    const revealSequence = new Map<HTMLElement, number>();
-    revealTargets.forEach((target) => {
-      target.dataset.cosmicReveal = "";
-      target.dataset.cosmicRole = getRevealRole(target);
-      const scene = target.closest<HTMLElement>(SCENE_SELECTOR);
-      const sequence = scene ? revealSequence.get(scene) ?? 0 : 0;
-      target.style.setProperty("--reveal-order", `${sequence}`);
-      target.style.setProperty(
-        "--reveal-delay",
-        `${Math.min(sequence, 8) * 54}ms`,
-      );
-      if (scene) revealSequence.set(scene, sequence + 1);
-
-      const rect = target.getBoundingClientRect();
-      if (rect.bottom > 0 && rect.top < window.innerHeight * 0.96) {
-        revealTarget(target);
-      } else {
-        pendingRevealTargets.add(target);
-      }
-    });
-
-    if (reducedMotion) {
-      root.classList.add("motion-reduced");
-      root.style.setProperty("--scroll-p", "0");
-      revealTargets.forEach(revealTarget);
-    }
-
-    const updateSceneProgress = (scene: HTMLElement) => {
-      const rect = scene.getBoundingClientRect();
-      const travel = window.innerHeight + rect.height;
-      const progress = clamp((window.innerHeight - rect.top) / Math.max(travel, 1));
-      const focus = clamp(1 - Math.abs(0.5 - progress) * 2);
-
-      scene.style.setProperty("--scene-p", progress.toFixed(4));
-      scene.style.setProperty("--scene-focus", focus.toFixed(4));
-      scene.style.setProperty("--scene-velocity", scrollVelocity.toFixed(3));
-      scene.style.setProperty("--scene-direction", `${scrollDirection}`);
-      scene.style.setProperty(
-        "--scene-shift",
-        `${((0.5 - progress) * 84).toFixed(2)}px`,
-      );
-      scene.style.setProperty(
-        "--scene-shift-soft",
-        `${((0.5 - progress) * 38).toFixed(2)}px`,
-      );
-      scene.style.setProperty(
-        "--scene-shift-reverse",
-        `${((progress - 0.5) * 52).toFixed(2)}px`,
-      );
-      scene.dataset.cosmicBeat = getCosmicBeat(scene, progress).beat;
-
-      return {
-        distance: Math.abs(
-          rect.top + rect.height / 2 - window.innerHeight / 2,
-        ),
-        focus,
-        progress,
-      };
-    };
-
-    const writeEnvironmentScore = (
-      scene: HTMLElement | null,
-      progress: number,
-      focus: number,
-      visiblePortalProgress: number | null,
+    const writeVariables = (
+      journeyProgress: number,
+      chapterProgress: number,
+      actProgress: number,
+      actFocus: number,
+      velocity: number,
+      portalProgress: number,
     ) => {
-      const sceneBeatScore = scene
-        ? getCosmicBeat(scene, progress)
-        : { beat: activeBeat, progress: 0.5 };
-      const beatScore =
-        visiblePortalProgress === null
-          ? sceneBeatScore
-          : { beat: "portal" as const, progress: visiblePortalProgress };
-      const chapter =
-        visiblePortalProgress === null
-          ? ((scene?.dataset.cosmicChapter as CosmicChapter | undefined) ??
-            activeChapter)
-          : "finale";
-      const environmentIsStatic = reducedMotion || forcedColors || saveData;
-      const beatProgress = environmentIsStatic ? 0.5 : beatScore.progress;
-      const environmentProgress = beatProgress;
-      const environmentFocus = environmentIsStatic
-        ? Math.min(focus, 0.14)
-        : focus;
-      const environmentVelocity = environmentIsStatic ? 0 : scrollVelocity;
-      const finaleProgress = environmentIsStatic
-        ? 0
-        : visiblePortalProgress === null
-          ? 0
-          : getPortalBloom("portal", visiblePortalProgress);
-
-      activeChapter = chapter;
-      const nextBeat = beatScore.beat;
-      const beatChanged = nextBeat !== activeBeat;
-      activeBeat = nextBeat;
-      if (root.dataset.cosmicChapter !== chapter) {
-        root.dataset.cosmicChapter = chapter;
-      }
-      if (root.dataset.cosmicBeat !== activeBeat) {
-        root.dataset.cosmicBeat = activeBeat;
-      }
-      root.style.setProperty("--beat-p", beatProgress.toFixed(4));
-      root.style.setProperty(
-        "--environment-p",
-        environmentProgress.toFixed(4),
-      );
-      root.style.setProperty(
-        "--environment-focus",
-        environmentFocus.toFixed(4),
-      );
-      root.style.setProperty(
-        "--environment-velocity",
-        environmentVelocity.toFixed(3),
-      );
-      root.style.setProperty("--finale-p", finaleProgress.toFixed(4));
-      if (beatChanged) {
-        journeyPoints.forEach((point, beat) => {
-          const isActive = beat === activeBeat;
-          point.classList.toggle("is-active", isActive);
-          point.dataset.beatState = isActive ? "active" : "idle";
-        });
-      }
+      root.style.setProperty("--journey-p", journeyProgress.toFixed(4));
+      root.style.setProperty("--chapter-p", chapterProgress.toFixed(4));
+      root.style.setProperty("--act-p", actProgress.toFixed(4));
+      root.style.setProperty("--act-focus", actFocus.toFixed(4));
+      root.style.setProperty("--journey-velocity", velocity.toFixed(3));
+      root.style.setProperty("--portal-p", portalProgress.toFixed(4));
     };
 
-    const writeMotionFrame = () => {
-      frameId = null;
+    const commitScene = (scene: HTMLElement, index: number) => {
+      if (scene === activeScene) return;
 
-      if (document.hidden) {
-        return;
+      activeScene?.setAttribute("data-journey-state", "idle");
+      activeScene = scene;
+      activeIndex = index;
+      scene.setAttribute("data-journey-state", "active");
+
+      const sceneId = scene.dataset.journeyScene ?? scene.id;
+      const act = sceneAct(scene);
+      root.dataset.journeyScene = sceneId;
+      root.dataset.journeyAct = act;
+      root.dataset.stagePreset = scene.dataset.stagePreset ?? "clarity";
+
+      if (scene.dataset.specimenIndex !== undefined) {
+        root.dataset.specimenIndex = scene.dataset.specimenIndex;
+      } else {
+        delete root.dataset.specimenIndex;
       }
 
-      pendingRevealTargets.forEach((target) => {
-        const rect = target.getBoundingClientRect();
-        if (rect.bottom > 0 && rect.top < window.innerHeight * 0.98) {
-          revealTarget(target);
+      anchors.forEach((anchor) => {
+        const current = anchor.dataset.journeyAnchor === sceneId;
+        anchor.dataset.journeyAnchorState = current ? "active" : "idle";
+        if (current) anchor.setAttribute("aria-current", "location");
+        else anchor.removeAttribute("aria-current");
+      });
+    };
+
+    const scoreScene = (scene: HTMLElement) => {
+      const rect = scene.getBoundingClientRect();
+      const viewportHeight = Math.max(window.innerHeight, 1);
+      const travel = viewportHeight + rect.height;
+      const progress = clamp((viewportHeight - rect.top) / Math.max(travel, 1));
+      const centerDistance = Math.abs(
+        rect.top + rect.height / 2 - viewportHeight / 2,
+      );
+      const focus = clamp(1 - centerDistance / (viewportHeight * 0.78));
+      return { centerDistance, focus, progress, rect };
+    };
+
+    const selectActiveScene = () => {
+      let candidate = activeScene ?? scenes[0];
+      let candidateIndex = activeScene ? activeIndex : 0;
+      let candidateScore = scoreScene(candidate);
+
+      scenes.forEach((scene, index) => {
+        const score = scoreScene(scene);
+        const intersectsJourneyBand =
+          score.rect.bottom > window.innerHeight * 0.08 &&
+          score.rect.top < window.innerHeight * 0.92;
+        if (!intersectsJourneyBand) return;
+        if (score.centerDistance < candidateScore.centerDistance) {
+          candidate = scene;
+          candidateIndex = index;
+          candidateScore = score;
         }
       });
 
+      if (activeScene && candidate !== activeScene) {
+        const activeScore = scoreScene(activeScene);
+        const hysteresis = window.innerHeight * ACTIVE_HYSTERESIS_RATIO;
+        const activeStillVisible =
+          activeScore.rect.bottom > 0 && activeScore.rect.top < window.innerHeight;
+        if (
+          activeStillVisible &&
+          candidateScore.centerDistance + hysteresis >= activeScore.centerDistance
+        ) {
+          candidate = activeScene;
+          candidateIndex = activeIndex;
+          candidateScore = activeScore;
+        }
+      }
+
+      commitScene(candidate, candidateIndex);
+      return candidateScore;
+    };
+
+    const writeFrame = (time = performance.now()) => {
+      frameId = null;
+      if (document.hidden) return;
+
+      const score = selectActiveScene();
+      const scrollY = window.scrollY;
       const maximumScroll = Math.max(
         document.documentElement.scrollHeight - window.innerHeight,
         1,
       );
-      const scrollProgress = reducedMotion
-        ? 0
-        : clamp(window.scrollY / maximumScroll);
+      const elapsed = Math.max(time - previousFrameTime, 16);
+      const velocity = clamp((scrollY - previousScrollY) / elapsed / 1.35, -1, 1);
+      const journeyProgress = clamp(scrollY / maximumScroll);
+      const chapterProgress = clamp(
+        (activeIndex + score.progress) / Math.max(scenes.length, 1),
+      );
+      const act = activeScene ? sceneAct(activeScene) : "evidence";
+      const portalProgress =
+        act === "portal" ? score.progress : act === "quiet" ? 0.12 : 0;
 
-      if (Math.abs(scrollProgress - lastScrollProgress) >= 0.001) {
-        root.style.setProperty("--scroll-p", scrollProgress.toFixed(4));
-        lastScrollProgress = scrollProgress;
-      }
-
-      let activeScene: HTMLElement | null = null;
-      let activeDistance = Number.POSITIVE_INFINITY;
-      let activeProgress = 0.5;
-      let activeFocus = 0;
-      let visiblePortalProgress: number | null = null;
-
-      visibleScenes.forEach((scene) => {
-        let sceneProgress = 0.5;
-        let sceneFocus = 1;
-        let sceneDistance = Number.POSITIVE_INFINITY;
-
-        if (reducedMotion) {
-          const rect = scene.getBoundingClientRect();
-          sceneDistance = Math.abs(
-            rect.top + rect.height / 2 - window.innerHeight / 2,
-          );
-          scene.style.setProperty("--scene-p", "0.5");
-          scene.style.setProperty("--scene-shift", "0px");
-          scene.style.setProperty("--scene-shift-soft", "0px");
-          scene.style.setProperty("--scene-shift-reverse", "0px");
-          scene.style.setProperty("--scene-focus", "1");
-          scene.style.setProperty("--scene-velocity", "0");
-        } else {
-          const score = updateSceneProgress(scene);
-          sceneProgress = score.progress;
-          sceneFocus = score.focus;
-          sceneDistance = score.distance;
-
-          const sceneName = scene.dataset.scrollScene?.toLowerCase() ?? "";
-          if (
-            PORTAL_SCENES.has(sceneName) &&
-            score.progress > 0 &&
-            score.progress < 1
-          ) {
-            visiblePortalProgress = score.progress;
-          }
-        }
-
-        if (sceneDistance < activeDistance) {
-          activeScene = scene;
-          activeDistance = sceneDistance;
-          activeProgress = sceneProgress;
-          activeFocus = sceneFocus;
-        }
-      });
-
-      if (activeScene) {
-        scenes.forEach((scene) => {
-          const active = scene === activeScene;
-          scene.classList.toggle("is-cosmic-focus", active);
-        });
-        writeEnvironmentScore(
-          activeScene,
-          activeProgress,
-          activeFocus,
-          visiblePortalProgress,
-        );
-      }
-
-      if (pointerDirty) {
-        pointerDirty = false;
-
-        if (!pointerAvailable || !canUseKinetics()) {
-          clearAllKinetics();
-          return;
-        }
-
-        visibleGlyphs.forEach((glyph) => {
-          const focusedControl = glyph.closest<HTMLElement>(
-            "a:focus-visible, button:focus-visible",
-          );
-
-          if (focusedControl || glyph.closest(".tarot-fan")) {
-            clearKineticProperties(glyph);
-            return;
-          }
-
-          const rect = glyph.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          const deltaX = pointerX - centerX;
-          const deltaY = pointerY - centerY;
-          const distance = Math.hypot(deltaX, deltaY);
-          const radius = Math.min(190, Math.max(110, rect.width * 5));
-
-          if (distance >= radius) {
-            clearKineticProperties(glyph);
-            return;
-          }
-
-          const personality = glyph.dataset.kineticPersonality ?? "star";
-          const personalityStrength =
-            personality === "orbit"
-              ? 1
-              : personality === "sun"
-                ? 0.88
-                : personality === "moon"
-                  ? 0.72
-                  : personality === "eclipse"
-                    ? 0.82
-                    : 0.62;
-          const proximity = 1 - distance / radius;
-          const strength = (1 + proximity * 2) * personalityStrength;
-          const directionX = distance > 0 ? deltaX / distance : 0;
-          const directionY = distance > 0 ? deltaY / distance : 0;
-          const rotation =
-            (directionX * 2.4 + directionY * 0.8) * personalityStrength;
-
-          glyph.style.setProperty(
-            "--kinetic-x",
-            `${(directionX * strength).toFixed(2)}px`,
-          );
-          glyph.style.setProperty(
-            "--kinetic-y",
-            `${(directionY * strength).toFixed(2)}px`,
-          );
-          glyph.style.setProperty(
-            "--kinetic-rotate",
-            `${rotation.toFixed(2)}deg`,
-          );
-          glyph.classList.add("is-kinetic-active");
-        });
-
-        visibleControls.forEach((control) => {
-          if (control.matches(":focus-visible")) {
-            clearKineticProperties(control);
-            return;
-          }
-
-          const rect = control.getBoundingClientRect();
-          const reach = 18;
-          const isNear =
-            pointerX >= rect.left - reach &&
-            pointerX <= rect.right + reach &&
-            pointerY >= rect.top - reach &&
-            pointerY <= rect.bottom + reach;
-
-          if (!isNear) {
-            clearKineticProperties(control);
-            return;
-          }
-
-          const normalizedX = clamp(
-            (pointerX - (rect.left + rect.width / 2)) /
-              Math.max(rect.width / 2, 1),
-            -1,
-            1,
-          );
-          const normalizedY = clamp(
-            (pointerY - (rect.top + rect.height / 2)) /
-              Math.max(rect.height / 2, 1),
-            -1,
-            1,
-          );
-
-          control.style.setProperty(
-            "--kinetic-x",
-            `${(normalizedX * 5).toFixed(2)}px`,
-          );
-          control.style.setProperty(
-            "--kinetic-y",
-            `${(normalizedY * 5).toFixed(2)}px`,
-          );
-          control.classList.add("is-kinetic-active");
-        });
-
-        visibleCards.forEach((card) => {
-          if (card.matches(":focus-visible, :focus-within")) {
-            clearKineticProperties(card);
-            return;
-          }
-
-          const rect = card.getBoundingClientRect();
-          const isInside =
-            pointerX >= rect.left &&
-            pointerX <= rect.right &&
-            pointerY >= rect.top &&
-            pointerY <= rect.bottom;
-
-          if (!isInside) {
-            clearKineticProperties(card);
-            return;
-          }
-
-          const normalizedX = clamp(
-            (pointerX - rect.left) / Math.max(rect.width, 1),
-          );
-          const normalizedY = clamp(
-            (pointerY - rect.top) / Math.max(rect.height, 1),
-          );
-
-          card.style.setProperty(
-            "--kinetic-card-rx",
-            `${((0.5 - normalizedY) * 5).toFixed(2)}deg`,
-          );
-          card.style.setProperty(
-            "--kinetic-card-ry",
-            `${((normalizedX - 0.5) * 5).toFixed(2)}deg`,
-          );
-          card.style.setProperty(
-            "--kinetic-highlight-x",
-            `${(normalizedX * 100).toFixed(1)}%`,
-          );
-          card.style.setProperty(
-            "--kinetic-highlight-y",
-            `${(normalizedY * 100).toFixed(1)}%`,
-          );
-          card.style.setProperty("--kinetic-highlight-alpha", "13%");
-          card.classList.add("is-kinetic-active");
-        });
-      }
+      writeVariables(
+        journeyProgress,
+        chapterProgress,
+        score.progress,
+        score.focus,
+        velocity,
+        portalProgress,
+      );
+      previousScrollY = scrollY;
+      previousFrameTime = time;
     };
 
-    const requestMotionFrame = () => {
+    const requestJourneyFrame = () => {
       if (frameId === null && !document.hidden) {
-        frameId = window.requestAnimationFrame(writeMotionFrame);
+        frameId = requestAnimationFrame(writeFrame);
       }
-    };
-
-    const sceneObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const scene = entry.target as HTMLElement;
-          if (entry.isIntersecting) {
-            visibleScenes.add(scene);
-            scene.classList.add("is-cosmic-visible");
-          } else {
-            visibleScenes.delete(scene);
-            scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
-          }
-        });
-        requestMotionFrame();
-      },
-      { rootMargin: "15% 0px 15% 0px", threshold: 0 },
-    );
-
-    revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) {
-            return;
-          }
-
-          revealTarget(entry.target as HTMLElement);
-        });
-      },
-      { rootMargin: "0px 0px 12% 0px", threshold: 0.01 },
-    );
-
-    const kineticObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const target = entry.target as HTMLElement;
-          const targetSet = target.matches(KINETIC_CARD_SELECTOR)
-            ? visibleCards
-            : target.matches(KINETIC_GLYPH_SELECTOR)
-              ? visibleGlyphs
-              : visibleControls;
-
-          if (entry.isIntersecting) {
-            targetSet.add(target);
-          } else {
-            targetSet.delete(target);
-            clearKineticProperties(target);
-          }
-        });
-      },
-      { rootMargin: "12% 8% 12% 8%", threshold: 0 },
-    );
-
-    scenes.forEach((scene) => sceneObserver.observe(scene));
-    pendingRevealTargets.forEach((target) => revealObserver?.observe(target));
-    kineticTargets.forEach((target) => kineticObserver.observe(target));
-
-    const handleMotionPreference = (event: MediaQueryListEvent) => {
-      reducedMotion = event.matches;
-      root.classList.toggle("motion-reduced", reducedMotion);
-
-      if (reducedMotion) {
-        revealTargets.forEach(revealTarget);
-      }
-
-      syncKineticMode();
-      pointerDirty = true;
-      requestMotionFrame();
-    };
-
-    const handleKineticPreference = () => {
-      forcedColors = forcedColorsPreference.matches;
-      coarsePointer =
-        coarsePointerPreference.matches || !hoverPreference.matches;
-      syncKineticMode();
-      pointerDirty = true;
-      requestMotionFrame();
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (!canUseKinetics() || event.pointerType === "touch") {
-        return;
-      }
-
-      pointerX = event.clientX;
-      pointerY = event.clientY;
-      pointerAvailable = true;
-      pointerDirty = true;
-      requestMotionFrame();
-    };
-
-    const handlePointerLeave = () => {
-      pointerAvailable = false;
-      pointerDirty = true;
-      requestMotionFrame();
-    };
-
-    const handlePointerDown = (event: PointerEvent) => {
-      if (event.pointerType !== "touch" && !coarsePointer) {
-        return;
-      }
-
-      const origin = event.target;
-      if (!(origin instanceof Element)) {
-        return;
-      }
-
-      const pressedTarget = origin.closest<HTMLElement>(
-        `${KINETIC_CARD_SELECTOR}, ${KINETIC_CONTROL_SELECTOR}`,
-      );
-      pressedTarget?.classList.add("is-kinetic-pressed");
-    };
-
-    const releasePressedTargets = () => {
-      kineticTargets.forEach((target) =>
-        target.classList.remove("is-kinetic-pressed"),
-      );
-    };
-
-    const handleFocusIn = (event: FocusEvent) => {
-      const origin = event.target;
-      if (!(origin instanceof HTMLElement)) {
-        return;
-      }
-
-      const focusedCard = origin.closest<HTMLElement>(KINETIC_CARD_SELECTOR);
-      const focusedControl = origin.closest<HTMLElement>(
-        KINETIC_CONTROL_SELECTOR,
-      );
-      if (focusedCard) {
-        clearKineticProperties(focusedCard);
-      }
-      if (focusedControl) {
-        clearKineticProperties(focusedControl);
-      }
-      origin
-        .querySelectorAll<HTMLElement>(KINETIC_GLYPH_SELECTOR)
-        .forEach(clearKineticProperties);
-    };
-
-    const handleResize = () => {
-      pointerDirty = true;
-      requestMotionFrame();
-    };
-
-    const handleScroll = () => {
-      const now = performance.now();
-      const elapsed = Math.max(now - lastScrollTime, 16);
-      const delta = window.scrollY - lastScrollY;
-      scrollVelocity = clamp(delta / elapsed / 1.25, -1, 1);
-      if (Math.abs(delta) > 0.5) scrollDirection = delta > 0 ? 1 : -1;
-      lastScrollY = window.scrollY;
-      lastScrollTime = now;
-
-      if (velocityResetId !== null) window.clearTimeout(velocityResetId);
-      velocityResetId = window.setTimeout(() => {
-        scrollVelocity = 0;
-        requestMotionFrame();
-      }, 120);
-      pointerDirty = pointerAvailable;
-      requestMotionFrame();
     };
 
     const handleVisibility = () => {
-      root.classList.toggle("motion-paused", document.hidden);
-
-      if (document.hidden) {
-        pointerAvailable = false;
-        clearAllKinetics();
-        if (frameId !== null) {
-          window.cancelAnimationFrame(frameId);
-          frameId = null;
-        }
-        return;
+      root.classList.toggle("journey-paused", document.hidden);
+      if (document.hidden && frameId !== null) {
+        cancelAnimationFrame(frameId);
+        frameId = null;
+      } else if (!document.hidden) {
+        previousScrollY = window.scrollY;
+        previousFrameTime = performance.now();
+        requestJourneyFrame();
       }
-
-      pointerDirty = true;
-      requestMotionFrame();
     };
 
-    root.classList.toggle("motion-reduced", reducedMotion);
-    root.classList.toggle("motion-paused", document.hidden);
-    root.style.setProperty("--scroll-p", "0");
-    writeMotionFrame();
+    const handleCapabilityChange = () => {
+      setCapabilityVersion((version) => version + 1);
+    };
 
-    const readyFrame = window.requestAnimationFrame(() => {
-      root.classList.add("motion-ready");
-    });
+    scenes.forEach((scene) => scene.setAttribute("data-journey-state", "idle"));
+    root.classList.toggle("journey-static", staticExperience);
+    root.classList.toggle("journey-cinematic", !staticExperience);
+    reducedMotion.addEventListener("change", handleCapabilityChange);
+    forcedColors.addEventListener("change", handleCapabilityChange);
+    dataConnection?.addEventListener("change", handleCapabilityChange);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize, { passive: true });
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    document.documentElement.addEventListener("pointerleave", handlePointerLeave);
-    document.addEventListener("pointerdown", handlePointerDown, { passive: true });
-    document.addEventListener("pointerup", releasePressedTargets, { passive: true });
-    document.addEventListener("pointercancel", releasePressedTargets, {
-      passive: true,
-    });
-    document.addEventListener("focusin", handleFocusIn);
+    if (staticExperience) {
+      const firstScene = scenes[0];
+      commitScene(firstScene, 0);
+      scenes.forEach((scene) => scene.setAttribute("data-journey-state", "static"));
+      writeVariables(0, 0, 0.5, 1, 0, 0);
+
+      return () => {
+        reducedMotion.removeEventListener("change", handleCapabilityChange);
+        forcedColors.removeEventListener("change", handleCapabilityChange);
+        dataConnection?.removeEventListener("change", handleCapabilityChange);
+        scenes.forEach((scene) => scene.removeAttribute("data-journey-state"));
+        root.classList.remove("journey-static", "journey-cinematic");
+        delete root.dataset.journeyScene;
+        delete root.dataset.journeyAct;
+        delete root.dataset.stagePreset;
+        delete root.dataset.specimenIndex;
+        JOURNEY_VARIABLES.forEach((variable) => root.style.removeProperty(variable));
+      };
+    }
+
+    writeFrame();
+    root.classList.add("journey-ready");
+    window.addEventListener("scroll", requestJourneyFrame, { passive: true });
+    window.addEventListener("resize", requestJourneyFrame, { passive: true });
     document.addEventListener("visibilitychange", handleVisibility);
-    motionPreference.addEventListener("change", handleMotionPreference);
-    forcedColorsPreference.addEventListener("change", handleKineticPreference);
-    coarsePointerPreference.addEventListener("change", handleKineticPreference);
-    hoverPreference.addEventListener("change", handleKineticPreference);
 
     return () => {
-      window.cancelAnimationFrame(readyFrame);
-      if (frameId !== null) {
-        window.cancelAnimationFrame(frameId);
-      }
-      if (velocityResetId !== null) {
-        window.clearTimeout(velocityResetId);
-      }
-
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("pointermove", handlePointerMove);
-      document.documentElement.removeEventListener(
-        "pointerleave",
-        handlePointerLeave,
-      );
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("pointerup", releasePressedTargets);
-      document.removeEventListener("pointercancel", releasePressedTargets);
-      document.removeEventListener("focusin", handleFocusIn);
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", requestJourneyFrame);
+      window.removeEventListener("resize", requestJourneyFrame);
       document.removeEventListener("visibilitychange", handleVisibility);
-      motionPreference.removeEventListener("change", handleMotionPreference);
-      forcedColorsPreference.removeEventListener(
-        "change",
-        handleKineticPreference,
-      );
-      coarsePointerPreference.removeEventListener(
-        "change",
-        handleKineticPreference,
-      );
-      hoverPreference.removeEventListener("change", handleKineticPreference);
-      sceneObserver.disconnect();
-      revealObserver?.disconnect();
-      kineticObserver.disconnect();
-      pendingRevealTargets.clear();
-
+      reducedMotion.removeEventListener("change", handleCapabilityChange);
+      forcedColors.removeEventListener("change", handleCapabilityChange);
+      dataConnection?.removeEventListener("change", handleCapabilityChange);
+      scenes.forEach((scene) => scene.removeAttribute("data-journey-state"));
+      anchors.forEach((anchor) => {
+        anchor.dataset.journeyAnchorState = "idle";
+        anchor.removeAttribute("aria-current");
+      });
       root.classList.remove(
-        "motion-ready",
-        "motion-reduced",
-        "motion-paused",
-        "kinetic-enabled",
-        "kinetic-constrained",
-        "kinetic-save-data",
+        "journey-ready",
+        "journey-paused",
+        "journey-static",
+        "journey-cinematic",
       );
-      root.style.removeProperty("--scroll-p");
-      delete root.dataset.cosmicChapter;
-      delete root.dataset.cosmicBeat;
-      ENVIRONMENT_PROPERTIES.forEach((property) =>
-        root.style.removeProperty(property),
-      );
-      journeyRail.remove();
-
-      scenes.forEach((scene) => {
-        delete scene.dataset.cosmicScene;
-        delete scene.dataset.cosmicChapter;
-        delete scene.dataset.cosmicBeat;
-        scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
-        scene.style.removeProperty("--chapter-index");
-        scene.style.removeProperty("--chapter-count");
-        scene.style.removeProperty("--scene-p");
-        scene.style.removeProperty("--scene-focus");
-        scene.style.removeProperty("--scene-velocity");
-        scene.style.removeProperty("--scene-direction");
-        scene.style.removeProperty("--scene-shift");
-        scene.style.removeProperty("--scene-shift-soft");
-        scene.style.removeProperty("--scene-shift-reverse");
-      });
-
-      revealTargets.forEach((target) => {
-        delete target.dataset.cosmicReveal;
-        delete target.dataset.cosmicRole;
-        target.classList.remove("is-revealed");
-        target.style.removeProperty("--reveal-delay");
-        target.style.removeProperty("--reveal-order");
-      });
-
-      kineticTargets.forEach((target) => {
-        target.classList.remove(
-          "is-kinetic-glyph",
-          "is-kinetic-control",
-          "is-kinetic-card",
-          "is-kinetic-active",
-          "is-kinetic-pressed",
-        );
-        clearKineticProperties(target);
-      });
+      delete root.dataset.journeyScene;
+      delete root.dataset.journeyAct;
+      delete root.dataset.stagePreset;
+      delete root.dataset.specimenIndex;
+      JOURNEY_VARIABLES.forEach((variable) => root.style.removeProperty(variable));
     };
-  }, [mode, pathname, ready]);
+  }, [capabilityVersion, mode, pathname, ready]);
 
   return null;
 }

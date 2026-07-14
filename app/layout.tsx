@@ -10,6 +10,8 @@ import "./cinematic-journey.css";
 import "./globals.css";
 import "./cosmic-components.css";
 import "./cosmic-pages.css";
+import "./cinematic-stage.css";
+import "./journey-typography.css";
 import "./galaxy-experience.css";
 import "./performance-guardian.css";
 

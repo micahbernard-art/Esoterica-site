@@ -1,0 +1,1132 @@
+/* El Atlas Vivo — one persistent observatory, many semantic scroll acts. */
+:root {
+  --z-galaxy: 1;
+  --z-stage-world: 4;
+  --z-stage-ornament: 6;
+  --z-stage-content: 10;
+  --z-stage-action: 12;
+  --z-stage-hud: 24;
+  --z-stage-header: 30;
+  --z-stage-overlay: 80;
+  --atlas-edge: rgba(255, 250, 238, 0.16);
+  --atlas-edge-bright: rgba(239, 207, 142, 0.48);
+  --atlas-violet: rgba(170, 116, 255, 0.4);
+  --atlas-cyan: rgba(104, 226, 240, 0.34);
+  --atlas-coral: rgba(255, 137, 121, 0.28);
+  --atlas-glass: rgba(10, 7, 26, 0.66);
+}
+
+.atlas-journey {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: clip;
+}
+
+.atlas-journey .site-content {
+  position: relative;
+  z-index: var(--z-stage-content);
+  pointer-events: none;
+}
+
+.atlas-journey .site-content :is(a, button, input, select, textarea, [role="button"]) {
+  pointer-events: auto;
+}
+
+/* The header is a stable instrument, not another full-width section. */
+.atlas-journey .site-header {
+  position: fixed;
+  z-index: var(--z-stage-header);
+  top: max(0.8rem, env(safe-area-inset-top));
+  left: 50%;
+  width: min(calc(100% - 2rem), 76rem);
+  margin: 0;
+  border: 1px solid var(--atlas-edge);
+  border-radius: 1.35rem;
+  background: rgba(8, 5, 21, 0.68);
+  box-shadow: 0 1rem 3.5rem rgba(2, 0, 12, 0.24), inset 0 1px rgba(255, 255, 255, 0.06);
+  transform: translate3d(-50%, 0, 0);
+  backdrop-filter: blur(20px) saturate(118%);
+  -webkit-backdrop-filter: blur(20px) saturate(118%);
+}
+
+.atlas-journey .site-header::after {
+  display: none;
+}
+
+.atlas-journey .header-inner {
+  width: 100%;
+  min-height: 4.25rem;
+  padding: 0.45rem 0.55rem 0.45rem 0.75rem;
+}
+
+.atlas-journey .brand-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.atlas-journey .brand-wordmark {
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+}
+
+.atlas-journey .primary-nav ul {
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border: 0;
+  background: transparent;
+}
+
+.atlas-journey .primary-nav [data-ui-action="nav"] {
+  min-height: 2.85rem;
+  padding-inline: clamp(0.75rem, 1.8vw, 1.15rem);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--cream-200);
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+  font-weight: 620;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    opacity var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap);
+  will-change: transform, opacity;
+}
+
+.atlas-journey .primary-nav [aria-current="page"] {
+  border-color: var(--atlas-edge-bright);
+  background: rgba(239, 207, 142, 0.08);
+  color: var(--cream-50);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .atlas-journey .primary-nav [data-ui-action="nav"]:hover {
+    opacity: 1;
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* The persistent visual subject. It never remounts between chapters. */
+.cinematic-stage {
+  position: fixed;
+  z-index: var(--z-stage-world);
+  inset: 0;
+  overflow: hidden;
+  contain: paint;
+  pointer-events: none;
+}
+
+.cinematic-stage::before,
+.cinematic-stage::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.cinematic-stage::before {
+  z-index: var(--z-raised);
+  background:
+    linear-gradient(90deg, transparent 7.9%, rgba(255, 255, 255, 0.045) 8%, transparent 8.1%),
+    linear-gradient(90deg, transparent 49.9%, rgba(255, 255, 255, 0.035) 50%, transparent 50.1%),
+    linear-gradient(0deg, transparent 15.9%, rgba(255, 255, 255, 0.035) 16%, transparent 16.1%),
+    radial-gradient(circle at 74% 44%, rgba(239, 207, 142, 0.08), transparent 28%);
+  opacity: calc(0.3 + var(--act-focus, 0) * 0.42);
+}
+
+.cinematic-stage::after {
+  z-index: var(--z-badge);
+  background:
+    radial-gradient(circle at 50% 50%, transparent 32%, rgba(3, 1, 12, 0.28) 72%, rgba(3, 1, 12, 0.76) 100%),
+    linear-gradient(180deg, rgba(4, 2, 13, 0.16), transparent 35%, rgba(4, 2, 13, 0.36));
+}
+
+.cinematic-stage__aperture {
+  position: absolute;
+  z-index: var(--z-badge);
+  top: 50%;
+  left: 72%;
+  width: clamp(24rem, 50vw, 48rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: calc(0.72 + var(--act-focus, 0) * 0.26);
+  transform:
+    translate3d(-50%, calc(-50% + (var(--act-p, 0.5) - 0.5) * -4rem), 0)
+    rotate(calc((var(--journey-p, 0) * 48deg) - 8deg))
+    scale(calc(0.82 + var(--act-focus, 0) * 0.16));
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.cinematic-stage__aperture::before,
+.cinematic-stage__aperture::after {
+  position: absolute;
+  inset: 9%;
+  border: 1px solid var(--atlas-edge);
+  border-radius: 50%;
+  content: "";
+}
+
+.cinematic-stage__aperture::before {
+  background:
+    conic-gradient(from 26deg, transparent 0 8%, rgba(239, 207, 142, 0.18) 8.2% 8.45%, transparent 8.7% 28%, rgba(134, 211, 236, 0.15) 28.2% 28.5%, transparent 28.8% 64%, rgba(179, 128, 255, 0.16) 64.2% 64.55%, transparent 64.8%),
+    radial-gradient(circle, rgba(15, 9, 38, 0.78) 0 34%, rgba(12, 8, 31, 0.35) 34.4% 47%, transparent 47.4%);
+  box-shadow: inset 0 0 0 1.6rem rgba(255, 255, 255, 0.012), 0 0 5rem rgba(112, 74, 209, 0.14);
+  transform: rotate(calc(var(--journey-p, 0) * -96deg));
+  will-change: transform;
+}
+
+.cinematic-stage__aperture::after {
+  inset: 18%;
+  border-color: rgba(239, 207, 142, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(150, 108, 232, 0.12),
+    inset 0 0 4rem rgba(5, 2, 18, 0.85);
+  transform: scale(calc(0.86 + var(--chapter-p, 0) * 0.12));
+  will-change: transform;
+}
+
+.cinematic-stage__orbit {
+  position: absolute;
+  inset: 2%;
+  border: 1px solid var(--atlas-edge);
+  border-radius: 50%;
+  opacity: 0.7;
+  transform: rotate(calc(var(--journey-p, 0) * 86deg));
+  will-change: transform, opacity;
+}
+
+.cinematic-stage__orbit::before,
+.cinematic-stage__orbit::after {
+  position: absolute;
+  top: 50%;
+  width: 0.55rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--cream-50);
+  box-shadow: 0 0 1.4rem rgba(255, 244, 202, 0.85);
+  content: "";
+}
+
+.cinematic-stage__orbit::before { left: -0.28rem; }
+.cinematic-stage__orbit::after { right: -0.28rem; }
+
+.cinematic-stage__orbit--inner {
+  inset: 24%;
+  border-color: var(--atlas-edge-bright);
+  transform: rotate(calc(var(--journey-p, 0) * -132deg + 24deg));
+}
+
+.cinematic-stage__object {
+  position: absolute;
+  z-index: var(--z-badge);
+  top: 50%;
+  left: 50%;
+  width: 28%;
+  height: 42%;
+  transform:
+    translate3d(-50%, -50%, 0)
+    rotate(calc(-8deg + var(--specimen-index, 0) * 5deg))
+    scale(calc(0.84 + var(--act-focus, 0) * 0.14));
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.cinematic-stage__object::before,
+.cinematic-stage__object::after,
+.cinematic-stage__object > span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--atlas-edge-bright);
+  border-radius: 1.1rem;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(239, 207, 142, 0.22), transparent 18%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(90, 48, 154, 0.12) 48%, rgba(5, 2, 17, 0.88));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 1.4rem 4rem rgba(2, 0, 12, 0.32);
+  content: "";
+  transform-origin: 50% 92%;
+  will-change: transform, opacity;
+}
+
+.cinematic-stage__object::before {
+  transform: translate3d(-38%, 4%, -1px) rotate(-18deg);
+}
+
+.cinematic-stage__object::after {
+  transform: translate3d(38%, 4%, -2px) rotate(18deg);
+}
+
+.cinematic-stage__object > span:nth-child(1) {
+  transform: translate3d(-19%, 1%, 1px) rotate(-9deg);
+}
+
+.cinematic-stage__object > span:nth-child(2) {
+  transform: translate3d(19%, 1%, 2px) rotate(9deg);
+}
+
+.cinematic-stage__object > span:nth-child(3) {
+  background:
+    conic-gradient(from 90deg at 50% 48%, transparent, rgba(239, 207, 142, 0.16), transparent 28%, rgba(134, 211, 236, 0.12), transparent 62%),
+    radial-gradient(circle at 50% 48%, rgba(7, 3, 19, 0.9) 0 19%, rgba(239, 207, 142, 0.4) 19.5% 20%, rgba(8, 4, 21, 0.82) 20.5% 42%, rgba(176, 119, 255, 0.22) 42.5% 43%, transparent 43.5%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(6, 3, 18, 0.94));
+}
+
+.cinematic-stage__portal-light {
+  position: absolute;
+  z-index: var(--z-raised);
+  inset: 2%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 250, 225, 0.96) 0 2%, rgba(239, 185, 109, 0.54) 5%, rgba(193, 115, 255, 0.2) 18%, transparent 54%);
+  opacity: calc(var(--portal-p, 0) * 0.9);
+  transform: scale(calc(0.28 + var(--portal-p, 0) * 1.08));
+  will-change: transform, opacity;
+}
+
+.cinematic-stage__coordinate {
+  position: absolute;
+  z-index: var(--z-stage-ornament);
+  right: clamp(1.5rem, 4vw, 4rem);
+  bottom: clamp(5rem, 10vh, 8rem);
+  display: grid;
+  margin: 0;
+  color: var(--cream-300);
+  font-family: var(--font-utility);
+  font-size: 0.58rem;
+  font-weight: 620;
+  letter-spacing: 0.2em;
+  line-height: 1.5;
+  text-align: right;
+  text-transform: uppercase;
+  opacity: 0.66;
+}
+
+html[data-stage-preset="tarot"] .cinematic-stage__aperture {
+  left: 72%;
+  transform:
+    translate3d(-50%, calc(-50% + (var(--act-p, 0.5) - 0.5) * -5rem), 0)
+    rotate(calc(var(--chapter-p, 0) * 38deg - 10deg))
+    scale(calc(0.9 + var(--act-focus, 0) * 0.12));
+}
+
+html[data-stage-preset="book"] .cinematic-stage__object {
+  width: 31%;
+  height: 39%;
+  transform: translate3d(-50%, -50%, 0) rotate(calc(-4deg + var(--act-p, 0) * 8deg));
+}
+
+html[data-stage-preset="book"] .cinematic-stage__object::before,
+html[data-stage-preset="book"] .cinematic-stage__object::after,
+html[data-stage-preset="book"] .cinematic-stage__object > span:nth-child(1),
+html[data-stage-preset="book"] .cinematic-stage__object > span:nth-child(2) {
+  transform: translate3d(calc((var(--specimen-index, 0) + 1) * 0.5rem), calc((var(--specimen-index, 0) + 1) * -0.38rem), 0);
+}
+
+html[data-stage-preset="eclipse"] .cinematic-stage__object {
+  width: 36%;
+  height: 36%;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0) rotate(calc(var(--chapter-p, 0) * 72deg));
+}
+
+html[data-stage-preset="eclipse"] .cinematic-stage__object::before,
+html[data-stage-preset="eclipse"] .cinematic-stage__object::after,
+html[data-stage-preset="eclipse"] .cinematic-stage__object > span {
+  border-radius: 50%;
+  transform: translate3d(0, 0, 0) scale(calc(1 - var(--specimen-index, 0) * 0.09));
+}
+
+html[data-stage-preset="eclipse"] .cinematic-stage__object > span:nth-child(3) {
+  transform: translate3d(calc(var(--specimen-index, 0) * 14%), 0, 0) scale(0.78);
+}
+
+html[data-stage-preset="matrix"] .cinematic-stage__object {
+  transform: translate3d(-50%, -50%, 0) rotate(45deg) scale(1.1);
+}
+
+html[data-stage-preset="clarity"] .cinematic-stage__aperture {
+  left: 78%;
+  opacity: 0.62;
+  transform: translate3d(-50%, -50%, 0) scale(0.72);
+}
+
+html[data-stage-preset="portal"] .cinematic-stage__aperture {
+  left: 50%;
+  opacity: 1;
+  transform:
+    translate3d(-50%, -50%, 0)
+    rotate(calc(var(--portal-p, 0) * 120deg))
+    scale(calc(0.68 + var(--portal-p, 0) * 0.38));
+}
+
+html[data-stage-preset="portal"] .cinematic-stage__object {
+  opacity: calc(1 - var(--portal-p, 0) * 0.82);
+  transform: translate3d(-50%, -50%, 0) rotate(calc(var(--portal-p, 0) * 90deg)) scale(calc(0.72 - var(--portal-p, 0) * 0.42));
+}
+
+html[data-stage-preset="quiet"] .cinematic-stage {
+  opacity: 0.52;
+}
+
+html[data-stage-preset="quiet"] .cinematic-stage__aperture {
+  left: 84%;
+  transform: translate3d(-50%, -50%, 0) scale(0.48);
+}
+
+/* Semantic rail and route acts. */
+.journey-content,
+.atlas-journey .subpage.astral-page {
+  position: relative;
+  z-index: var(--z-stage-content);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.journey-scene {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: 85svh;
+  align-items: center;
+  padding: clamp(7rem, 12vh, 10rem) max(clamp(1.5rem, 6vw, 6rem), calc((100vw - 80rem) / 2));
+  overflow: clip;
+  pointer-events: none;
+}
+
+.journey-scene--threshold,
+.journey-scene[data-stage-preset="threshold"] {
+  min-height: 100svh;
+}
+
+.journey-scene--thesis,
+.journey-scene[data-journey-act="thesis"]:not([data-stage-preset="threshold"]) {
+  min-height: 75svh;
+}
+
+.journey-scene--specimen,
+.journey-scene[data-journey-act="specimen"] {
+  min-height: 90svh;
+}
+
+.journey-scene--matrix,
+.journey-scene[data-journey-act="matrix"] {
+  min-height: 95svh;
+}
+
+.journey-scene--evidence,
+.journey-scene[data-journey-act="evidence"] {
+  min-height: 85svh;
+}
+
+.journey-scene--portal,
+.journey-scene[data-journey-act="portal"] {
+  min-height: 95svh;
+}
+
+.journey-scene--quiet,
+.journey-scene[data-journey-act="quiet"] {
+  min-height: 88svh;
+  align-items: end;
+  padding-bottom: 5rem;
+}
+
+.journey-scene > * {
+  position: relative;
+  z-index: var(--z-stage-content);
+  opacity: 0.56;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity var(--ui-duration-cinematic) var(--ui-ease-structural),
+    transform var(--ui-duration-cinematic) var(--ui-ease-structural);
+  will-change: transform, opacity;
+}
+
+.journey-scene[data-journey-state="active"] > *,
+.journey-scene[data-journey-state="static"] > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.journey-scene :is(a, button, input, select, textarea, [role="button"]) {
+  pointer-events: auto;
+}
+
+/* The old reveal controller is deliberately retired inside the Atlas. */
+.journey-scene [data-reveal],
+.journey-scene [data-astral-arrival] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+.journey-scene > .page-hero {
+  width: 100%;
+  min-height: 82svh;
+  margin: 0;
+  padding-inline: 0;
+  background: transparent;
+}
+
+.journey-first-fold,
+.journey-scene .page-hero-inner {
+  width: min(100%, 78rem);
+}
+
+.journey-first-fold {
+  display: grid;
+  align-content: center;
+  min-height: 78svh;
+  padding-top: 4rem;
+}
+
+.journey-first-fold .astral-title,
+.journey-first-fold h1,
+.journey-scene .page-hero h1 {
+  max-width: 7.4ch;
+  font-size: clamp(4.6rem, 11vw, 10rem);
+  line-height: 0.8;
+}
+
+.journey-first-fold .hero-subtitle {
+  max-width: 38ch;
+}
+
+.journey-first-fold .hero-actions {
+  max-width: 42rem;
+}
+
+.journey-evidence-card,
+.journey-clarity-copy,
+.journey-reading-specimen,
+.journey-portal-copy {
+  width: min(100%, 37rem);
+  margin-right: auto;
+  padding: clamp(1.6rem, 4vw, 3rem);
+  border: 1px solid var(--atlas-edge);
+  border-radius: var(--titanium-radius-panel);
+  background:
+    linear-gradient(125deg, rgba(239, 207, 142, 0.09), transparent 34%),
+    var(--atlas-glass);
+  box-shadow: var(--titanium-shadow);
+  backdrop-filter: blur(22px) saturate(116%);
+  -webkit-backdrop-filter: blur(22px) saturate(116%);
+}
+
+.journey-index,
+.journey-specimen__meta > span,
+.journey-specimen-pair__heading > span {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--gold-300);
+  font-family: var(--font-utility);
+  font-size: 0.62rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.journey-evidence-card h2,
+.journey-clarity-copy h2,
+.journey-portal-copy h2,
+.journey-specimen__meta h2,
+.journey-specimen-pair__heading h2 {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(2.5rem, 5.8vw, 5.2rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+
+.journey-specimen {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.72fr) minmax(18rem, 0.92fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  align-items: center;
+  width: min(100%, 72rem);
+  margin-left: auto;
+}
+
+.journey-specimen__meta {
+  max-width: 31rem;
+}
+
+.journey-specimen > .catalog-card,
+.journey-specimen-pair .catalog-card {
+  min-height: 32rem;
+}
+
+.journey-category-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 67rem);
+  margin: auto;
+  border-top: 1px solid var(--atlas-edge);
+  border-left: 1px solid var(--atlas-edge);
+  background: rgba(7, 4, 19, 0.46);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.journey-category-matrix .category-card {
+  min-height: clamp(13rem, 25vw, 19rem);
+  border-right: 1px solid var(--atlas-edge);
+  border-bottom: 1px solid var(--atlas-edge);
+  border-radius: 0;
+  background: rgba(14, 9, 32, 0.34);
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap);
+  will-change: transform, opacity;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .journey-category-matrix .category-card:hover {
+    opacity: 1;
+    transform: translate3d(0, -5px, 0) scale(1.012);
+  }
+}
+
+.journey-reading-specimen {
+  margin-right: clamp(0rem, 8vw, 8rem);
+  margin-left: auto;
+}
+
+.journey-reading-specimen dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 1.5rem;
+  border-top: 1px solid var(--atlas-edge);
+  border-left: 1px solid var(--atlas-edge);
+}
+
+.journey-reading-specimen dl > div {
+  display: grid;
+  min-height: 7rem;
+  align-content: space-between;
+  padding: 1rem;
+  border-right: 1px solid var(--atlas-edge);
+  border-bottom: 1px solid var(--atlas-edge);
+}
+
+.journey-reading-specimen dt {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.journey-reading-specimen dd {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: 2rem;
+}
+
+.journey-scene--clarity {
+  grid-template-columns: minmax(16rem, 0.74fr) minmax(22rem, 1fr);
+  gap: clamp(2rem, 7vw, 7rem);
+}
+
+.journey-evidence-list {
+  display: grid;
+  width: min(100%, 44rem);
+  margin: 0 0 0 auto;
+  padding: 0;
+  border-top: 1px solid var(--atlas-edge);
+  list-style: none;
+}
+
+.journey-evidence-list li {
+  display: grid;
+  grid-template-columns: 2rem 2.4rem 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--atlas-edge);
+}
+
+.journey-evidence-list h3,
+.journey-evidence-list p {
+  margin: 0;
+}
+
+.journey-specimen-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  width: min(100%, 70rem);
+  margin-left: auto;
+  border: 1px solid var(--atlas-edge);
+  background: var(--atlas-edge);
+}
+
+.journey-specimen-pair__heading {
+  width: min(100%, 70rem);
+  margin: 0 0 2rem auto;
+}
+
+.journey-specimen-pair .tarot-constellation__cell {
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: rgba(7, 4, 19, 0.82);
+}
+
+/* Route legacy layouts become stage specimens rather than full old sections. */
+.journey-scene.page-content,
+.journey-scene.content-section {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.journey-scene .book-layout,
+.journey-scene .reading-tier-grid,
+.journey-scene .readings-highlight-copy,
+.journey-scene .readings-highlight-details,
+.journey-scene.booking-note,
+.journey-scene.contact-banner {
+  width: min(100%, 70rem);
+  margin-inline: auto;
+}
+
+.journey-scene .book-layout,
+.journey-scene .reading-tier-grid {
+  grid-template-columns: 1fr;
+}
+
+.journey-scene .reading-tier-grid {
+  place-items: center;
+}
+
+.journey-scene .reading-tier {
+  width: min(100%, 36rem);
+  max-width: 36rem;
+  padding: 5rem 1.35rem 1.5rem;
+}
+
+.journey-scene .book-copy,
+.journey-scene .book-artifact,
+.journey-scene .reading-tier,
+.journey-scene .readings-highlight-copy,
+.journey-scene .readings-highlight-details,
+.journey-scene.booking-note,
+.journey-scene.contact-banner {
+  max-width: 42rem;
+  margin-left: auto;
+}
+
+.journey-scene .book-artifact {
+  position: relative;
+  top: auto;
+}
+
+.journey-scene .book-artifact__stage,
+.journey-scene .reading-tier,
+.journey-scene .monthly-eclipse__stage,
+.journey-scene.booking-note,
+.journey-scene.contact-banner {
+  border-color: var(--atlas-edge);
+  border-radius: var(--titanium-radius-panel);
+  background: var(--atlas-glass);
+  box-shadow: var(--titanium-shadow);
+  backdrop-filter: blur(22px) saturate(116%);
+  -webkit-backdrop-filter: blur(22px) saturate(116%);
+}
+
+.journey-scene .purchase-links {
+  width: min(100%, 42rem);
+  margin-left: auto;
+}
+
+.journey-scene .purchase-link {
+  min-height: clamp(14rem, 28vw, 22rem);
+  border-radius: var(--titanium-radius-panel);
+}
+
+.journey-scene .external-purchase-note {
+  max-width: 42rem;
+  margin: 1.25rem 0 0 auto;
+}
+
+.journey-portal-copy,
+.journey-scene.contact-banner {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.journey-scene.contact-banner > .orbit-portal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0.5;
+  transform: translate3d(-50%, -50%, 0) scale(1.5);
+}
+
+.journey-rail {
+  position: fixed;
+  z-index: var(--z-stage-hud);
+  top: 50%;
+  left: max(0.8rem, env(safe-area-inset-left));
+  width: 7.25rem;
+  pointer-events: none;
+  transform: translate3d(0, -50%, 0);
+}
+
+.journey-rail ol {
+  display: grid;
+  gap: 0.28rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey-rail a {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  min-height: 1.75rem;
+  align-items: center;
+  color: var(--cream-300);
+  font-family: var(--font-utility);
+  font-size: 0.54rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  opacity: 0.32;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--ui-duration-fast) var(--ui-ease-snap),
+    transform var(--ui-duration-fast) var(--ui-ease-snap);
+  will-change: transform, opacity;
+}
+
+.journey-rail a > span:first-child {
+  color: var(--gold-300);
+  font-variant-numeric: tabular-nums;
+}
+
+.journey-rail a[data-journey-anchor-state="active"] {
+  opacity: 1;
+  transform: translate3d(0.45rem, 0, 0);
+}
+
+@media (max-width: 900px) {
+  .atlas-journey .site-header {
+    width: calc(100% - 1rem);
+    border-radius: 1.1rem;
+  }
+
+  .atlas-journey .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem;
+  }
+
+  .atlas-journey .primary-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .atlas-journey .primary-nav::-webkit-scrollbar { display: none; }
+
+  .atlas-journey .primary-nav ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(5.4rem, 1fr));
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .atlas-journey .header-contact {
+    min-height: 2.6rem;
+  }
+
+  .cinematic-stage__aperture {
+    top: 42%;
+    left: 78%;
+    width: clamp(25rem, 90vw, 39rem);
+    opacity: 0.7;
+  }
+
+  .cinematic-stage__coordinate,
+  .journey-rail {
+    display: none;
+  }
+
+  .journey-scene {
+    padding-inline: clamp(1.1rem, 5vw, 2rem);
+  }
+
+  .journey-first-fold .astral-title,
+  .journey-first-fold h1,
+  .journey-scene .page-hero h1 {
+    max-width: 15ch;
+  }
+
+  .journey-first-fold h1 {
+    margin: 1rem 0 0;
+  }
+
+  .journey-first-fold .hero-subtitle {
+    margin: 1rem 0;
+  }
+
+  .journey-first-fold .hero-actions {
+    flex-direction: row;
+  }
+
+  .journey-first-fold .hero-actions .button {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+  }
+
+  .journey-scene[data-journey-act="thesis"]:not([data-stage-preset="threshold"]) {
+    padding-top: 7.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .journey-scene[data-journey-act="thesis"]:not([data-stage-preset="threshold"]) .journey-thesis {
+    min-height: 54svh;
+    padding-block: 3rem;
+  }
+
+  .journey-scene--clarity,
+  .journey-specimen {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-specimen__meta {
+    padding-left: 0;
+  }
+
+  .journey-specimen > .catalog-card {
+    width: min(100%, 30rem);
+    margin-left: auto;
+  }
+
+  .journey-specimen > .catalog-card,
+  .journey-specimen-pair .catalog-card {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.82fr) minmax(14rem, 1fr);
+    width: 100%;
+    min-height: 0;
+  }
+
+  .journey-specimen .catalog-card-media,
+  .journey-specimen-pair .catalog-card-media,
+  .journey-specimen .featured-catalog-grid .catalog-card:last-child .catalog-card-media,
+  .journey-specimen-pair .featured-catalog-grid .catalog-card:last-child .catalog-card-media {
+    min-height: 24rem;
+    aspect-ratio: auto;
+    margin: 0.7rem 0 0.7rem 0.7rem;
+  }
+
+  .journey-specimen .catalog-card-content,
+  .journey-specimen-pair .catalog-card-content {
+    align-self: center;
+    padding: 1.3rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .journey-specimen-pair {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(86vw, 32rem);
+    justify-content: start;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+  }
+
+  .journey-specimen-pair::-webkit-scrollbar {
+    display: none;
+  }
+
+  .journey-specimen-pair .tarot-constellation__cell {
+    scroll-snap-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .atlas-journey .brand-wordmark { font-size: 1.25rem; }
+  .atlas-journey .brand-mark { width: 2.2rem; height: 2.2rem; }
+  .atlas-journey .header-contact { padding-inline: 0.8rem; }
+  .atlas-journey .header-contact .contact-orbit { display: none; }
+
+  .journey-scene {
+    min-height: 78svh;
+    padding-top: 8.75rem;
+    padding-bottom: 5.5rem;
+  }
+
+  .journey-scene[data-stage-preset="threshold"] { min-height: 100svh; }
+  .journey-scene[data-journey-act="thesis"]:not([data-stage-preset="threshold"]) { min-height: 70svh; }
+  .journey-scene[data-journey-act="specimen"] { min-height: 92svh; }
+  .journey-scene[data-journey-act="matrix"] { min-height: 95svh; }
+  .journey-scene[data-journey-act="portal"] { min-height: 92svh; }
+  .journey-scene[data-journey-act="quiet"] { min-height: auto; }
+
+  .journey-first-fold,
+  .journey-scene .page-hero-inner {
+    min-height: 72svh;
+    padding-top: 2rem;
+  }
+
+  .journey-first-fold .astral-title,
+  .journey-first-fold h1,
+  .journey-scene .page-hero h1 {
+    max-width: 9.2ch;
+    font-size: clamp(3.6rem, 15vw, 5.8rem);
+  }
+
+  .journey-category-matrix,
+  .journey-specimen-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-category-matrix .category-card {
+    min-height: 10.5rem;
+  }
+
+  .journey-specimen > .catalog-card,
+  .journey-specimen-pair .catalog-card {
+    min-height: auto;
+  }
+
+  .journey-evidence-card,
+  .journey-clarity-copy,
+  .journey-reading-specimen,
+  .journey-portal-copy,
+  .journey-scene .book-copy,
+  .journey-scene .book-artifact,
+  .journey-scene .reading-tier,
+  .journey-scene .readings-highlight-copy,
+  .journey-scene .readings-highlight-details,
+  .journey-scene.booking-note,
+  .journey-scene.contact-banner {
+    width: 100%;
+    max-width: none;
+    padding: 1.35rem;
+    border-radius: 1.4rem;
+  }
+
+  .cinematic-stage__aperture {
+    top: 40%;
+    left: 84%;
+    width: 31rem;
+    opacity: 0.55;
+  }
+
+  html[data-stage-preset="portal"] .cinematic-stage__aperture {
+    top: 48%;
+    left: 50%;
+    width: min(92vw, 33rem);
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 470px) {
+  .journey-first-fold .hero-actions {
+    flex-direction: column;
+  }
+
+  .journey-first-fold .hero-actions .button {
+    width: 100%;
+  }
+
+  .journey-specimen > .catalog-card,
+  .journey-specimen-pair .catalog-card {
+    display: block;
+  }
+
+  .journey-specimen .catalog-card-media,
+  .journey-specimen-pair .catalog-card-media {
+    min-height: 22rem;
+    margin: 0.65rem 0.65rem 0;
+  }
+}
+
+html.journey-static .cinematic-stage {
+  position: absolute;
+  height: 100svh;
+  opacity: 0.58;
+}
+
+html.journey-static .journey-scene,
+html[data-performance-mode="lite"] .journey-scene,
+.kinetic-save-data .journey-scene,
+.motion-reduced .journey-scene {
+  min-height: auto;
+  padding-block: clamp(5.5rem, 12vw, 8rem);
+}
+
+html.journey-static .journey-scene > *,
+html[data-performance-mode="lite"] .journey-scene > *,
+.kinetic-save-data .journey-scene > *,
+.motion-reduced .journey-scene > * {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+html[data-performance-mode="lite"] .cinematic-stage__aperture,
+.kinetic-save-data .cinematic-stage__aperture,
+.motion-reduced .cinematic-stage__aperture {
+  transform: translate3d(-50%, -50%, 0) scale(0.78);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-stage__aperture,
+  .cinematic-stage__aperture::before,
+  .cinematic-stage__aperture::after,
+  .cinematic-stage__orbit,
+  .cinematic-stage__object,
+  .cinematic-stage__object::before,
+  .cinematic-stage__object::after,
+  .cinematic-stage__object > span,
+  .cinematic-stage__portal-light,
+  .journey-scene > * {
+    transform: none;
+    transition: none;
+  }
+
+  .journey-scene { min-height: auto; }
+}
+
+@media (forced-colors: active) {
+  .cinematic-stage,
+  .journey-rail {
+    display: none;
+  }
+
+  .atlas-journey .site-header,
+  .journey-evidence-card,
+  .journey-clarity-copy,
+  .journey-reading-specimen,
+  .journey-portal-copy,
+  .journey-scene .book-artifact__stage,
+  .journey-scene .reading-tier,
+  .journey-scene .monthly-eclipse__stage,
+  .journey-scene.booking-note,
+  .journey-scene.contact-banner {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    color: CanvasText;
+    backdrop-filter: none;
+  }
+
+  .journey-scene {
+    min-height: auto;
+  }
+}

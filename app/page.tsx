@@ -1,10 +1,8 @@
 import { ActionLink } from "@/components/ui/action-link";
-import { AstralDivider } from "@/components/site/astral-divider";
 import { AstralTitle } from "@/components/site/astral-title";
 import { CatalogCard } from "@/components/site/catalog-card";
 import { CelestialGlyph } from "@/components/site/celestial-glyph";
-import { OrbitPortal } from "@/components/site/orbit-portal";
-import { SectionHeading } from "@/components/site/section-heading";
+import { JourneyThesis } from "@/components/site/journey-thesis";
 import { SiteFrame } from "@/components/site/site-frame";
 import { featuredCatalog, whatsappUrl } from "@/lib/site-data";
 
@@ -73,36 +71,16 @@ const processSteps = [
 export default function HomePage() {
   return (
     <SiteFrame activePath="/">
-      <main id="main-content" className="astral-page astral-home">
+      <main id="main-content" className="astral-page astral-home journey-content">
         <section
-          className="cosmos-entry"
+          id="home-threshold"
+          className="journey-scene journey-scene--threshold"
           aria-labelledby="hero-title"
-          data-scroll-scene="galaxy-entry"
-          data-galaxy-anchor="home-threshold"
-          data-route-relic="home"
+          data-journey-scene="home-threshold"
+          data-journey-act="thesis"
+          data-stage-preset="threshold"
         >
-          <div
-            className="observatory-chapter-word observatory-chapter-word--arrival"
-            data-observatory-chapter="arrival"
-            data-reveal="fade"
-            aria-hidden="true"
-          >
-            <span>Llegada · 00</span>
-            <strong>UMBRAL</strong>
-          </div>
-          <span className="route-relic" aria-hidden="true">
-            <span>Umbral</span>
-            <span className="route-relic__coordinate">ÓRBITA · 00</span>
-          </span>
-          <div className="cosmos-entry__dust" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-
-          <div className="cosmos-entry__copy" data-reveal="from-left">
+          <div className="journey-scene__content journey-first-fold">
             <p className="hero-kicker">
               <span aria-hidden="true">✦</span>
               Tarot, símbolos y guía personal
@@ -134,319 +112,237 @@ export default function HomePage() {
                 <CelestialGlyph kind="moon" />
               </ActionLink>
             </div>
-            <p className="hero-note">
-              <span className="pulse-star" aria-hidden="true" />
-              Disponibilidad y coordinación por WhatsApp
-            </p>
-          </div>
-
-          <div className="cosmos-entry__portal" data-reveal="scale-in">
-            <div className="hero-orbit-stage" aria-hidden="true">
-              <OrbitPortal variant="hero" />
-              <div className="tarot-fan">
-                <span className="tarot-back tarot-back--left">
-                  <CelestialGlyph kind="star" />
-                </span>
-                <span className="tarot-back tarot-back--center">
-                  <CelestialGlyph kind="sun" />
-                </span>
-                <span className="tarot-back tarot-back--right">
-                  <CelestialGlyph kind="moon" />
-                </span>
-              </div>
-            </div>
-
-            <aside className="hero-feature" aria-label="Atención personalizada">
-              <span className="hero-feature-icon" aria-hidden="true">
-                01
-              </span>
-              <p>Una experiencia sencilla</p>
-              <h2>Explora, pregunta y coordina directamente</h2>
-              <p>
-                Sin carritos ni cobros automáticos. Confirmamos contigo cada detalle
-                antes de coordinar.
-              </p>
-              <ActionLink
-                className="text-link"
-                href={catalogContactUrl}
-                intent="text"
-                external
-                cursorLabel="Abrir WhatsApp"
-              >
-                Iniciar una consulta
-              </ActionLink>
-            </aside>
-          </div>
-
-          <div className="coordinate-strip" aria-hidden="true">
-            <span>UMBRAL · 01</span>
-            <span>☉ &nbsp; SOL</span>
-            <span>☾ &nbsp; LUNA</span>
-            <span>✦ &nbsp; INTUICIÓN</span>
-          </div>
-        </section>
-
-        <AstralDivider />
-
-        <section
-          className="content-section products-section astral-catalog observatory-specimen-layout"
-          aria-labelledby="featured-title"
-          data-scroll-scene="catalog-arches"
-        >
-          <div className="observatory-sticky-stage">
-            <SectionHeading
-              eyebrow="Catálogo"
-              title="Una selección para comenzar"
-              titleId="featured-title"
-              description="Las imágenes son referenciales. Consulta por WhatsApp para confirmar modelos, disponibilidad y detalles."
-              chapterLabel="Observación"
-              chapterWord="ARCANO"
-              chapterIndex="01"
-              action={
-                <ActionLink
-                  className="text-link"
-                  href="/tarot"
-                  intent="text"
-                  cursorLabel="Ver Tarot"
-                >
-                  Ver todo el Tarot
-                </ActionLink>
-              }
-            />
-          </div>
-          <div className="catalog-grid featured-catalog-grid">
-            {featuredCatalog.map((item, index) => (
-              <div
-                className="catalog-constellation"
-                data-reveal={index === 1 ? "rise-delay" : "rise"}
-                key={item.id}
-              >
-                <span className="catalog-star" aria-hidden="true">
-                  0{index + 1}
-                </span>
-                <CatalogCard item={item} />
-              </div>
-            ))}
           </div>
         </section>
 
         <section
-          className="content-section categories-section orbital-categories observatory-choice"
-          aria-labelledby="categories-title"
-          data-scroll-scene="category-orbit"
+          id="home-threshold-evidence"
+          className="journey-scene journey-scene--evidence"
+          data-journey-scene="home-threshold-evidence"
+          data-journey-act="evidence"
+          data-stage-preset="threshold"
         >
-          <div className="orbital-categories__heading" data-reveal="from-left">
-            <SectionHeading
-              eyebrow="Explora"
-              title="Elige tu próximo paso"
-              titleId="categories-title"
-              description="Navega por el catálogo, conoce el libro o revisa las opciones de lectura."
-              chapterLabel="Elección"
-              chapterWord="ELIGE"
-              chapterIndex="02"
-            />
-          </div>
-          <div className="category-orbit">
-            <div className="category-orbit__core" aria-hidden="true">
-              <CelestialGlyph kind="sun" />
-              <span>Esoterica</span>
-            </div>
-            <div className="category-grid">
-              {categories.map((category, index) => {
-                const content = (
-                  <>
-                    <span className="category-orbit-index" aria-hidden="true">
-                      {category.orbit}
-                    </span>
-                    <CelestialGlyph kind={category.glyph} />
-                    <span className="category-copy">
-                      <strong>{category.title}</strong>
-                      <span>{category.description}</span>
-                    </span>
-                    <span className="category-arrow">
-                      {category.external ? "Consultar" : "Ver"}
-                    </span>
-                  </>
-                );
-
-                return category.external ? (
-                  <ActionLink
-                    className="category-card"
-                    href={category.href}
-                    intent="card"
-                    external
-                    cursorLabel="Consultar"
-                    key={category.title}
-                    reveal={index % 2 ? "from-right" : "from-left"}
-                    ariaLabel={`${category.title}: consultar por WhatsApp (abre en una pestaña nueva)`}
-                  >
-                    {content}
-                  </ActionLink>
-                ) : (
-                  <ActionLink
-                    className="category-card"
-                    href={category.href}
-                    intent="card"
-                    cursorLabel={`Ver ${category.title}`}
-                    key={category.title}
-                    reveal={index % 2 ? "from-right" : "from-left"}
-                  >
-                    {content}
-                  </ActionLink>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="content-section readings-highlight eclipse-panel"
-          aria-labelledby="readings-highlight-title"
-          data-scroll-scene="readings-eclipse"
-        >
-          <div className="readings-highlight-copy" data-reveal="from-left">
-            <p className="section-eyebrow">Lecturas de Tarot</p>
-            <h2 id="readings-highlight-title">
-              Un espacio para mirar tu pregunta con calma
-            </h2>
+          <div className="journey-evidence-card">
+            <span className="journey-index" aria-hidden="true">00 / 01</span>
+            <p className="section-eyebrow">Una experiencia sencilla</p>
+            <h2>Explora, pregunta y coordina directamente</h2>
             <p>
-              Revisa las opciones de lectura, desde una consulta puntual hasta una
-              sesión extendida o un acompañamiento coordinado mes a mes. Los precios
-              están visibles antes de reservar.
+              Sin carritos ni cobros automáticos. Confirmamos contigo cada detalle
+              antes de coordinar.
             </p>
+            <ActionLink
+              className="text-link"
+              href={catalogContactUrl}
+              intent="text"
+              external
+              cursorLabel="Abrir WhatsApp"
+            >
+              Iniciar una consulta
+            </ActionLink>
+          </div>
+        </section>
+
+        <section
+          id="home-arcana-thesis"
+          className="journey-scene journey-scene--thesis"
+          data-journey-scene="home-arcana-thesis"
+          data-journey-act="thesis"
+          data-stage-preset="tarot"
+        >
+          <JourneyThesis
+            eyebrow="Catálogo"
+            title="Una selección para comenzar"
+            description="Tres puertas de entrada al Tarot. Consulta disponibilidad y detalles antes de elegir."
+            chapter="Arcana"
+            index="01"
+            titleId="home-arcana-title"
+          />
+        </section>
+
+        {featuredCatalog.map((item, index) => (
+          <section
+            id={`home-arcana-0${index + 1}`}
+            className="journey-scene journey-scene--specimen"
+            data-journey-scene={`home-arcana-0${index + 1}`}
+            data-journey-act="specimen"
+            data-stage-preset="tarot"
+            data-specimen-index={index}
+            key={item.id}
+          >
+            <div className="journey-specimen">
+              <div className="journey-specimen__meta">
+                <span>ARCANO · 0{index + 1}</span>
+                <h2>{item.name}</h2>
+                <p>Imagen referencial. Te compartiremos las opciones disponibles.</p>
+              </div>
+              <CatalogCard item={item} />
+            </div>
+          </section>
+        ))}
+
+        <section
+          id="home-paths-thesis"
+          className="journey-scene journey-scene--thesis"
+          data-journey-scene="home-paths-thesis"
+          data-journey-act="thesis"
+          data-stage-preset="matrix"
+        >
+          <JourneyThesis
+            eyebrow="Explora"
+            title="Elige tu próximo paso"
+            description="Tarot, cristales, aprendizaje o una lectura: cuatro caminos en una sola carta celeste."
+            chapter="Caminos"
+            index="02"
+            titleId="home-paths-title"
+          />
+        </section>
+
+        <section
+          id="home-paths-matrix"
+          className="journey-scene journey-scene--matrix"
+          aria-labelledby="home-paths-title"
+          data-journey-scene="home-paths-matrix"
+          data-journey-act="matrix"
+          data-stage-preset="matrix"
+        >
+          <div className="journey-category-matrix">
+            {categories.map((category) => {
+              const content = (
+                <>
+                  <span className="category-orbit-index" aria-hidden="true">
+                    {category.orbit}
+                  </span>
+                  <CelestialGlyph kind={category.glyph} />
+                  <span className="category-copy">
+                    <strong>{category.title}</strong>
+                    <span>{category.description}</span>
+                  </span>
+                  <span className="category-arrow">
+                    {category.external ? "Consultar" : "Ver"}
+                  </span>
+                </>
+              );
+
+              return (
+                <ActionLink
+                  className="category-card"
+                  href={category.href}
+                  intent="card"
+                  external={category.external}
+                  cursorLabel={category.external ? "Consultar" : `Ver ${category.title}`}
+                  ariaLabel={
+                    category.external
+                      ? `${category.title}: consultar por WhatsApp (abre en una pestaña nueva)`
+                      : undefined
+                  }
+                  key={category.title}
+                >
+                  {content}
+                </ActionLink>
+              );
+            })}
+          </div>
+        </section>
+
+        <section
+          id="home-readings-thesis"
+          className="journey-scene journey-scene--thesis"
+          data-journey-scene="home-readings-thesis"
+          data-journey-act="thesis"
+          data-stage-preset="eclipse"
+        >
+          <JourneyThesis
+            eyebrow="Lecturas de Tarot"
+            title="Mira tu pregunta con calma"
+            description="Desde una consulta puntual hasta una sesión extendida o un acompañamiento mensual."
+            chapter="Lecturas"
+            index="03"
+            titleId="home-readings-title"
+          />
+        </section>
+
+        <section
+          id="home-readings-specimen"
+          className="journey-scene journey-scene--specimen"
+          aria-labelledby="home-readings-title"
+          data-journey-scene="home-readings-specimen"
+          data-journey-act="specimen"
+          data-stage-preset="eclipse"
+          data-specimen-index="0"
+        >
+          <div className="journey-reading-specimen">
+            <dl>
+              <div><dt>Opciones desde</dt><dd>S/25</dd></div>
+              <div><dt>Reserva</dt><dd>Por WhatsApp</dd></div>
+            </dl>
+            <p>Los precios y el alcance de cada lectura están visibles antes de reservar.</p>
             <ActionLink
               className="button button-primary eclipse-cta"
               href="/lecturas"
               intent="primary"
               cursorLabel="Ver lecturas"
             >
-              <span className="eclipse-cta__label">Ver opciones y precios</span>
-              <span className="eclipse-cta__orbit" aria-hidden="true">
-                <CelestialGlyph kind="eclipse" />
-              </span>
+              <span>Ver opciones y precios</span>
+              <CelestialGlyph kind="eclipse" />
             </ActionLink>
-          </div>
-          <div className="readings-highlight-details" data-reveal="scale-in">
-            <div className="eclipse-stage">
-              <OrbitPortal variant="eclipse" />
-              <span className="eclipse-number" aria-hidden="true">
-                03
-              </span>
-              <dl>
-                <div>
-                  <dt>Opciones desde</dt>
-                  <dd>S/25</dd>
-                </div>
-                <div>
-                  <dt>Reserva</dt>
-                  <dd>Por WhatsApp</dd>
-                </div>
-              </dl>
-            </div>
           </div>
         </section>
 
         <section
-          className="content-section process-section astral-process observatory-clarity"
-          aria-labelledby="process-title"
-          data-scroll-scene="planet-path"
+          id="home-clarity"
+          className="journey-scene journey-scene--evidence journey-scene--clarity"
+          aria-labelledby="home-clarity-title"
+          data-journey-scene="home-clarity"
+          data-journey-act="evidence"
+          data-stage-preset="clarity"
         >
-          <SectionHeading
-            eyebrow="Cómo te acompañamos"
-            title="Un proceso claro, de principio a fin"
-            titleId="process-title"
-            description="La atención se coordina de forma directa para que sepas qué está disponible antes de tomar una decisión."
-            chapterLabel="Claridad"
-            chapterWord="CLARIDAD"
-            chapterIndex="03"
-          />
-          <ol className="process-grid">
+          <div className="journey-clarity-copy">
+            <p className="section-eyebrow">Cómo te acompañamos</p>
+            <h2 id="home-clarity-title">Un proceso claro, de principio a fin</h2>
+            <p>
+              Reunimos tarot, cristales, elementos rituales y guía para comenzar.
+              Antes de coordinar, confirmamos disponibilidad y detalles contigo.
+            </p>
+          </div>
+          <ol className="journey-evidence-list">
             {processSteps.map((step, index) => (
-              <li className="process-card" data-reveal="rise" key={step.title}>
-                <div className="process-planet" aria-hidden="true">
-                  <CelestialGlyph kind={step.glyph} />
-                  <span className="process-number">0{index + 1}</span>
-                </div>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
+              <li key={step.title}>
+                <span aria-hidden="true">0{index + 1}</span>
+                <CelestialGlyph kind={step.glyph} />
+                <div><h3>{step.title}</h3><p>{step.description}</p></div>
               </li>
             ))}
           </ol>
         </section>
 
         <section
-          className="content-section about-section crescent-scene observatory-clarity-grid"
-          aria-labelledby="about-title"
-          data-scroll-scene="crescent-about"
-        >
-          <div className="crescent-scene__moon" aria-hidden="true">
-            <CelestialGlyph kind="moon" />
-          </div>
-          <div className="about-copy" data-reveal="from-right">
-            <p className="section-eyebrow">Esoterica</p>
-            <h2 id="about-title">Herramientas simbólicas elegidas con intención</h2>
-            <p>
-              Este espacio reúne tarot, cristales, elementos rituales y una guía
-              para comenzar a leer las cartas. También puedes reservar una lectura
-              si prefieres explorar una pregunta con acompañamiento.
-            </p>
-            <p>
-              Antes de coordinar, consulta la disponibilidad y los detalles del
-              producto o servicio que te interesa.
-            </p>
-          </div>
-          <div className="about-principles" data-reveal="rise">
-            <div>
-              <span aria-hidden="true">01</span>
-              <span>
-                <strong>Comunicación directa</strong>
-                <small>Resolvemos tus dudas por WhatsApp.</small>
-              </span>
-            </div>
-            <div>
-              <span aria-hidden="true">02</span>
-              <span>
-                <strong>Disponibilidad confirmada</strong>
-                <small>Coordinamos cada pedido antes de la entrega.</small>
-              </span>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="content-section contact-banner portal-close observatory-portal"
+          id="home-portal"
+          className="journey-scene journey-scene--portal"
           aria-labelledby="contact-title"
-          data-scroll-scene="portal-close"
+          data-journey-scene="home-portal"
+          data-journey-act="portal"
+          data-stage-preset="portal"
         >
-          <div
-            className="observatory-chapter-word observatory-chapter-word--portal"
-            data-observatory-chapter="portal"
-            data-reveal="fade"
-            aria-hidden="true"
-          >
-            <span>Portal · 04</span>
-            <strong>CONVERSEMOS</strong>
-          </div>
-          <OrbitPortal variant="compact" />
-          <div data-reveal="from-left">
+          <div className="journey-portal-copy">
+            <span className="journey-index" aria-hidden="true">05 / PORTAL</span>
             <p className="section-eyebrow">¿Tienes una pregunta?</p>
             <h2 id="contact-title">Conversemos por WhatsApp</h2>
             <p>
               Cuéntanos qué buscas y te orientaremos sobre productos, lecturas y
               disponibilidad.
             </p>
+            <ActionLink
+              className="button button-primary astral-button"
+              href={catalogContactUrl}
+              intent="primary"
+              external
+              cursorLabel="Abrir WhatsApp"
+              ariaLabel="Iniciar consulta por WhatsApp (abre en una pestaña nueva)"
+            >
+              <span>Iniciar consulta</span>
+              <CelestialGlyph kind="star" />
+            </ActionLink>
           </div>
-          <ActionLink
-            className="button button-primary astral-button"
-            href={catalogContactUrl}
-            intent="primary"
-            external
-            cursorLabel="Abrir WhatsApp"
-            ariaLabel="Iniciar consulta por WhatsApp (abre en una pestaña nueva)"
-          >
-            <span>Iniciar consulta</span>
-            <CelestialGlyph kind="star" />
-          </ActionLink>
         </section>
       </main>
     </SiteFrame>

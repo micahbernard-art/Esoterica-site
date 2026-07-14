@@ -1,4 +1,3 @@
-import { AstralDivider } from "@/components/site/astral-divider";
 import { ActionLink } from "@/components/ui/action-link";
 import { CelestialGlyph } from "@/components/site/celestial-glyph";
 import { OrbitPortal } from "@/components/site/orbit-portal";
@@ -20,30 +19,53 @@ export default function LibrosPage() {
   return (
     <SiteFrame activePath="/libros">
       <main id="main-content" className="subpage astral-page books-page">
-        <PageHero
-          variant="book"
-          eyebrow="Biblioteca"
-          title="Aprende a leer el Tarot desde cero"
-          description="Conoce la guía y elige la plataforma donde prefieres adquirirla."
-        />
-
-        <AstralDivider />
+        <div
+          id="libros-threshold"
+          className="journey-scene"
+          data-journey-scene="libros-threshold"
+          data-journey-act="thesis"
+          data-stage-preset="threshold"
+        >
+          <PageHero
+            variant="book"
+            eyebrow="Biblioteca"
+            title="Aprende a leer el Tarot desde cero"
+            description="Conoce la guía y elige la plataforma donde prefieres adquirirla."
+          />
+        </div>
 
         <section
-          className="page-content book-section artifact-scene observatory-specimen-layout"
+          id="libros-artifact"
+          className="page-content book-section artifact-scene observatory-specimen-layout journey-scene"
           aria-labelledby="book-title"
-          data-scroll-scene="book-artifact"
+          data-journey-scene="libros-artifact"
+          data-journey-act="thesis"
+          data-stage-preset="book"
         >
           <div className="book-layout">
-            <div className="book-artifact observatory-sticky-stage" data-reveal="scale-in">
-              <div
-                className="observatory-chapter-word observatory-chapter-word--specimen"
-                data-observatory-chapter="specimen"
-                aria-hidden="true"
-              >
-                <span>Observación · 01</span>
-                <strong>LIBRO</strong>
+            <div className="book-copy">
+              <div className="book-copy-intro">
+                <p className="section-eyebrow">Guía en español</p>
+                <h2 id="book-title">Un punto de partida para acercarte al Tarot</h2>
+                <p>
+                  Accede al libro desde una de sus páginas oficiales. Allí encontrarás
+                  la información vigente sobre formatos, precio y condiciones de compra.
+                </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="libros-book"
+          className="page-content book-section artifact-scene observatory-specimen-layout journey-scene"
+          aria-label="Presentación del libro"
+          data-journey-scene="libros-book"
+          data-journey-act="specimen"
+          data-stage-preset="book"
+        >
+          <div className="book-layout">
+            <div className="book-artifact">
               <span className="artifact-coordinate" aria-hidden="true">
                 BIBLIOTECA · 01
               </span>
@@ -64,18 +86,20 @@ export default function LibrosPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
+        <section
+          id="libros-topics"
+          className="page-content book-section journey-scene"
+          aria-labelledby="book-topics-title"
+          data-journey-scene="libros-topics"
+          data-journey-act="evidence"
+          data-stage-preset="clarity"
+        >
+          <div className="book-layout">
             <div className="book-copy">
-              <div className="book-copy-intro" data-reveal="from-right">
-                <p className="section-eyebrow">Guía en español</p>
-                <h2 id="book-title">Un punto de partida para acercarte al Tarot</h2>
-                <p>
-                  Accede al libro desde una de sus páginas oficiales. Allí encontrarás
-                  la información vigente sobre formatos, precio y condiciones de compra.
-                </p>
-              </div>
-
-              <h3>Una guía para comenzar con:</h3>
+              <h3 id="book-topics-title">Una guía para comenzar con:</h3>
               <ul className="check-list moon-phase-topics">
                 {topics.map((topic, index) => (
                   <li key={topic}>
@@ -86,83 +110,81 @@ export default function LibrosPage() {
                   </li>
                 ))}
               </ul>
-
-              <div className="book-purchase observatory-choice-locus" data-reveal="rise">
-                <div
-                  className="observatory-chapter-word observatory-chapter-word--choice"
-                  data-observatory-chapter="choice"
-                  aria-hidden="true"
-                >
-                  <span>Elección · 02</span>
-                  <strong>ELIGE</strong>
-                </div>
-                <p>Elige una plataforma de compra:</p>
-                <div className="purchase-links celestial-gateways">
-                  <ActionLink
-                    className="purchase-link amazon"
-                    href={bookLinks.amazon}
-                    intent="gateway"
-                    external
-                    cursorLabel="Abrir Amazon"
-                    ariaLabel="Comprar el libro en Amazon (abre en una pestaña nueva)"
-                  >
-                    <CelestialGlyph kind="sun" />
-                    <span>
-                      <strong>Amazon</strong>
-                      <small>Ver edición disponible</small>
-                    </span>
-                    <span className="gateway-arrow" aria-hidden="true">↗</span>
-                  </ActionLink>
-                  <ActionLink
-                    className="purchase-link hotmart"
-                    href={bookLinks.hotmart}
-                    intent="gateway"
-                    external
-                    cursorLabel="Abrir Hotmart"
-                    ariaLabel="Comprar el libro en Hotmart (abre en una pestaña nueva)"
-                  >
-                    <CelestialGlyph kind="moon" />
-                    <span>
-                      <strong>Hotmart</strong>
-                      <small>Ver producto digital</small>
-                    </span>
-                    <span className="gateway-arrow" aria-hidden="true">↗</span>
-                  </ActionLink>
-                </div>
-                <p className="external-purchase-note">
-                  La compra se completa en la plataforma elegida. Sus precios y
-                  condiciones se muestran antes de pagar.
-                </p>
-              </div>
-              <div
-                className="observatory-chapter-word observatory-chapter-word--clarity"
-                data-observatory-chapter="clarity"
-                data-reveal="fade"
-                aria-hidden="true"
-              >
-                <span>Claridad · 03</span>
-                <strong>CLARIDAD</strong>
-              </div>
             </div>
           </div>
         </section>
 
         <section
-          className="content-section contact-banner portal-close book-portal-close observatory-portal"
-          aria-labelledby="book-help-title"
-          data-scroll-scene="book-question"
+          id="libros-amazon"
+          className="page-content book-section book-purchase observatory-choice-locus journey-scene"
+          aria-labelledby="book-purchase-title"
+          data-journey-scene="libros-amazon"
+          data-journey-act="specimen"
+          data-stage-preset="book"
+          data-specimen-index="0"
         >
-          <div
-            className="observatory-chapter-word observatory-chapter-word--portal"
-            data-observatory-chapter="portal"
-            data-reveal="fade"
-            aria-hidden="true"
-          >
-            <span>Portal · 04</span>
-            <strong>CONVERSEMOS</strong>
+          <p id="book-purchase-title">Elige una plataforma de compra:</p>
+          <div className="purchase-links celestial-gateways">
+            <ActionLink
+              className="purchase-link amazon"
+              href={bookLinks.amazon}
+              intent="gateway"
+              external
+              cursorLabel="Abrir Amazon"
+              ariaLabel="Comprar el libro en Amazon (abre en una pestaña nueva)"
+            >
+              <CelestialGlyph kind="sun" />
+              <span>
+                <strong>Amazon</strong>
+                <small>Ver edición disponible</small>
+              </span>
+              <span className="gateway-arrow" aria-hidden="true">↗</span>
+            </ActionLink>
           </div>
+        </section>
+
+        <section
+          id="libros-hotmart"
+          className="page-content book-section book-purchase observatory-choice-locus journey-scene"
+          aria-label="Comprar en Hotmart"
+          data-journey-scene="libros-hotmart"
+          data-journey-act="specimen"
+          data-stage-preset="book"
+          data-specimen-index="1"
+        >
+          <div className="purchase-links celestial-gateways">
+            <ActionLink
+              className="purchase-link hotmart"
+              href={bookLinks.hotmart}
+              intent="gateway"
+              external
+              cursorLabel="Abrir Hotmart"
+              ariaLabel="Comprar el libro en Hotmart (abre en una pestaña nueva)"
+            >
+              <CelestialGlyph kind="moon" />
+              <span>
+                <strong>Hotmart</strong>
+                <small>Ver producto digital</small>
+              </span>
+              <span className="gateway-arrow" aria-hidden="true">↗</span>
+            </ActionLink>
+          </div>
+          <p className="external-purchase-note">
+            La compra se completa en la plataforma elegida. Sus precios y
+            condiciones se muestran antes de pagar.
+          </p>
+        </section>
+
+        <section
+          id="libros-portal"
+          className="content-section contact-banner portal-close book-portal-close observatory-portal journey-scene"
+          aria-labelledby="book-help-title"
+          data-journey-scene="libros-portal"
+          data-journey-act="portal"
+          data-stage-preset="portal"
+        >
           <OrbitPortal variant="compact" />
-          <div data-reveal="from-left">
+          <div>
             <p className="section-eyebrow">¿Tienes una consulta?</p>
             <h2 id="book-help-title">Pregunta por el libro</h2>
             <p>Si necesitas orientación antes de comprar, escríbenos por WhatsApp.</p>

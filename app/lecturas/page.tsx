@@ -1,9 +1,7 @@
-import { AstralDivider } from "@/components/site/astral-divider";
 import { ActionLink } from "@/components/ui/action-link";
 import { CelestialGlyph } from "@/components/site/celestial-glyph";
 import { OrbitPortal } from "@/components/site/orbit-portal";
 import { PageHero } from "@/components/site/page-hero";
-import { SectionHeading } from "@/components/site/section-heading";
 import { SiteFrame } from "@/components/site/site-frame";
 import { readingTiers, whatsappUrl } from "@/lib/site-data";
 
@@ -19,51 +17,72 @@ export default function LecturasPage() {
   return (
     <SiteFrame activePath="/lecturas">
       <main id="main-content" className="subpage astral-page readings-page">
-        <PageHero
-          variant="readings"
-          eyebrow="Sesiones personales"
-          title="Lecturas de Tarot"
-          description="Elige una opción según el tiempo y la profundidad que buscas, y coordina tu reserva directamente por WhatsApp."
-        />
-
-        <AstralDivider />
+        <div
+          id="lecturas-threshold"
+          className="journey-scene"
+          data-journey-scene="lecturas-threshold"
+          data-journey-act="thesis"
+          data-stage-preset="threshold"
+        >
+          <PageHero
+            variant="readings"
+            eyebrow="Sesiones personales"
+            title="Lecturas de Tarot"
+            description="Elige una opción según el tiempo y la profundidad que buscas, y coordina tu reserva directamente por WhatsApp."
+          />
+        </div>
 
         <section
-          className="page-content readings-section reading-chambers observatory-specimen-layout"
+          id="lecturas-reading"
+          className="page-content readings-section reading-chambers observatory-specimen-layout journey-scene"
           aria-labelledby="reading-options-title"
-          data-scroll-scene="reading-chambers"
+          data-journey-scene="lecturas-reading"
+          data-journey-act="thesis"
+          data-stage-preset="eclipse"
         >
-          <div className="reading-chambers__heading observatory-sticky-stage" data-reveal="from-left">
-            <SectionHeading
-              eyebrow="Opciones y precios"
-              title="Una lectura para cada tipo de consulta"
-              titleId="reading-options-title"
-              description="Revisa qué incluye cada opción. La disponibilidad se confirma antes de coordinar la sesión."
-              chapterLabel="Observación"
-              chapterWord="LECTURA"
-              chapterIndex="01"
-            />
-            <div className="phase-sequence" aria-hidden="true">
-              <CelestialGlyph kind="moon" />
-              <span />
-              <CelestialGlyph kind="eclipse" />
-              <span />
+          <header className="section-heading reading-chambers__heading">
+            <div className="section-heading-copy">
+              <p className="section-eyebrow">Opciones y precios</p>
+              <h2 id="reading-options-title">Una lectura para cada tipo de consulta</h2>
+              <p>
+                Revisa qué incluye cada opción. La disponibilidad se confirma antes de
+                coordinar la sesión.
+              </p>
+            </div>
+            <div className="section-heading-astra" aria-hidden="true">
+              <span className="section-heading-orbit" />
               <CelestialGlyph kind="sun" />
             </div>
+          </header>
+          <div className="phase-sequence" aria-hidden="true">
+            <CelestialGlyph kind="moon" />
+            <span />
+            <CelestialGlyph kind="eclipse" />
+            <span />
+            <CelestialGlyph kind="sun" />
           </div>
+        </section>
 
-          <div className="reading-tier-grid">
-            {readingTiers.map((tier, index) => {
-              const bookingUrl = whatsappUrl(
-                `Hola, quisiera reservar la ${tier.name} de S/${tier.price}. ¿Qué horarios tienen disponibles?`,
-              );
+        {readingTiers.map((tier, index) => {
+          const bookingUrl = whatsappUrl(
+            `Hola, quisiera reservar la ${tier.name} de S/${tier.price}. ¿Qué horarios tienen disponibles?`,
+          );
+          const sceneId = `lecturas-tier-${tier.id}`;
+          const titleId = `${sceneId}-title`;
 
-              return (
-                <article
-                  className={`reading-tier${tier.featured ? " is-featured" : ""}`}
-                  data-reveal={tier.featured ? "rise-delay" : "rise"}
-                  key={tier.id}
-                >
+          return (
+            <section
+              id={sceneId}
+              className="page-content readings-section reading-chambers journey-scene"
+              aria-labelledby={titleId}
+              data-journey-scene={sceneId}
+              data-journey-act="specimen"
+              data-stage-preset="eclipse"
+              data-specimen-index={index}
+              key={tier.id}
+            >
+              <div className="reading-tier-grid">
+                <article className={`reading-tier${tier.featured ? " is-featured" : ""}`}>
                   <div className="reading-tier__sky" aria-hidden="true">
                     <span className="chamber-index">0{index + 1}</span>
                     <CelestialGlyph
@@ -74,7 +93,7 @@ export default function LecturasPage() {
                     <span className="popular-badge">Opción destacada</span>
                   ) : null}
                   <div className="reading-tier-header">
-                    <h2>{tier.name}</h2>
+                    <h2 id={titleId}>{tier.name}</h2>
                     <p>{tier.description}</p>
                   </div>
                   <div className="tier-price">
@@ -101,26 +120,20 @@ export default function LecturasPage() {
                     <CelestialGlyph kind={tier.featured ? "sun" : "star"} />
                   </ActionLink>
                 </article>
-              );
-            })}
-          </div>
-        </section>
+              </div>
+            </section>
+          );
+        })}
 
         <section
-          className="content-section readings-highlight monthly-eclipse observatory-choice-locus"
+          id="lecturas-monthly"
+          className="content-section readings-highlight monthly-eclipse observatory-choice-locus journey-scene"
           aria-labelledby="monthly-support-title"
-          data-scroll-scene="monthly-eclipse"
+          data-journey-scene="lecturas-monthly"
+          data-journey-act="thesis"
+          data-stage-preset="eclipse"
         >
-          <div
-            className="observatory-chapter-word observatory-chapter-word--choice"
-            data-observatory-chapter="choice"
-            data-reveal="fade"
-            aria-hidden="true"
-          >
-            <span>Elección · 02</span>
-            <strong>ELIGE</strong>
-          </div>
-          <div className="readings-highlight-copy" data-reveal="from-left">
+          <div className="readings-highlight-copy">
             <p className="section-eyebrow">Acompañamiento mensual</p>
             <h2 id="monthly-support-title">
               Un mes de seguimiento, coordinado contigo
@@ -142,7 +155,17 @@ export default function LecturasPage() {
               <CelestialGlyph kind="eclipse" />
             </ActionLink>
           </div>
-          <div className="readings-highlight-details" data-reveal="scale-in">
+        </section>
+
+        <section
+          id="lecturas-monthly-evidence"
+          className="content-section readings-highlight monthly-eclipse journey-scene"
+          aria-label="Detalles del acompañamiento mensual"
+          data-journey-scene="lecturas-monthly-evidence"
+          data-journey-act="evidence"
+          data-stage-preset="eclipse"
+        >
+          <div className="readings-highlight-details">
             <div className="monthly-eclipse__stage">
               <OrbitPortal variant="eclipse" />
               <span className="monthly-eclipse__core" aria-hidden="true">
@@ -163,24 +186,18 @@ export default function LecturasPage() {
         </section>
 
         <section
-          className="content-section booking-note astral-wayfinding observatory-clarity"
+          id="lecturas-coordination"
+          className="content-section booking-note astral-wayfinding observatory-clarity journey-scene"
           aria-labelledby="booking-note-title"
-          data-scroll-scene="wayfinding"
+          data-journey-scene="lecturas-coordination"
+          data-journey-act="evidence"
+          data-stage-preset="clarity"
         >
-          <div
-            className="observatory-chapter-word observatory-chapter-word--clarity"
-            data-observatory-chapter="clarity"
-            data-reveal="fade"
-            aria-hidden="true"
-          >
-            <span>Claridad · 03</span>
-            <strong>CLARIDAD</strong>
-          </div>
           <div className="booking-note-icon" aria-hidden="true">
             <CelestialGlyph kind="orbit" />
             <span>01</span>
           </div>
-          <div data-reveal="from-right">
+          <div>
             <p className="section-eyebrow">Antes de reservar</p>
             <h2 id="booking-note-title">La coordinación es directa</h2>
             <p>
@@ -191,21 +208,15 @@ export default function LecturasPage() {
         </section>
 
         <section
-          className="content-section contact-banner portal-close readings-portal-close observatory-portal"
+          id="lecturas-portal"
+          className="content-section contact-banner portal-close readings-portal-close observatory-portal journey-scene"
           aria-labelledby="reading-help-title"
-          data-scroll-scene="reading-close"
+          data-journey-scene="lecturas-portal"
+          data-journey-act="portal"
+          data-stage-preset="portal"
         >
-          <div
-            className="observatory-chapter-word observatory-chapter-word--portal"
-            data-observatory-chapter="portal"
-            data-reveal="fade"
-            aria-hidden="true"
-          >
-            <span>Portal · 04</span>
-            <strong>CONVERSEMOS</strong>
-          </div>
           <OrbitPortal variant="compact" />
-          <div data-reveal="from-left">
+          <div>
             <p className="section-eyebrow">Te ayudamos a elegir</p>
             <h2 id="reading-help-title">¿No sabes cuál lectura reservar?</h2>
             <p>Cuéntanos brevemente qué deseas explorar y te orientaremos.</p>

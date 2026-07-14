@@ -44,61 +44,51 @@ test("site frame publishes a stable foreground interface contract", async () => 
     read("app/globals.css"),
   ]);
 
-  assert.match(frame, /className="site-shell site-interface"/);
+  assert.match(frame, /className="site-shell site-interface atlas-journey"/);
   assert.match(frame, /data-interface-layer="foreground"/);
   assert.match(frame, /data-interface-route=\{activePath\}/);
   assert.match(frame, /data-interface-plane="content"/);
+  assert.equal((frame.match(/<JourneyStage\b/g) ?? []).length, 1);
+  assert.equal((frame.match(/<JourneyHud\b/g) ?? []).length, 1);
+  assert.equal((frame.match(/<JourneyRail\b/g) ?? []).length, 1);
   assert.match(globals, /\.site-interface[\s\S]*z-index:\s*var\(--z-content\)/);
   assert.match(globals, /html\[data-scroll-engine="lenis"\][\s\S]*scroll-behavior:\s*auto/);
 });
 
-test("Oracle Observatory stages one sticky specimen and static-safe chapters per route", async () => {
-  const [frame, hero, heading, home, tarot, books, readings, pages, choreography] =
-    await Promise.all([
-      read("components/site/site-frame.tsx"),
-      read("components/site/page-hero.tsx"),
-      read("components/site/section-heading.tsx"),
-      read("app/page.tsx"),
-      read("app/tarot/page.tsx"),
-      read("app/libros/page.tsx"),
-      read("app/lecturas/page.tsx"),
-      read("app/cosmic-pages.css"),
-      read("app/galaxy-choreography.css"),
-    ]);
+test("El Atlas Vivo stages one persistent world and semantic acts per route", async () => {
+  const [frame, home, tarot, books, readings, stage, stageCss] = await Promise.all([
+    read("components/site/site-frame.tsx"),
+    read("app/page.tsx"),
+    read("app/tarot/page.tsx"),
+    read("app/libros/page.tsx"),
+    read("app/lecturas/page.tsx"),
+    read("components/site/journey-stage.tsx"),
+    read("app/cinematic-stage.css"),
+  ]);
 
-  assert.doesNotMatch(frame, /className="observatory-hud"/);
-  assert.match(hero, /data-observatory-chapter="arrival"/);
-  assert.match(hero, /<span>Llegada · 00<\/span>/);
-  assert.match(hero, /<strong>UMBRAL<\/strong>/);
-  assert.match(heading, /chapterWord\?:\s*string/);
-  assert.match(heading, /data-observatory-chapter=/);
+  assert.equal((frame.match(/<JourneyStage\b/g) ?? []).length, 1);
+  assert.match(stage, /data-journey-stage="persistent"/);
+  assert.doesNotMatch(frame, /cosmic-beat-hud|observatory-hud/);
 
   for (const route of [home, tarot, books, readings]) {
-    assert.equal((route.match(/\bobservatory-sticky-stage\b/g) ?? []).length, 1);
-    assert.match(route, /\bobservatory-portal\b/);
-    assert.match(route, /<strong>CONVERSEMOS<\/strong>/);
+    assert.match(route, /data-journey-scene=/);
+    assert.match(route, /data-journey-act="thesis"/);
+    assert.match(route, /data-journey-act="specimen"/);
+    assert.match(route, /data-journey-act="portal"/);
+    assert.match(route, /data-stage-preset=/);
   }
 
-  assert.match(home, /chapterWord="ARCANO"/);
-  assert.match(home, /chapterWord="ELIGE"/);
-  assert.match(home, /chapterWord="CLARIDAD"/);
-  assert.match(tarot, /chapterWord="ARCANO"/);
-  assert.equal((tarot.match(/data-observatory-phase=/g) ?? []).length, 1);
-  assert.match(tarot, /index < 2 \? "specimen" : index < 4 \? "choice" : "clarity"/);
-  assert.match(books, /<strong>LIBRO<\/strong>/);
-  assert.ok(books.indexOf("<strong>ELIGE</strong>") < books.indexOf("<strong>CLARIDAD</strong>"));
-  assert.match(readings, /chapterWord="LECTURA"/);
-
-  assert.match(pages, /min-height:\s*var\(--observatory-portal-height\)/);
-  assert.match(pages, /min-height:\s*70svh/);
-  assert.match(pages, /\.orbital-categories\.observatory-choice[\s\S]*overflow:\s*clip/);
-  assert.match(pages, /@media \(max-width:\s*900px\)[\s\S]*\.observatory-sticky-stage[\s\S]*position:\s*relative/);
-  assert.match(pages, /data-performance-mode="lite"[\s\S]*\.observatory-sticky-stage/);
-  assert.match(pages, /\.observatory-portal::after[\s\S]*var\(--finale-p/);
-  assert.match(choreography, /\[data-observatory-chapter\]/);
+  assert.equal((home.match(/className="journey-category-matrix"/g) ?? []).length, 1);
+  assert.equal((home.match(/data-specimen-index=/g) ?? []).length, 2);
+  assert.equal((tarot.match(/data-specimen-index=/g) ?? []).length, 1);
+  assert.match(books, /data-stage-preset="book"/);
+  assert.match(readings, /data-stage-preset="eclipse"/);
+  assert.match(stageCss, /\.journey-scene[\s\S]*min-height:\s*85svh/);
+  assert.match(stageCss, /html\.journey-static[\s\S]*\.journey-scene/);
+  assert.match(stageCss, /data-performance-mode="lite"[\s\S]*\.journey-scene/);
   assert.doesNotMatch(
-    choreography,
-    /transition(?:-property)?:[^;]*(?:clip-path|filter|box-shadow|border-color|width|height|margin)/,
+    stageCss,
+    /transition(?:-property)?:[^;]*(?:width|height|margin|clip-path|filter|box-shadow|border-color)/,
   );
 });
 
@@ -186,16 +176,16 @@ test("Celestial Titanium keeps one coherent material hierarchy with safe fallbac
   );
 });
 
-test("cosmic reveal observers rebind by route and cannot strand mobile copy", async () => {
-  const motion = await read("components/site/cosmic-motion.tsx");
+test("Atlas state rebinds by route and cannot strand legacy reveal copy", async () => {
+  const [motion, stageCss] = await Promise.all([
+    read("components/site/cosmic-motion.tsx"),
+    read("app/cinematic-stage.css"),
+  ]);
 
   assert.match(motion, /const pathname = usePathname\(\)/);
-  assert.match(motion, /\}, \[mode, pathname, ready\]\)/);
-  assert.match(motion, /if \(!ready \|\| mode === "lite"\)/);
-  assert.match(motion, /pendingRevealTargets = new Set<HTMLElement>\(\)/);
-  assert.match(motion, /pendingRevealTargets\.forEach/);
-  assert.match(motion, /rect\.bottom > 0 && rect\.top < window\.innerHeight \* 0\.98/);
-  assert.match(motion, /pendingRevealTargets\.delete\(target\)/);
-  assert.match(motion, /revealObserver\?\.unobserve\(target\)/);
-  assert.match(motion, /rootMargin: "0px 0px 12% 0px", threshold: 0\.01/);
+  assert.match(motion, /\[capabilityVersion, mode, pathname, ready\]/);
+  assert.match(motion, /scenes\.forEach\(\(scene\) => scene\.setAttribute\("data-journey-state", "static"\)\)/);
+  assert.match(motion, /JOURNEY_VARIABLES\.forEach/);
+  assert.doesNotMatch(motion, /IntersectionObserver|pendingRevealTargets|revealObserver/);
+  assert.match(stageCss, /\.journey-scene \[data-reveal\][\s\S]*visibility:\s*visible !important/);
 });

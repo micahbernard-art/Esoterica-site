@@ -1,0 +1,374 @@
+/* El Atlas Vivo — foreground typography and the quiet journey coordinate. */
+.journey-hud {
+  position: fixed;
+  z-index: var(--z-journey-rail);
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  left: 50%;
+  display: grid;
+  grid-template-columns: auto minmax(9.5rem, 1fr) minmax(4.25rem, auto);
+  align-items: center;
+  width: min(calc(100% - 2rem), 42rem);
+  min-height: 3rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--titanium-edge-milk);
+  border-radius: var(--titanium-radius-control, 18px);
+  background:
+    linear-gradient(112deg, rgba(239, 207, 142, 0.07), transparent 32%),
+    var(--titanium-smoke-strong);
+  box-shadow: var(--titanium-shadow-quiet);
+  isolation: isolate;
+  opacity: calc(0.65 + var(--act-focus, 0) * 0.31);
+  pointer-events: none;
+  transform: translate3d(-50%, calc((1 - var(--act-focus, 0)) * 4px), 0);
+  transition:
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity;
+}
+
+.journey-hud * {
+  pointer-events: none;
+}
+
+.journey-hud :is(a, button, [role="button"], [tabindex]:not([tabindex="-1"])) {
+  min-height: 3rem;
+  pointer-events: auto;
+}
+
+.journey-hud__route {
+  display: grid;
+  min-width: 5.4rem;
+  color: var(--text-muted);
+  font-family: var(--font-utility);
+  font-size: 0.62rem;
+  font-weight: 620;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.journey-hud__route strong {
+  margin-top: 0.16rem;
+  color: var(--cream-50);
+  font-family: var(--font-editorial);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.journey-hud__progress {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  min-width: 0;
+  margin: 0;
+  padding: 0 0.55rem;
+  list-style: none;
+}
+
+.journey-hud__progress > li {
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--cream-200);
+  font-family: var(--font-utility);
+  font-size: 0.56rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 620;
+  letter-spacing: 0.1em;
+  opacity: 0.38;
+  transform: translate3d(0, 1px, 0) scale(0.82);
+  transition:
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity;
+}
+
+.journey-hud__progress > li::before {
+  position: absolute;
+  width: 1.45rem;
+  height: 1.45rem;
+  border: 1px solid var(--titanium-edge-milk);
+  border-radius: 50%;
+  content: "";
+  opacity: 0.5;
+  transform: translate3d(0, 0, 0) scale(0.68);
+  transition:
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity;
+}
+
+.journey-hud__chapters {
+  display: grid;
+  min-width: 4.25rem;
+  color: var(--gold-300);
+  font-family: var(--font-utility);
+  font-size: 0.62rem;
+  font-weight: 620;
+  letter-spacing: 0.18em;
+  line-height: 1.15;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.journey-hud__chapters > span {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translate3d(0, 4px, 0);
+  transition:
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-medium, 520ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: transform, opacity;
+}
+
+html:not([data-journey-act]) .journey-hud__progress [data-hud-act="thesis"],
+html[data-journey-act="thesis"] .journey-hud__progress [data-hud-act="thesis"],
+html[data-journey-act="specimen"] .journey-hud__progress [data-hud-act="specimen"],
+html[data-journey-act="matrix"] .journey-hud__progress [data-hud-act="matrix"],
+html[data-journey-act="evidence"] .journey-hud__progress [data-hud-act="evidence"],
+html[data-journey-act="portal"] .journey-hud__progress [data-hud-act="portal"],
+html[data-journey-act="quiet"] .journey-hud__progress [data-hud-act="quiet"] {
+  color: var(--cream-50);
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+html:not([data-journey-act]) .journey-hud__progress [data-hud-act="thesis"]::before,
+html[data-journey-act="thesis"] .journey-hud__progress [data-hud-act="thesis"]::before,
+html[data-journey-act="specimen"] .journey-hud__progress [data-hud-act="specimen"]::before,
+html[data-journey-act="matrix"] .journey-hud__progress [data-hud-act="matrix"]::before,
+html[data-journey-act="evidence"] .journey-hud__progress [data-hud-act="evidence"]::before,
+html[data-journey-act="portal"] .journey-hud__progress [data-hud-act="portal"]::before,
+html[data-journey-act="quiet"] .journey-hud__progress [data-hud-act="quiet"]::before {
+  border-color: var(--titanium-edge-gold);
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+html:not([data-journey-act]) .journey-hud__chapters [data-hud-chapter="thesis"],
+html[data-journey-act="thesis"] .journey-hud__chapters [data-hud-chapter="thesis"],
+html[data-journey-act="specimen"] .journey-hud__chapters [data-hud-chapter="specimen"],
+html[data-journey-act="matrix"] .journey-hud__chapters [data-hud-chapter="matrix"],
+html[data-journey-act="evidence"] .journey-hud__chapters [data-hud-chapter="evidence"],
+html[data-journey-act="portal"] .journey-hud__chapters [data-hud-chapter="portal"],
+html[data-journey-act="quiet"] .journey-hud__chapters [data-hud-chapter="quiet"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+html:is([data-journey-phase="closing"], [data-journey-phase="covered"]) .journey-hud {
+  opacity: 0;
+  transform: translate3d(-50%, 8px, 0);
+}
+
+.journey-thesis {
+  position: relative;
+  display: grid;
+  min-height: clamp(32rem, 72svh, 54rem);
+  align-items: center;
+  padding-block: clamp(5rem, 12vw, 10rem);
+  isolation: isolate;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.journey-thesis__mirror {
+  position: absolute;
+  z-index: var(--z-raised);
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  overflow: clip;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.journey-thesis__mirror > span {
+  display: block;
+  color: color-mix(in srgb, var(--gold-300) 13%, transparent);
+  font-family: var(--font-editorial);
+  font-size: clamp(7rem, 22vw, 19rem);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  line-height: 0.72;
+  opacity: calc(0.65 + var(--act-focus, 0) * 0.31);
+  text-align: center;
+  text-transform: uppercase;
+  transform: translate3d(0, calc(35px - var(--act-p, 0.5) * 60px), 0);
+  transition:
+    opacity var(--ui-duration-fast, 320ms) var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--ui-duration-medium, 520ms) var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1));
+  will-change: transform, opacity;
+}
+
+.journey-thesis__content {
+  position: relative;
+  z-index: var(--z-content);
+  width: min(100%, 56rem);
+  pointer-events: none;
+}
+
+.journey-thesis__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  color: var(--gold-300);
+  font-family: var(--font-utility);
+  font-size: 0.62rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.journey-thesis__eyebrow > span {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.journey-thesis__title {
+  max-width: 15ch;
+  margin: 0;
+  color: var(--cream-50);
+  font-family: var(--font-editorial);
+  font-size: clamp(2.4rem, 6vw, 5.5rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.journey-thesis__description {
+  max-width: 44ch;
+  margin: clamp(1.25rem, 2.6vw, 2rem) 0 0;
+  color: var(--text-secondary);
+  font-family: var(--font-utility);
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.journey-thesis__extra {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  pointer-events: auto;
+}
+
+.journey-thesis :is(a, button, input, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"])) {
+  pointer-events: auto;
+}
+
+.journey-thesis :is(a, button, input, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 4px;
+}
+
+@media (max-width: 720px) {
+  .journey-hud {
+    grid-template-columns: auto minmax(8rem, 1fr);
+    width: min(calc(100% - 1rem), 31rem);
+    padding-inline: 0.55rem;
+  }
+
+  .journey-hud__route {
+    min-width: 4.25rem;
+  }
+
+  .journey-hud__route > span,
+  .journey-hud__chapters {
+    display: none;
+  }
+
+  .journey-hud__progress {
+    padding-inline: 0.3rem;
+  }
+
+  .journey-thesis {
+    min-height: clamp(28rem, 68svh, 42rem);
+    padding-block: clamp(4rem, 16vw, 7rem);
+  }
+
+  .journey-thesis__mirror > span {
+    font-size: clamp(4.5rem, 24vw, 8rem);
+    letter-spacing: -0.06em;
+  }
+
+  .journey-thesis__title {
+    font-size: clamp(2.4rem, 13vw, 4.6rem);
+  }
+}
+
+html[data-performance-mode="lite"] .journey-hud,
+.kinetic-save-data .journey-hud,
+.motion-reduced .journey-hud {
+  opacity: 0.88;
+  transform: translate3d(-50%, 0, 0);
+  transition: none;
+}
+
+html[data-performance-mode="lite"] .journey-hud__progress > li,
+html[data-performance-mode="lite"] .journey-hud__progress > li::before,
+html[data-performance-mode="lite"] .journey-hud__chapters > span,
+.kinetic-save-data .journey-hud__progress > li,
+.kinetic-save-data .journey-hud__progress > li::before,
+.kinetic-save-data .journey-hud__chapters > span,
+.motion-reduced .journey-hud__progress > li,
+.motion-reduced .journey-hud__progress > li::before,
+.motion-reduced .journey-hud__chapters > span,
+html[data-performance-mode="lite"] .journey-thesis__mirror > span,
+.kinetic-save-data .journey-thesis__mirror > span,
+.motion-reduced .journey-thesis__mirror > span {
+  transform: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-hud {
+    opacity: 0.88;
+    transform: translate3d(-50%, 0, 0);
+    transition: none;
+  }
+
+  .journey-hud__progress > li,
+  .journey-hud__progress > li::before,
+  .journey-hud__chapters > span,
+  .journey-thesis__mirror > span {
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .journey-hud {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    color: CanvasText;
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0);
+    transition: none;
+  }
+
+  .journey-hud__route,
+  .journey-hud__route strong,
+  .journey-hud__progress > li,
+  .journey-hud__chapters {
+    color: CanvasText;
+  }
+
+  .journey-hud__progress > li::before {
+    border-color: CanvasText;
+  }
+
+  .journey-thesis__mirror {
+    display: none;
+  }
+
+  .journey-thesis__eyebrow,
+  .journey-thesis__title,
+  .journey-thesis__description {
+    color: CanvasText;
+  }
+}

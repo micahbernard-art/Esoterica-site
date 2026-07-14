@@ -69,96 +69,43 @@ test("hidden tabs stop the refresh-synchronized galaxy scheduler", async () => {
   assert.match(scheduler, /document\.hidden/);
 });
 
-test("one section score drives the five-beat Oracle Observatory", async () => {
-  const [motion, backdrop, motionCss, pagesCss] = await Promise.all([
+test("one hysteretic scene score drives the six-variable Atlas journey", async () => {
+  const [motion, stageCss, galaxy] = await Promise.all([
     read("components/site/cosmic-motion.tsx"),
-    read("components/site/celestial-backdrop.tsx"),
-    read("app/cosmic-motion.css"),
-    read("app/cosmic-pages.css"),
+    read("app/cinematic-stage.css"),
+    read("components/site/galaxy-experience.tsx"),
   ]);
 
-  assert.match(motion, /root\.dataset\.cosmicBeat/);
-  assert.match(motion, /--beat-p/);
-  assert.match(motion, /const COSMIC_BEATS = \[[\s\S]*?"arrival"[\s\S]*?"specimen"[\s\S]*?"choice"[\s\S]*?"clarity"[\s\S]*?"portal"/);
-  for (const scene of [
-    "galaxy-entry",
-    "page-hero-",
-    "catalog-arches",
-    "reading-chambers",
-    "category-orbit",
-    "monthly-eclipse",
-    "planet-path",
-    "crescent-about",
-    "wayfinding",
-    "recommendation-portal",
-    "book-question",
-    "reading-close",
-    "portal-close",
-  ]) {
-    assert.match(motion, new RegExp(`["']${scene}["']`));
-  }
-  assert.match(motion, /sceneName === "tarot-constellation"[\s\S]*?0\.34[\s\S]*?0\.72/);
-  assert.match(motion, /sceneName === "book-artifact"[\s\S]*?0\.35[\s\S]*?0\.7/);
-  assert.match(motion, /const PORTAL_PEAK = 0\.62/);
-  assert.match(motion, /getPortalBloom\("portal", visiblePortalProgress\)/);
-  assert.match(motion, /PORTAL_SCENES\.has\(sceneName\)[\s\S]*score\.progress > 0/);
   for (const property of [
-    "--beat-p",
-    "--environment-p",
-    "--environment-focus",
-    "--environment-velocity",
-    "--finale-p",
+    "--journey-p",
+    "--chapter-p",
+    "--act-p",
+    "--act-focus",
+    "--journey-velocity",
+    "--portal-p",
   ]) {
     assert.match(motion, new RegExp(`["']${property}["']`));
   }
-  assert.match(
-    motion,
-    /ENVIRONMENT_PROPERTIES\.forEach\([\s\S]*?removeProperty\(property\)/,
-  );
-  assert.equal((motion.match(/requestAnimationFrame/g) ?? []).length, 2);
-  assert.equal((motion.match(/setTimeout/g) ?? []).length, 1);
-  assert.doesNotMatch(motion, /setInterval|requestEnvironmentFrame/);
-  assert.match(motion, /cosmic-beat-hud/);
-  assert.match(motion, /COSMIC_BEATS\.forEach/);
-  assert.match(motion, /dataset\.cosmicBeatMarker/);
 
-  assert.equal(
-    (backdrop.match(/className="celestial-focus-lens"/g) ?? []).length,
-    1,
-  );
-  assert.equal(
-    (backdrop.match(/className="celestial-finale-supernova"/g) ?? []).length,
-    1,
-  );
-  assert.equal(
-    (backdrop.match(/className="celestial-observatory-axis"/g) ?? []).length,
-    1,
-  );
+  assert.equal((motion.match(/root\.style\.setProperty/g) ?? []).length, 6);
+  assert.match(motion, /ACTIVE_HYSTERESIS_RATIO = 0\.08/);
+  assert.match(motion, /root\.dataset\.journeyScene/);
+  assert.match(motion, /root\.dataset\.journeyAct/);
+  assert.match(motion, /root\.dataset\.stagePreset/);
+  assert.match(motion, /root\.dataset\.specimenIndex/);
+  assert.match(motion, /dataConnection\?\.saveData === true/);
+  assert.match(motion, /mode === "lite"/);
+  assert.doesNotMatch(motion, /IntersectionObserver|setInterval|setTimeout|cosmicBeat/);
+  assert.match(stageCss, /\.cinematic-stage[\s\S]*position:\s*fixed/);
+  assert.match(stageCss, /html\[data-stage-preset="portal"\][\s\S]*var\(--portal-p/);
+  assert.match(stageCss, /data-performance-mode="lite"[\s\S]*\.journey-scene/);
+  assert.match(stageCss, /prefers-reduced-motion:\s*reduce/);
+  assert.match(stageCss, /forced-colors:\s*active/);
 
-  for (const beat of ["arrival", "specimen", "choice", "clarity", "portal"]) {
-    assert.match(
-      motionCss,
-      new RegExp(`data-cosmic-beat=["']${beat}["']`),
-    );
-  }
-  assert.match(motionCss, /\.cosmic-journey-rail\.cosmic-beat-hud[\s\S]*pointer-events:\s*none/);
-  assert.match(motionCss, /\.celestial-finale-supernova[\s\S]*var\(--finale-p\)/);
-  assert.match(
-    pagesCss,
-    /\.observatory-portal::after\s*\{[\s\S]*z-index:\s*var\(--z-raised\)[\s\S]*var\(--finale-p/,
-  );
-  assert.doesNotMatch(motionCss, /\.site-footer::after/);
-  assert.doesNotMatch(
-    motionCss.match(/\.celestial-focus-lens\s*\{[\s\S]*?\n\}/)?.[0] ?? "",
-    /transition\s*:/,
-  );
-  assert.doesNotMatch(
-    motionCss.match(/\.celestial-finale-supernova\s*\{[\s\S]*?\n\}/)?.[0] ?? "",
-    /animation\s*:/,
-  );
-  assert.match(motionCss, /data-performance-mode="lite"[\s\S]*celestial-finale-supernova/);
-  assert.match(motionCss, /prefers-reduced-motion:\s*reduce[\s\S]*celestial-finale-supernova/);
-  assert.match(motionCss, /forced-colors:\s*active[\s\S]*celestial-finale-supernova/);
+  assert.match(galaxy, /const JOURNEY_CAMERA/);
+  assert.match(galaxy, /quality\.constrained \? 0\.5 : 1/);
+  assert.match(galaxy, /readJourneyCameraPreset/);
+  assert.doesNotMatch(galaxy, /torusGeometry|sphereGeometry|icosahedronGeometry|postprocessing/i);
 });
 
 test("custom cursor remains semantic, decorative, and bounded", async () => {
@@ -190,28 +137,30 @@ test("Basement Grotesque ships with its complete OFL license", async () => {
   assert.match(styles, /BasementGrotesque-Black\.woff2/);
 });
 
-test("constellation arrival keeps one readable H1 and restrained route relics", async () => {
-  const [title, arrival, home, pageHero] = await Promise.all([
+test("Atlas thresholds keep one readable H1 and explicit journey contracts", async () => {
+  const [title, stageCss, home, pageHero, tarot, books, readings] = await Promise.all([
     read("components/site/astral-title.tsx"),
-    read("app/astral-arrival.css"),
+    read("app/cinematic-stage.css"),
     read("app/page.tsx"),
     read("components/site/page-hero.tsx"),
+    read("app/tarot/page.tsx"),
+    read("app/libros/page.tsx"),
+    read("app/lecturas/page.tsx"),
   ]);
 
   assert.equal((title.match(/<h1\b/g) ?? []).length, 1);
   assert.match(title, /className="sr-only"/);
   assert.match(title, /aria-hidden="true"/);
   assert.match(title, /data-astral-arrival="constellation"/);
-  assert.match(arrival, /data-journey-phase="opening"/);
-  assert.match(arrival, /prefers-reduced-motion:\s*reduce/);
-  assert.match(arrival, /forced-colors:\s*active/);
-  assert.match(arrival, /\.astral-title__oracle[\s\S]*font-family:\s*inherit/);
-  assert.match(arrival, /\.astral-title__oracle \.astral-title__glyph[\s\S]*background-clip:\s*text/);
-  assert.match(arrival, /\.route-relic[\s\S]*font-family:\s*var\(--font-impact/);
-  assert.match(home, /data-galaxy-anchor="home-threshold"/);
-  assert.match(home, /data-route-relic="home"/);
+  assert.match(home, /data-journey-scene="home-threshold"/);
+  assert.match(home, /data-stage-preset="threshold"/);
+  for (const route of [tarot, books, readings]) {
+    assert.equal((route.match(/<PageHero\b/g) ?? []).length, 1);
+    assert.match(route, /data-stage-preset="threshold"/);
+  }
   assert.match(pageHero, /data-galaxy-anchor=\{`\$\{variant\}-threshold`\}/);
-  assert.match(pageHero, /data-route-relic=\{variant\}/);
+  assert.match(stageCss, /\.journey-scene \[data-reveal\][\s\S]*opacity:\s*1 !important/);
+  assert.match(stageCss, /\.journey-first-fold[\s\S]*min-height:\s*78svh/);
 });
 
 test("cinematic journey exposes one root mount and opening phase contract", async () => {

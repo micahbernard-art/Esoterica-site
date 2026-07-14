@@ -66,6 +66,26 @@ const ROUTES: Record<
   },
 };
 
+const JOURNEY_CAMERA = {
+  threshold: { x: -0.08, y: 0.05, z: -0.18, worldZ: -0.08, roll: -0.008 },
+  tarot: { x: -0.24, y: 0.1, z: 0.22, worldZ: 0.16, roll: -0.014 },
+  book: { x: 0.2, y: -0.1, z: 0.12, worldZ: 0.22, roll: 0.012 },
+  eclipse: { x: -0.16, y: 0.14, z: 0.32, worldZ: 0.34, roll: -0.018 },
+  matrix: { x: 0.22, y: 0.01, z: 0.08, worldZ: 0.18, roll: 0.01 },
+  clarity: { x: 0.14, y: -0.08, z: -0.16, worldZ: -0.04, roll: 0.006 },
+  portal: { x: 0, y: 0, z: 0.72, worldZ: 0.72, roll: 0.028 },
+  quiet: { x: -0.1, y: 0.04, z: -0.24, worldZ: -0.12, roll: 0 },
+} as const;
+
+type JourneyCameraPreset = keyof typeof JOURNEY_CAMERA;
+
+function readJourneyCameraPreset() {
+  const preset = document.documentElement.dataset.stagePreset;
+  return preset && preset in JOURNEY_CAMERA
+    ? JOURNEY_CAMERA[preset as JourneyCameraPreset]
+    : JOURNEY_CAMERA.threshold;
+}
+
 function makeStars(count: number, seed: number, depth: number) {
   const random = seededRandom(seed);
   const positions = new Float32Array(count * 3);
@@ -332,25 +352,33 @@ function GalaxyWorld({
       passageEase,
     );
     const passageStrength = passageAmount.current;
+    const stage = readJourneyCameraPreset();
+    const stageAmplitude = quality.constrained ? 0.5 : 1;
 
     const targetX =
       cameraTarget.x +
+      stage.x * stageAmplitude +
       state.pointerX * 0.16 +
       (passage.originX - 0.5) * passageStrength * 0.2;
     const targetY =
       cameraTarget.y -
+      stage.y * stageAmplitude -
       state.pointerY * 0.1 +
       Math.sin(state.progress * Math.PI) * 0.08 +
       (0.5 - passage.originY) * passageStrength * 0.14;
     const targetZ =
       cameraTarget.z -
+      stage.z * stageAmplitude -
       Math.min(Math.abs(velocity) * 0.006, 0.28) -
       passageStrength * 2.35;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, ease);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, ease);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, ease);
     camera.lookAt(0, 0, -2.5);
-    camera.rotateZ((passage.originX - 0.5) * passageStrength * 0.095);
+    camera.rotateZ(
+      (passage.originX - 0.5) * passageStrength * 0.095 +
+        stage.roll * stageAmplitude,
+    );
 
     if (world.current) {
       world.current.rotation.z = THREE.MathUtils.lerp(
@@ -362,7 +390,9 @@ function GalaxyWorld({
       );
       world.current.position.z = THREE.MathUtils.lerp(
         world.current.position.z,
-        state.progress * 0.7 + passageStrength * 0.92,
+        state.progress * 0.7 +
+          stage.worldZ * stageAmplitude +
+          passageStrength * 0.92,
         ease,
       );
     }

@@ -62,17 +62,17 @@ test("monthly accompaniment is presented without automatic billing claims", asyn
 
 test("foreground actions share one accessible interaction contract", async () => {
   const actionLink = await readFile("components/ui/action-link.tsx", "utf8");
-  const motion = await readFile("components/site/cosmic-motion.tsx", "utf8");
   const components = await readFile("app/cosmic-components.css", "utf8");
+  const stage = await readFile("app/cinematic-stage.css", "utf8");
 
   assert.match(actionLink, /data-ui-action/);
   assert.match(actionLink, /data-cursor-label/);
   assert.match(actionLink, /noopener noreferrer/);
-  assert.match(motion, /\[data-ui-action\]/);
-  assert.doesNotMatch(motion, /KINETIC_CONTROL_SELECTOR\s*=\s*["']a\[href\]/);
   assert.match(components, /min-height:\s*48px/);
   assert.match(components, /\[data-ui-action\]:focus-visible/);
   assert.match(components, /--ui-duration-fast/);
+  assert.match(stage, /\.site-content :is\([\s\S]*pointer-events:\s*auto/);
+  assert.match(stage, /\.journey-scene :is\([\s\S]*pointer-events:\s*auto/);
 });
 
 test("astral actions use continuous orbital glass and compositor-only kinetics", async () => {
@@ -160,14 +160,7 @@ test("readings eclipse CTA keeps scoped premium anatomy and route semantics", as
   assert.match(eclipseCta, /intent="primary"/);
   assert.match(eclipseCta, /cursorLabel="Ver lecturas"/);
   assert.doesNotMatch(eclipseCta, /\bastral-button\b/);
-  assert.match(
-    eclipseCta,
-    /className="eclipse-cta__label">Ver opciones y precios<\/span>/,
-  );
-  assert.match(
-    eclipseCta,
-    /className="eclipse-cta__orbit" aria-hidden="true"/,
-  );
+  assert.match(eclipseCta, /<span>Ver opciones y precios<\/span>/);
   assert.match(eclipseCta, /<CelestialGlyph kind="eclipse" \/>/);
   assert.equal((home.match(/\beclipse-cta\b/g) ?? []).length, 1);
   assert.match(
@@ -207,7 +200,7 @@ test("readings eclipse CTA keeps scoped premium anatomy and route semantics", as
   );
 });
 
-test("catalog focal metadata and book reveals preserve readable content", async () => {
+test("catalog focal metadata and book Atlas acts preserve readable content", async () => {
   const catalogCard = await readFile("components/site/catalog-card.tsx", "utf8");
   const siteData = await readFile("lib/site-data.ts", "utf8");
   const books = await readFile("app/libros/page.tsx", "utf8");
@@ -218,7 +211,11 @@ test("catalog focal metadata and book reveals preserve readable content", async 
   assert.match(catalogCard, /--catalog-image-position/);
   assert.match(catalogCard, /--catalog-image-scale/);
   assert.match(catalogCard, /catalog-card-action/);
-  assert.doesNotMatch(books, /className="book-copy"\s+data-reveal/);
-  assert.match(books, /className="book-copy-intro"\s+data-reveal/);
-  assert.match(books, /className="book-purchase[^"]*"\s+data-reveal/);
+  assert.doesNotMatch(books, /data-reveal/);
+  assert.match(books, /data-journey-scene="libros-artifact"/);
+  assert.match(books, /data-journey-scene="libros-book"/);
+  assert.match(books, /data-journey-scene="libros-amazon"/);
+  assert.match(books, /data-journey-scene="libros-hotmart"/);
+  assert.match(books, /data-journey-act="evidence"/);
+  assert.match(books, /data-journey-act="specimen"/);
 });
