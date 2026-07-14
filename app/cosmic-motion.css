@@ -180,6 +180,33 @@ html[data-cosmic-chapter="finale"] .celestial-focus-lens {
   transform: rotate(calc(-4deg + var(--finale-p) * 8deg)) scale(calc(0.7 + var(--finale-p) * 0.34));
 }
 
+/* The fixed celestial layer sits below WebGL. Repeat the finale bloom inside
+ * the footer's isolated paint stack so its core remains visible behind copy. */
+.site-footer {
+  isolation: isolate;
+}
+
+.site-footer::after {
+  position: absolute;
+  z-index: var(--z-underlay);
+  top: 52%;
+  left: 70%;
+  width: min(48rem, 82vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 48.7%, rgb(255 248 224 / 22%) 49.85%, rgb(255 252 238 / 62%) 50%, rgb(255 248 224 / 22%) 50.15%, transparent 51.3%),
+    linear-gradient(0deg, transparent 48.7%, rgb(245 195 104 / 18%) 49.85%, rgb(255 252 238 / 54%) 50%, rgb(245 195 104 / 18%) 50.15%, transparent 51.3%),
+    radial-gradient(circle, rgb(255 253 243 / 98%) 0 1.1%, rgb(255 219 139 / 92%) 2.2%, rgb(235 167 74 / 48%) 7%, rgb(177 135 255 / 24%) 19%, rgb(126 237 244 / 10%) 34%, transparent 65%);
+  content: "";
+  filter: drop-shadow(0 0 3.5rem rgb(239 207 142 / 28%));
+  mask-image: radial-gradient(circle, black 0 9%, rgb(0 0 0 / 92%) 28%, transparent 68%);
+  opacity: calc(var(--finale-p) * 0.96);
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0) scale(calc(0.46 + var(--finale-p) * 0.54));
+  will-change: transform, opacity;
+}
+
 .nebula-field {
   position: absolute;
   z-index: 0;
@@ -708,6 +735,14 @@ html[data-performance-mode="lite"] :is(.celestial-focus-lens, .celestial-finale-
   transition: none !important;
 }
 
+html.motion-reduced .site-footer::after,
+html.kinetic-save-data .site-footer::after,
+html[data-performance-mode="lite"] .site-footer::after {
+  filter: none;
+  opacity: 0.08;
+  transform: translate3d(-50%, -50%, 0) scale(0.72);
+}
+
 .motion-reduced .celestial-backdrop :is(.star-plane, .nebula-field, .astral-sun, .astral-crescent, .orbit-shell, .celestial-meridian),
 .motion-reduced [data-cosmic-scene] :is(.hero-copy, .page-hero-copy, .section-heading, .about-copy, .book-copy, .hero-feature, .about-principles, .book-cover, .readings-highlight-details, .catalog-grid, .category-grid, .process-grid, .reading-tier-grid) {
   transform: none !important;
@@ -758,7 +793,16 @@ html[data-performance-mode="lite"] :is(.celestial-focus-lens, .celestial-finale-
 
 @media (forced-colors: active) {
   .celestial-focus-lens,
-  .celestial-finale-supernova {
+  .celestial-finale-supernova,
+  .site-footer::after {
     display: none;
+  }
+}
+
+@media (max-width: 46rem) {
+  .site-footer::after {
+    top: 54%;
+    left: 56%;
+    width: min(34rem, 112vw);
   }
 }

@@ -118,6 +118,11 @@ test("one section score drives the chapter lens and restrained finale", async ()
     );
   }
   assert.match(motionCss, /\.celestial-finale-supernova[\s\S]*var\(--finale-p\)/);
+  assert.match(
+    motionCss,
+    /\.site-footer::after\s*\{[\s\S]*z-index:\s*var\(--z-underlay\)[\s\S]*var\(--finale-p\)/,
+  );
+  assert.match(motionCss, /\.site-footer\s*\{\s*isolation:\s*isolate/);
   assert.doesNotMatch(
     motionCss.match(/\.celestial-focus-lens\s*\{[\s\S]*?\n\}/)?.[0] ?? "",
     /transition\s*:/,
