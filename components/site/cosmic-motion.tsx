@@ -9,8 +9,46 @@ import "@/app/galaxy-choreography.css";
 const SCENE_SELECTOR = "main > section, .site-footer";
 const CHAPTERS = ["threshold", "orbit", "eclipse", "archive", "finale"] as const;
 type CosmicChapter = (typeof CHAPTERS)[number];
+const COSMIC_BEATS = [
+  "arrival",
+  "specimen",
+  "choice",
+  "clarity",
+  "portal",
+] as const;
+type CosmicBeat = (typeof COSMIC_BEATS)[number];
+
+const COSMIC_BEAT_LABELS: Record<CosmicBeat, string> = {
+  arrival: "Llegada",
+  specimen: "Observación",
+  choice: "Elección",
+  clarity: "Claridad",
+  portal: "Portal",
+};
+
+const SPECIMEN_SCENES = new Set(["catalog-arches", "reading-chambers"]);
+const CHOICE_SCENES = new Set([
+  "category-orbit",
+  "readings-eclipse",
+  "monthly-eclipse",
+]);
+const CLARITY_SCENES = new Set([
+  "planet-path",
+  "crescent-about",
+  "wayfinding",
+]);
+const PORTAL_SCENES = new Set([
+  "portal-close",
+  "recommendation-portal",
+  "book-question",
+  "reading-close",
+]);
+
+const PORTAL_PEAK = 0.62;
+const PORTAL_RESTING_GLOW = 0.12;
 
 const ENVIRONMENT_PROPERTIES = [
+  "--beat-p",
   "--environment-p",
   "--environment-focus",
   "--environment-velocity",
@@ -47,6 +85,86 @@ const KINETIC_PROPERTIES = [
 
 const clamp = (value: number, minimum = 0, maximum = 1) =>
   Math.min(maximum, Math.max(minimum, value));
+
+const normalizeBeatProgress = (progress: number, start: number, end: number) =>
+  clamp((progress - start) / Math.max(end - start, 0.001));
+
+const getCosmicBeat = (
+  scene: HTMLElement,
+  progress: number,
+): { beat: CosmicBeat; progress: number } => {
+  const sceneName = scene.dataset.scrollScene?.toLowerCase() ?? "";
+  const sceneProgress = clamp(progress);
+
+  if (sceneName === "galaxy-entry" || sceneName.startsWith("page-hero-")) {
+    return { beat: "arrival", progress: sceneProgress };
+  }
+
+  if (sceneName === "tarot-constellation") {
+    if (sceneProgress < 0.34) {
+      return {
+        beat: "specimen",
+        progress: normalizeBeatProgress(sceneProgress, 0, 0.34),
+      };
+    }
+    if (sceneProgress < 0.72) {
+      return {
+        beat: "choice",
+        progress: normalizeBeatProgress(sceneProgress, 0.34, 0.72),
+      };
+    }
+    return {
+      beat: "clarity",
+      progress: normalizeBeatProgress(sceneProgress, 0.72, 1),
+    };
+  }
+
+  if (sceneName === "book-artifact") {
+    if (sceneProgress < 0.35) {
+      return {
+        beat: "specimen",
+        progress: normalizeBeatProgress(sceneProgress, 0, 0.35),
+      };
+    }
+    if (sceneProgress < 0.7) {
+      return {
+        beat: "choice",
+        progress: normalizeBeatProgress(sceneProgress, 0.35, 0.7),
+      };
+    }
+    return {
+      beat: "clarity",
+      progress: normalizeBeatProgress(sceneProgress, 0.7, 1),
+    };
+  }
+
+  if (SPECIMEN_SCENES.has(sceneName)) {
+    return { beat: "specimen", progress: sceneProgress };
+  }
+  if (CHOICE_SCENES.has(sceneName)) {
+    return { beat: "choice", progress: sceneProgress };
+  }
+  if (CLARITY_SCENES.has(sceneName)) {
+    return { beat: "clarity", progress: sceneProgress };
+  }
+  if (PORTAL_SCENES.has(sceneName)) {
+    return { beat: "portal", progress: sceneProgress };
+  }
+  if (sceneName === "footer") {
+    return { beat: "portal", progress: 1 };
+  }
+
+  return { beat: "clarity", progress: sceneProgress };
+};
+
+const getPortalBloom = (beat: CosmicBeat, progress: number) => {
+  if (beat !== "portal") return 0;
+
+  const distance = Math.abs(progress - PORTAL_PEAK);
+  const spread = progress <= PORTAL_PEAK ? PORTAL_PEAK : 1 - PORTAL_PEAK;
+  const peak = clamp(1 - distance / spread);
+  return PORTAL_RESTING_GLOW + peak * (1 - PORTAL_RESTING_GLOW);
+};
 
 const CHAPTER_SCENES: Record<CosmicChapter, string[]> = {
   threshold: ["entry", "hero"],
@@ -128,6 +246,8 @@ export function CosmicMotion() {
     );
 
     if (!ready || mode === "lite") {
+      const initialScene = scenes[0] ?? document.body;
+      const initialBeat = getCosmicBeat(initialScene, 0.5);
       root.classList.add(
         "motion-ready",
         "motion-reduced",
@@ -136,10 +256,12 @@ export function CosmicMotion() {
       root.classList.remove("motion-paused", "kinetic-enabled");
       root.style.setProperty("--scroll-p", "0");
       root.dataset.cosmicChapter = getChapter(
-        scenes[0] ?? document.body,
+        initialScene,
         0,
         Math.max(scenes.length, 1),
       );
+      root.dataset.cosmicBeat = initialBeat.beat;
+      root.style.setProperty("--beat-p", "0.5");
       root.style.setProperty("--environment-p", "0.5");
       root.style.setProperty("--environment-focus", "0.14");
       root.style.setProperty("--environment-velocity", "0");
@@ -148,6 +270,7 @@ export function CosmicMotion() {
       scenes.forEach((scene, index) => {
         scene.dataset.cosmicScene = "";
         scene.dataset.cosmicChapter = getChapter(scene, index, scenes.length);
+        scene.dataset.cosmicBeat = getCosmicBeat(scene, 0.5).beat;
         scene.classList.add("is-cosmic-visible", "is-cosmic-focus");
         scene.style.setProperty("--scene-p", "0.5");
         scene.style.setProperty("--scene-focus", "1");
@@ -183,6 +306,7 @@ export function CosmicMotion() {
         );
         root.style.removeProperty("--scroll-p");
         delete root.dataset.cosmicChapter;
+        delete root.dataset.cosmicBeat;
         ENVIRONMENT_PROPERTIES.forEach((property) =>
           root.style.removeProperty(property),
         );
@@ -190,6 +314,7 @@ export function CosmicMotion() {
         scenes.forEach((scene) => {
           delete scene.dataset.cosmicScene;
           delete scene.dataset.cosmicChapter;
+          delete scene.dataset.cosmicBeat;
           scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
           scene.style.removeProperty("--scene-p");
           scene.style.removeProperty("--scene-focus");
@@ -227,7 +352,7 @@ export function CosmicMotion() {
     const visibleCards = new Set<HTMLElement>();
     const visibleControls = new Set<HTMLElement>();
     const journeyRail = document.createElement("div");
-    const journeyPoints: HTMLSpanElement[] = [];
+    const journeyPoints = new Map<CosmicBeat, HTMLSpanElement>();
 
     let frameId: number | null = null;
     let velocityResetId: number | null = null;
@@ -250,16 +375,24 @@ export function CosmicMotion() {
       0,
       Math.max(scenes.length, 1),
     );
+    let activeBeat: CosmicBeat = getCosmicBeat(
+      scenes[0] ?? document.body,
+      0.5,
+    ).beat;
 
     const saveData = connection?.saveData === true;
 
-    journeyRail.className = "cosmic-journey-rail";
+    journeyRail.className = "cosmic-journey-rail cosmic-beat-hud";
+    journeyRail.dataset.cosmicHud = "oracle-observatory";
     journeyRail.setAttribute("aria-hidden", "true");
-    scenes.forEach((_, index) => {
+    COSMIC_BEATS.forEach((beat, index) => {
       const point = document.createElement("span");
       point.style.setProperty("--journey-index", `${index}`);
+      point.dataset.cosmicBeatMarker = beat;
+      point.dataset.beatLabel = COSMIC_BEAT_LABELS[beat];
+      point.dataset.beatState = beat === activeBeat ? "active" : "idle";
       journeyRail.append(point);
-      journeyPoints.push(point);
+      journeyPoints.set(beat, point);
     });
     document.body.append(journeyRail);
 
@@ -301,6 +434,7 @@ export function CosmicMotion() {
     scenes.forEach((scene, index) => {
       scene.dataset.cosmicScene = "";
       scene.dataset.cosmicChapter = getChapter(scene, index, scenes.length);
+      scene.dataset.cosmicBeat = getCosmicBeat(scene, 0.5).beat;
       scene.style.setProperty("--chapter-index", `${index}`);
       scene.style.setProperty("--chapter-count", `${scenes.length}`);
       scene.style.setProperty("--scene-p", "0.5");
@@ -372,6 +506,7 @@ export function CosmicMotion() {
         "--scene-shift-reverse",
         `${((progress - 0.5) * 52).toFixed(2)}px`,
       );
+      scene.dataset.cosmicBeat = getCosmicBeat(scene, progress).beat;
 
       return {
         distance: Math.abs(
@@ -386,25 +521,44 @@ export function CosmicMotion() {
       scene: HTMLElement | null,
       progress: number,
       focus: number,
+      visiblePortalProgress: number | null,
     ) => {
+      const sceneBeatScore = scene
+        ? getCosmicBeat(scene, progress)
+        : { beat: activeBeat, progress: 0.5 };
+      const beatScore =
+        visiblePortalProgress === null
+          ? sceneBeatScore
+          : { beat: "portal" as const, progress: visiblePortalProgress };
       const chapter =
-        (scene?.dataset.cosmicChapter as CosmicChapter | undefined) ??
-        activeChapter;
+        visiblePortalProgress === null
+          ? ((scene?.dataset.cosmicChapter as CosmicChapter | undefined) ??
+            activeChapter)
+          : "finale";
       const environmentIsStatic = reducedMotion || forcedColors || saveData;
-      const environmentProgress = environmentIsStatic ? 0.5 : progress;
+      const beatProgress = environmentIsStatic ? 0.5 : beatScore.progress;
+      const environmentProgress = beatProgress;
       const environmentFocus = environmentIsStatic
         ? Math.min(focus, 0.14)
         : focus;
       const environmentVelocity = environmentIsStatic ? 0 : scrollVelocity;
-      const finaleProgress =
-        !environmentIsStatic && chapter === "finale"
-          ? clamp((progress - 0.08) / 0.38)
-          : 0;
+      const finaleProgress = environmentIsStatic
+        ? 0
+        : visiblePortalProgress === null
+          ? 0
+          : getPortalBloom("portal", visiblePortalProgress);
 
       activeChapter = chapter;
+      const nextBeat = beatScore.beat;
+      const beatChanged = nextBeat !== activeBeat;
+      activeBeat = nextBeat;
       if (root.dataset.cosmicChapter !== chapter) {
         root.dataset.cosmicChapter = chapter;
       }
+      if (root.dataset.cosmicBeat !== activeBeat) {
+        root.dataset.cosmicBeat = activeBeat;
+      }
+      root.style.setProperty("--beat-p", beatProgress.toFixed(4));
       root.style.setProperty(
         "--environment-p",
         environmentProgress.toFixed(4),
@@ -418,6 +572,13 @@ export function CosmicMotion() {
         environmentVelocity.toFixed(3),
       );
       root.style.setProperty("--finale-p", finaleProgress.toFixed(4));
+      if (beatChanged) {
+        journeyPoints.forEach((point, beat) => {
+          const isActive = beat === activeBeat;
+          point.classList.toggle("is-active", isActive);
+          point.dataset.beatState = isActive ? "active" : "idle";
+        });
+      }
     };
 
     const writeMotionFrame = () => {
@@ -451,6 +612,7 @@ export function CosmicMotion() {
       let activeDistance = Number.POSITIVE_INFINITY;
       let activeProgress = 0.5;
       let activeFocus = 0;
+      let visiblePortalProgress: number | null = null;
 
       visibleScenes.forEach((scene) => {
         let sceneProgress = 0.5;
@@ -473,6 +635,15 @@ export function CosmicMotion() {
           sceneProgress = score.progress;
           sceneFocus = score.focus;
           sceneDistance = score.distance;
+
+          const sceneName = scene.dataset.scrollScene?.toLowerCase() ?? "";
+          if (
+            PORTAL_SCENES.has(sceneName) &&
+            score.progress > 0 &&
+            score.progress < 1
+          ) {
+            visiblePortalProgress = score.progress;
+          }
         }
 
         if (sceneDistance < activeDistance) {
@@ -484,12 +655,16 @@ export function CosmicMotion() {
       });
 
       if (activeScene) {
-        scenes.forEach((scene, index) => {
+        scenes.forEach((scene) => {
           const active = scene === activeScene;
           scene.classList.toggle("is-cosmic-focus", active);
-          journeyPoints[index]?.classList.toggle("is-active", active);
         });
-        writeEnvironmentScore(activeScene, activeProgress, activeFocus);
+        writeEnvironmentScore(
+          activeScene,
+          activeProgress,
+          activeFocus,
+          visiblePortalProgress,
+        );
       }
 
       if (pointerDirty) {
@@ -901,6 +1076,7 @@ export function CosmicMotion() {
       );
       root.style.removeProperty("--scroll-p");
       delete root.dataset.cosmicChapter;
+      delete root.dataset.cosmicBeat;
       ENVIRONMENT_PROPERTIES.forEach((property) =>
         root.style.removeProperty(property),
       );
@@ -909,6 +1085,7 @@ export function CosmicMotion() {
       scenes.forEach((scene) => {
         delete scene.dataset.cosmicScene;
         delete scene.dataset.cosmicChapter;
+        delete scene.dataset.cosmicBeat;
         scene.classList.remove("is-cosmic-visible", "is-cosmic-focus");
         scene.style.removeProperty("--chapter-index");
         scene.style.removeProperty("--chapter-count");

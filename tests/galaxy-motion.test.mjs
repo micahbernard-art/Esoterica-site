@@ -69,24 +69,41 @@ test("hidden tabs stop the refresh-synchronized galaxy scheduler", async () => {
   assert.match(scheduler, /document\.hidden/);
 });
 
-test("one section score drives the chapter lens and restrained finale", async () => {
-  const [motion, backdrop, motionCss] = await Promise.all([
+test("one section score drives the five-beat Oracle Observatory", async () => {
+  const [motion, backdrop, motionCss, pagesCss] = await Promise.all([
     read("components/site/cosmic-motion.tsx"),
     read("components/site/celestial-backdrop.tsx"),
     read("app/cosmic-motion.css"),
+    read("app/cosmic-pages.css"),
   ]);
 
-  assert.match(motion, /root\.dataset\.cosmicChapter/);
-  for (const closingScene of [
+  assert.match(motion, /root\.dataset\.cosmicBeat/);
+  assert.match(motion, /--beat-p/);
+  assert.match(motion, /const COSMIC_BEATS = \[[\s\S]*?"arrival"[\s\S]*?"specimen"[\s\S]*?"choice"[\s\S]*?"clarity"[\s\S]*?"portal"/);
+  for (const scene of [
+    "galaxy-entry",
+    "page-hero-",
+    "catalog-arches",
+    "reading-chambers",
+    "category-orbit",
+    "monthly-eclipse",
+    "planet-path",
+    "crescent-about",
+    "wayfinding",
     "recommendation-portal",
     "book-question",
     "reading-close",
     "portal-close",
   ]) {
-    assert.match(motion, new RegExp(`["']${closingScene}["']`));
+    assert.match(motion, new RegExp(`["']${scene}["']`));
   }
-  assert.match(motion, /FINALE_SCENES\.has\(sceneName\)/);
+  assert.match(motion, /sceneName === "tarot-constellation"[\s\S]*?0\.34[\s\S]*?0\.72/);
+  assert.match(motion, /sceneName === "book-artifact"[\s\S]*?0\.35[\s\S]*?0\.7/);
+  assert.match(motion, /const PORTAL_PEAK = 0\.62/);
+  assert.match(motion, /getPortalBloom\("portal", visiblePortalProgress\)/);
+  assert.match(motion, /PORTAL_SCENES\.has\(sceneName\)[\s\S]*score\.progress > 0/);
   for (const property of [
+    "--beat-p",
     "--environment-p",
     "--environment-focus",
     "--environment-velocity",
@@ -101,6 +118,9 @@ test("one section score drives the chapter lens and restrained finale", async ()
   assert.equal((motion.match(/requestAnimationFrame/g) ?? []).length, 2);
   assert.equal((motion.match(/setTimeout/g) ?? []).length, 1);
   assert.doesNotMatch(motion, /setInterval|requestEnvironmentFrame/);
+  assert.match(motion, /cosmic-beat-hud/);
+  assert.match(motion, /COSMIC_BEATS\.forEach/);
+  assert.match(motion, /dataset\.cosmicBeatMarker/);
 
   assert.equal(
     (backdrop.match(/className="celestial-focus-lens"/g) ?? []).length,
@@ -110,19 +130,24 @@ test("one section score drives the chapter lens and restrained finale", async ()
     (backdrop.match(/className="celestial-finale-supernova"/g) ?? []).length,
     1,
   );
+  assert.equal(
+    (backdrop.match(/className="celestial-observatory-axis"/g) ?? []).length,
+    1,
+  );
 
-  for (const chapter of ["threshold", "orbit", "eclipse", "archive", "finale"]) {
+  for (const beat of ["arrival", "specimen", "choice", "clarity", "portal"]) {
     assert.match(
       motionCss,
-      new RegExp(`data-cosmic-chapter=["']${chapter}["']`),
+      new RegExp(`data-cosmic-beat=["']${beat}["']`),
     );
   }
+  assert.match(motionCss, /\.cosmic-journey-rail\.cosmic-beat-hud[\s\S]*pointer-events:\s*none/);
   assert.match(motionCss, /\.celestial-finale-supernova[\s\S]*var\(--finale-p\)/);
   assert.match(
-    motionCss,
-    /\.site-footer::after\s*\{[\s\S]*z-index:\s*var\(--z-underlay\)[\s\S]*var\(--finale-p\)/,
+    pagesCss,
+    /\.observatory-portal::after\s*\{[\s\S]*z-index:\s*var\(--z-raised\)[\s\S]*var\(--finale-p/,
   );
-  assert.match(motionCss, /\.site-footer\s*\{\s*isolation:\s*isolate/);
+  assert.doesNotMatch(motionCss, /\.site-footer::after/);
   assert.doesNotMatch(
     motionCss.match(/\.celestial-focus-lens\s*\{[\s\S]*?\n\}/)?.[0] ?? "",
     /transition\s*:/,

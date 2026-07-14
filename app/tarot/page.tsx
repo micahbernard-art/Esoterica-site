@@ -26,16 +26,19 @@ export default function TarotPage() {
         <AstralDivider />
 
         <section
-          className="page-content catalog-page tarot-constellation"
+          className="page-content catalog-page tarot-constellation observatory-specimen-layout"
           aria-labelledby="tarot-catalog-title"
           data-scroll-scene="tarot-constellation"
         >
-          <div className="constellation-heading" data-reveal="from-left">
+          <div className="constellation-heading observatory-sticky-stage" data-reveal="from-left">
             <SectionHeading
               eyebrow="Mazos y oráculos"
               title="Encuentra una baraja para tu práctica"
               titleId="tarot-catalog-title"
               description="Estas imágenes son referenciales y pueden no corresponder al producto disponible. Antes de coordinar, te compartiremos los detalles de las opciones actuales."
+              chapterLabel="Observación"
+              chapterWord="ARCANO"
+              chapterIndex="01"
             />
             <div className="constellation-key" aria-hidden="true">
               <CelestialGlyph kind="star" />
@@ -56,6 +59,9 @@ export default function TarotPage() {
               <div
                 className="tarot-constellation__cell"
                 data-reveal={index % 2 ? "rise-delay" : "rise"}
+                data-observatory-phase={
+                  index < 2 ? "specimen" : index < 4 ? "choice" : "clarity"
+                }
                 key={item.id}
               >
                 <span className="constellation-index" aria-hidden="true">
@@ -68,10 +74,19 @@ export default function TarotPage() {
         </section>
 
         <section
-          className="content-section contact-banner recommendation-portal"
+          className="content-section contact-banner recommendation-portal observatory-portal"
           aria-labelledby="tarot-help-title"
           data-scroll-scene="recommendation-portal"
         >
+          <div
+            className="observatory-chapter-word observatory-chapter-word--portal"
+            data-observatory-chapter="portal"
+            data-reveal="fade"
+            aria-hidden="true"
+          >
+            <span>Portal · 04</span>
+            <strong>CONVERSEMOS</strong>
+          </div>
           <div className="recommendation-portal__astral" data-reveal="scale-in">
             <OrbitPortal variant="compact" />
           </div>

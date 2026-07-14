@@ -220,5 +220,5 @@ test("catalog focal metadata and book reveals preserve readable content", async 
   assert.match(catalogCard, /catalog-card-action/);
   assert.doesNotMatch(books, /className="book-copy"\s+data-reveal/);
   assert.match(books, /className="book-copy-intro"\s+data-reveal/);
-  assert.match(books, /className="book-purchase"\s+data-reveal/);
+  assert.match(books, /className="book-purchase[^"]*"\s+data-reveal/);
 });

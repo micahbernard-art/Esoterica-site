@@ -30,12 +30,20 @@ export default function LibrosPage() {
         <AstralDivider />
 
         <section
-          className="page-content book-section artifact-scene"
+          className="page-content book-section artifact-scene observatory-specimen-layout"
           aria-labelledby="book-title"
           data-scroll-scene="book-artifact"
         >
           <div className="book-layout">
-            <div className="book-artifact" data-reveal="scale-in">
+            <div className="book-artifact observatory-sticky-stage" data-reveal="scale-in">
+              <div
+                className="observatory-chapter-word observatory-chapter-word--specimen"
+                data-observatory-chapter="specimen"
+                aria-hidden="true"
+              >
+                <span>Observación · 01</span>
+                <strong>LIBRO</strong>
+              </div>
               <span className="artifact-coordinate" aria-hidden="true">
                 BIBLIOTECA · 01
               </span>
@@ -79,7 +87,15 @@ export default function LibrosPage() {
                 ))}
               </ul>
 
-              <div className="book-purchase" data-reveal="rise">
+              <div className="book-purchase observatory-choice-locus" data-reveal="rise">
+                <div
+                  className="observatory-chapter-word observatory-chapter-word--choice"
+                  data-observatory-chapter="choice"
+                  aria-hidden="true"
+                >
+                  <span>Elección · 02</span>
+                  <strong>ELIGE</strong>
+                </div>
                 <p>Elige una plataforma de compra:</p>
                 <div className="purchase-links celestial-gateways">
                   <ActionLink
@@ -118,15 +134,33 @@ export default function LibrosPage() {
                   condiciones se muestran antes de pagar.
                 </p>
               </div>
+              <div
+                className="observatory-chapter-word observatory-chapter-word--clarity"
+                data-observatory-chapter="clarity"
+                data-reveal="fade"
+                aria-hidden="true"
+              >
+                <span>Claridad · 03</span>
+                <strong>CLARIDAD</strong>
+              </div>
             </div>
           </div>
         </section>
 
         <section
-          className="content-section contact-banner portal-close book-portal-close"
+          className="content-section contact-banner portal-close book-portal-close observatory-portal"
           aria-labelledby="book-help-title"
           data-scroll-scene="book-question"
         >
+          <div
+            className="observatory-chapter-word observatory-chapter-word--portal"
+            data-observatory-chapter="portal"
+            data-reveal="fade"
+            aria-hidden="true"
+          >
+            <span>Portal · 04</span>
+            <strong>CONVERSEMOS</strong>
+          </div>
           <OrbitPortal variant="compact" />
           <div data-reveal="from-left">
             <p className="section-eyebrow">¿Tienes una consulta?</p>

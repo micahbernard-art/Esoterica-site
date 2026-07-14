@@ -52,6 +52,56 @@ test("site frame publishes a stable foreground interface contract", async () => 
   assert.match(globals, /html\[data-scroll-engine="lenis"\][\s\S]*scroll-behavior:\s*auto/);
 });
 
+test("Oracle Observatory stages one sticky specimen and static-safe chapters per route", async () => {
+  const [frame, hero, heading, home, tarot, books, readings, pages, choreography] =
+    await Promise.all([
+      read("components/site/site-frame.tsx"),
+      read("components/site/page-hero.tsx"),
+      read("components/site/section-heading.tsx"),
+      read("app/page.tsx"),
+      read("app/tarot/page.tsx"),
+      read("app/libros/page.tsx"),
+      read("app/lecturas/page.tsx"),
+      read("app/cosmic-pages.css"),
+      read("app/galaxy-choreography.css"),
+    ]);
+
+  assert.doesNotMatch(frame, /className="observatory-hud"/);
+  assert.match(hero, /data-observatory-chapter="arrival"/);
+  assert.match(hero, /<span>Llegada · 00<\/span>/);
+  assert.match(hero, /<strong>UMBRAL<\/strong>/);
+  assert.match(heading, /chapterWord\?:\s*string/);
+  assert.match(heading, /data-observatory-chapter=/);
+
+  for (const route of [home, tarot, books, readings]) {
+    assert.equal((route.match(/\bobservatory-sticky-stage\b/g) ?? []).length, 1);
+    assert.match(route, /\bobservatory-portal\b/);
+    assert.match(route, /<strong>CONVERSEMOS<\/strong>/);
+  }
+
+  assert.match(home, /chapterWord="ARCANO"/);
+  assert.match(home, /chapterWord="ELIGE"/);
+  assert.match(home, /chapterWord="CLARIDAD"/);
+  assert.match(tarot, /chapterWord="ARCANO"/);
+  assert.equal((tarot.match(/data-observatory-phase=/g) ?? []).length, 1);
+  assert.match(tarot, /index < 2 \? "specimen" : index < 4 \? "choice" : "clarity"/);
+  assert.match(books, /<strong>LIBRO<\/strong>/);
+  assert.ok(books.indexOf("<strong>ELIGE</strong>") < books.indexOf("<strong>CLARIDAD</strong>"));
+  assert.match(readings, /chapterWord="LECTURA"/);
+
+  assert.match(pages, /min-height:\s*var\(--observatory-portal-height\)/);
+  assert.match(pages, /min-height:\s*70svh/);
+  assert.match(pages, /\.orbital-categories\.observatory-choice[\s\S]*overflow:\s*clip/);
+  assert.match(pages, /@media \(max-width:\s*900px\)[\s\S]*\.observatory-sticky-stage[\s\S]*position:\s*relative/);
+  assert.match(pages, /data-performance-mode="lite"[\s\S]*\.observatory-sticky-stage/);
+  assert.match(pages, /\.observatory-portal::after[\s\S]*var\(--finale-p/);
+  assert.match(choreography, /\[data-observatory-chapter\]/);
+  assert.doesNotMatch(
+    choreography,
+    /transition(?:-property)?:[^;]*(?:clip-path|filter|box-shadow|border-color|width|height|margin)/,
+  );
+});
+
 test("foreground kinetics use tokenized premium easing without layout animation", async () => {
   const [globals, kinetic, cosmic, cursor] = await Promise.all([
     read("app/globals.css"),

@@ -29,16 +29,19 @@ export default function LecturasPage() {
         <AstralDivider />
 
         <section
-          className="page-content readings-section reading-chambers"
+          className="page-content readings-section reading-chambers observatory-specimen-layout"
           aria-labelledby="reading-options-title"
           data-scroll-scene="reading-chambers"
         >
-          <div className="reading-chambers__heading" data-reveal="from-left">
+          <div className="reading-chambers__heading observatory-sticky-stage" data-reveal="from-left">
             <SectionHeading
               eyebrow="Opciones y precios"
               title="Una lectura para cada tipo de consulta"
               titleId="reading-options-title"
               description="Revisa qué incluye cada opción. La disponibilidad se confirma antes de coordinar la sesión."
+              chapterLabel="Observación"
+              chapterWord="LECTURA"
+              chapterIndex="01"
             />
             <div className="phase-sequence" aria-hidden="true">
               <CelestialGlyph kind="moon" />
@@ -104,10 +107,19 @@ export default function LecturasPage() {
         </section>
 
         <section
-          className="content-section readings-highlight monthly-eclipse"
+          className="content-section readings-highlight monthly-eclipse observatory-choice-locus"
           aria-labelledby="monthly-support-title"
           data-scroll-scene="monthly-eclipse"
         >
+          <div
+            className="observatory-chapter-word observatory-chapter-word--choice"
+            data-observatory-chapter="choice"
+            data-reveal="fade"
+            aria-hidden="true"
+          >
+            <span>Elección · 02</span>
+            <strong>ELIGE</strong>
+          </div>
           <div className="readings-highlight-copy" data-reveal="from-left">
             <p className="section-eyebrow">Acompañamiento mensual</p>
             <h2 id="monthly-support-title">
@@ -151,10 +163,19 @@ export default function LecturasPage() {
         </section>
 
         <section
-          className="content-section booking-note astral-wayfinding"
+          className="content-section booking-note astral-wayfinding observatory-clarity"
           aria-labelledby="booking-note-title"
           data-scroll-scene="wayfinding"
         >
+          <div
+            className="observatory-chapter-word observatory-chapter-word--clarity"
+            data-observatory-chapter="clarity"
+            data-reveal="fade"
+            aria-hidden="true"
+          >
+            <span>Claridad · 03</span>
+            <strong>CLARIDAD</strong>
+          </div>
           <div className="booking-note-icon" aria-hidden="true">
             <CelestialGlyph kind="orbit" />
             <span>01</span>
@@ -170,10 +191,19 @@ export default function LecturasPage() {
         </section>
 
         <section
-          className="content-section contact-banner portal-close readings-portal-close"
+          className="content-section contact-banner portal-close readings-portal-close observatory-portal"
           aria-labelledby="reading-help-title"
           data-scroll-scene="reading-close"
         >
+          <div
+            className="observatory-chapter-word observatory-chapter-word--portal"
+            data-observatory-chapter="portal"
+            data-reveal="fade"
+            aria-hidden="true"
+          >
+            <span>Portal · 04</span>
+            <strong>CONVERSEMOS</strong>
+          </div>
           <OrbitPortal variant="compact" />
           <div data-reveal="from-left">
             <p className="section-eyebrow">Te ayudamos a elegir</p>

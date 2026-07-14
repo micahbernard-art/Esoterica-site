@@ -1560,6 +1560,89 @@
   }
 }
 
+/* Oracle Observatory — foreground chapter typography. */
+.observatory-chapter-word {
+  z-index: var(--z-raised);
+  color: var(--pearl-50);
+  isolation: isolate;
+  pointer-events: none;
+  user-select: none;
+}
+
+.observatory-chapter-word > span {
+  display: block;
+  color: color-mix(in srgb, var(--comet-300) 72%, transparent);
+  font-family: var(--font-utility);
+  font-size: 0.58rem;
+  font-weight: 680;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.observatory-chapter-word > strong {
+  display: block;
+  font-family: var(--font-editorial);
+  font-weight: 470;
+  letter-spacing: -0.065em;
+  line-height: 0.72;
+  white-space: nowrap;
+}
+
+.page-hero > .observatory-chapter-word--arrival {
+  position: absolute;
+  right: 1.5%;
+  bottom: 2%;
+  left: 1.5%;
+}
+
+.page-hero > .observatory-chapter-word--arrival > strong {
+  color: color-mix(in srgb, var(--pearl-50) 6%, transparent);
+  font-size: clamp(8rem, 22vw, 20rem);
+  text-align: right;
+}
+
+.section-heading > .observatory-chapter-word--section {
+  position: absolute;
+  top: -3.1rem;
+  right: 0;
+  left: 0;
+}
+
+.section-heading > .observatory-chapter-word--section > strong {
+  color: color-mix(in srgb, var(--pearl-50) 5%, transparent);
+  font-size: clamp(5rem, 10vw, 10rem);
+  text-align: right;
+}
+
+.section-heading > :not(.observatory-chapter-word) {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+@media (max-width: 720px) {
+  .page-hero > .observatory-chapter-word--arrival {
+    right: 0.75rem;
+    bottom: 1rem;
+    left: 0.75rem;
+  }
+
+  .page-hero > .observatory-chapter-word--arrival > strong,
+  .section-heading > .observatory-chapter-word--section > strong {
+    font-size: clamp(4.2rem, 22vw, 7rem);
+  }
+
+  .section-heading > .observatory-chapter-word--section {
+    top: -1.8rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .observatory-chapter-word {
+    display: none;
+  }
+}
+
 /* Premium foreground action contract — shared by every route and navigation rail. */
 :where([data-ui-action]) {
   position: relative;

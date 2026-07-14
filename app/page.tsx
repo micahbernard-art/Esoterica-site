@@ -81,6 +81,15 @@ export default function HomePage() {
           data-galaxy-anchor="home-threshold"
           data-route-relic="home"
         >
+          <div
+            className="observatory-chapter-word observatory-chapter-word--arrival"
+            data-observatory-chapter="arrival"
+            data-reveal="fade"
+            aria-hidden="true"
+          >
+            <span>Llegada · 00</span>
+            <strong>UMBRAL</strong>
+          </div>
           <span className="route-relic" aria-hidden="true">
             <span>Umbral</span>
             <span className="route-relic__coordinate">ÓRBITA · 00</span>
@@ -180,26 +189,31 @@ export default function HomePage() {
         <AstralDivider />
 
         <section
-          className="content-section products-section astral-catalog"
+          className="content-section products-section astral-catalog observatory-specimen-layout"
           aria-labelledby="featured-title"
           data-scroll-scene="catalog-arches"
         >
-          <SectionHeading
-            eyebrow="Catálogo"
-            title="Una selección para comenzar"
-            titleId="featured-title"
-            description="Las imágenes son referenciales. Consulta por WhatsApp para confirmar modelos, disponibilidad y detalles."
-            action={
-              <ActionLink
-                className="text-link"
-                href="/tarot"
-                intent="text"
-                cursorLabel="Ver Tarot"
-              >
-                Ver todo el Tarot
-              </ActionLink>
-            }
-          />
+          <div className="observatory-sticky-stage">
+            <SectionHeading
+              eyebrow="Catálogo"
+              title="Una selección para comenzar"
+              titleId="featured-title"
+              description="Las imágenes son referenciales. Consulta por WhatsApp para confirmar modelos, disponibilidad y detalles."
+              chapterLabel="Observación"
+              chapterWord="ARCANO"
+              chapterIndex="01"
+              action={
+                <ActionLink
+                  className="text-link"
+                  href="/tarot"
+                  intent="text"
+                  cursorLabel="Ver Tarot"
+                >
+                  Ver todo el Tarot
+                </ActionLink>
+              }
+            />
+          </div>
           <div className="catalog-grid featured-catalog-grid">
             {featuredCatalog.map((item, index) => (
               <div
@@ -217,7 +231,7 @@ export default function HomePage() {
         </section>
 
         <section
-          className="content-section categories-section orbital-categories"
+          className="content-section categories-section orbital-categories observatory-choice"
           aria-labelledby="categories-title"
           data-scroll-scene="category-orbit"
         >
@@ -227,6 +241,9 @@ export default function HomePage() {
               title="Elige tu próximo paso"
               titleId="categories-title"
               description="Navega por el catálogo, conoce el libro o revisa las opciones de lectura."
+              chapterLabel="Elección"
+              chapterWord="ELIGE"
+              chapterIndex="02"
             />
           </div>
           <div className="category-orbit">
@@ -330,7 +347,7 @@ export default function HomePage() {
         </section>
 
         <section
-          className="content-section process-section astral-process"
+          className="content-section process-section astral-process observatory-clarity"
           aria-labelledby="process-title"
           data-scroll-scene="planet-path"
         >
@@ -339,6 +356,9 @@ export default function HomePage() {
             title="Un proceso claro, de principio a fin"
             titleId="process-title"
             description="La atención se coordina de forma directa para que sepas qué está disponible antes de tomar una decisión."
+            chapterLabel="Claridad"
+            chapterWord="CLARIDAD"
+            chapterIndex="03"
           />
           <ol className="process-grid">
             {processSteps.map((step, index) => (
@@ -355,7 +375,7 @@ export default function HomePage() {
         </section>
 
         <section
-          className="content-section about-section crescent-scene"
+          className="content-section about-section crescent-scene observatory-clarity-grid"
           aria-labelledby="about-title"
           data-scroll-scene="crescent-about"
         >
@@ -394,10 +414,19 @@ export default function HomePage() {
         </section>
 
         <section
-          className="content-section contact-banner portal-close"
+          className="content-section contact-banner portal-close observatory-portal"
           aria-labelledby="contact-title"
           data-scroll-scene="portal-close"
         >
+          <div
+            className="observatory-chapter-word observatory-chapter-word--portal"
+            data-observatory-chapter="portal"
+            data-reveal="fade"
+            aria-hidden="true"
+          >
+            <span>Portal · 04</span>
+            <strong>CONVERSEMOS</strong>
+          </div>
           <OrbitPortal variant="compact" />
           <div data-reveal="from-left">
             <p className="section-eyebrow">¿Tienes una pregunta?</p>

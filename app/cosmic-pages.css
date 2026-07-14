@@ -801,7 +801,7 @@ body {
   pointer-events: none;
 }
 
-.portal-close > div:not(.orbit-portal) {
+.portal-close > div:not(.orbit-portal):not(.observatory-chapter-word) {
   position: relative;
   z-index: 2;
   max-width: 45rem;
@@ -1347,7 +1347,7 @@ body {
   .crescent-scene { min-height: auto; padding-top: 6rem; padding-bottom: 6rem; }
   .portal-close { min-height: 0; padding: 4rem 1.4rem; border-radius: 4.5rem 0.8rem 4.5rem 0.8rem; }
   .portal-close > .orbit-portal { --portal-size: 12rem; left: -4.5rem; }
-  .portal-close > div:not(.orbit-portal) { padding-left: 2.8rem; }
+  .portal-close > div:not(.orbit-portal):not(.observatory-chapter-word) { padding-left: 2.8rem; }
   .portal-close > .button { width: 100%; }
   .constellation-key,
   .phase-sequence { position: relative; top: auto; right: auto; margin: -1rem 0 2rem; }
@@ -1374,7 +1374,7 @@ body {
   .monthly-eclipse__stage dl { gap: 0.4rem; padding: 0; }
   .eclipse-stage dd,
   .monthly-eclipse__stage dd { font-size: 1.3rem; }
-  .portal-close > div:not(.orbit-portal) { padding-left: 1.4rem; }
+  .portal-close > div:not(.orbit-portal):not(.observatory-chapter-word) { padding-left: 1.4rem; }
   .moon-phase-topics li { padding-left: 4.7rem; }
 }
 
@@ -1686,6 +1686,444 @@ body {
 
   .button.astral-button[data-ui-action]:focus-visible {
     outline-color: Highlight;
+  }
+}
+
+/* Oracle Observatory — chapter staging and luxury spatial grammar. */
+.page-hero {
+  min-height: clamp(42rem, 82svh, 58rem);
+}
+
+.cosmos-entry > .observatory-chapter-word--arrival {
+  position: absolute;
+  right: 0;
+  bottom: 2%;
+  left: 0;
+}
+
+.cosmos-entry > .observatory-chapter-word--arrival > strong {
+  color: color-mix(in srgb, var(--pearl-50) 6%, transparent);
+  font-size: clamp(8rem, 21vw, 19rem);
+  text-align: right;
+}
+
+.observatory-sticky-stage {
+  align-self: start;
+}
+
+.observatory-chapter-word--specimen,
+.observatory-chapter-word--choice,
+.observatory-chapter-word--clarity,
+.observatory-chapter-word--portal {
+  pointer-events: none;
+}
+
+.observatory-chapter-word--specimen > strong,
+.observatory-chapter-word--choice > strong,
+.observatory-chapter-word--clarity > strong {
+  color: color-mix(in srgb, var(--pearl-50) 5%, transparent);
+  font-size: clamp(5rem, 9vw, 9rem);
+}
+
+.book-artifact > .observatory-chapter-word--specimen {
+  position: absolute;
+  top: -2.25rem;
+  right: 0;
+  left: 0;
+}
+
+.book-artifact > .observatory-chapter-word--specimen > strong {
+  text-align: center;
+}
+
+.book-copy {
+  position: relative;
+}
+
+.book-copy > .observatory-chapter-word--clarity {
+  position: relative;
+  margin: 0 0 3rem;
+}
+
+.observatory-choice-locus {
+  position: relative;
+  isolation: isolate;
+}
+
+.observatory-choice-locus > .observatory-chapter-word--choice {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+}
+
+.observatory-choice-locus > .observatory-chapter-word--choice > strong {
+  font-size: clamp(4.5rem, 8vw, 8rem);
+  text-align: right;
+}
+
+.observatory-choice-locus > :not(.observatory-chapter-word) {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.observatory-portal {
+  position: relative;
+  min-height: var(--observatory-portal-height);
+  align-content: center;
+  isolation: isolate;
+}
+
+.observatory-portal::after {
+  position: absolute;
+  top: 54%;
+  left: 64%;
+  z-index: var(--z-raised);
+  width: min(44rem, 78vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 49.4%, rgb(255 247 225 / 24%) 49.88%, rgb(255 253 242 / 74%) 50%, rgb(255 247 225 / 24%) 50.12%, transparent 50.6%),
+    linear-gradient(0deg, transparent 49.4%, rgb(245 195 104 / 18%) 49.88%, rgb(255 253 242 / 66%) 50%, rgb(245 195 104 / 18%) 50.12%, transparent 50.6%),
+    radial-gradient(circle, rgb(255 254 246 / 98%) 0 1%, rgb(255 224 155 / 90%) 2.4%, rgb(238 176 87 / 42%) 8%, rgb(177 135 255 / 18%) 21%, rgb(126 237 244 / 7%) 36%, transparent 66%);
+  content: "";
+  mask-image: radial-gradient(circle, black 0 10%, rgb(0 0 0 / 94%) 30%, transparent 69%);
+  opacity: calc(var(--finale-p, 0) * 0.92);
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0) scale(calc(0.46 + var(--finale-p, 0) * 0.54));
+  will-change: transform, opacity;
+}
+
+.observatory-portal > .observatory-chapter-word--portal,
+.portal-close > .observatory-chapter-word--portal {
+  position: absolute;
+  right: 2rem;
+  bottom: 1rem;
+  left: 2rem;
+  z-index: var(--z-raised);
+  max-width: none;
+  padding: 0;
+}
+
+.observatory-chapter-word--portal > strong {
+  color: color-mix(in srgb, var(--pearl-50) 5%, transparent);
+  font-size: clamp(6rem, 14vw, 15rem);
+  text-align: center;
+}
+
+.tarot-constellation [data-observatory-phase] {
+  opacity: 0.46;
+  transform: translate3d(0, 1.25rem, 0) scale(0.985);
+  transition:
+    opacity 420ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 620ms var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1));
+  will-change: transform, opacity;
+}
+
+html.motion-ready .tarot-constellation[data-cosmic-scene] [data-observatory-phase].is-revealed {
+  opacity: 0.46;
+  transform: translate3d(0, 1.25rem, 0) scale(0.985);
+}
+
+html.motion-ready[data-cosmic-beat="specimen"] .tarot-constellation [data-observatory-phase="specimen"].is-revealed,
+html.motion-ready[data-cosmic-beat="choice"] .tarot-constellation [data-observatory-phase="choice"].is-revealed,
+html.motion-ready[data-cosmic-beat="clarity"] .tarot-constellation [data-observatory-phase="clarity"].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.observatory-portal > :not(.observatory-chapter-word):not(.orbit-portal) {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.observatory-clarity .process-grid::before {
+  display: none;
+}
+
+.observatory-clarity .process-card,
+.observatory-clarity .process-card:nth-child(2) {
+  padding-top: 2rem;
+  border-top: 1px solid var(--titanium-edge-milk);
+  text-align: left;
+  transform: none;
+}
+
+.observatory-clarity .process-planet {
+  width: 6.5rem;
+  margin: 0 0 2rem;
+}
+
+@media (min-width: 901px) {
+  .observatory-sticky-stage {
+    position: sticky;
+    top: var(--observatory-sticky-top);
+    z-index: var(--z-content);
+  }
+
+  .astral-catalog.observatory-specimen-layout,
+  .tarot-constellation.observatory-specimen-layout,
+  .reading-chambers.observatory-specimen-layout {
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.66fr) minmax(0, 1.34fr);
+    align-items: start;
+    min-height: 110svh;
+    column-gap: var(--observatory-stage-gap);
+  }
+
+  .astral-catalog.observatory-specimen-layout > .featured-catalog-grid,
+  .tarot-constellation.observatory-specimen-layout > .tarot-catalog-grid,
+  .reading-chambers.observatory-specimen-layout > .reading-tier-grid {
+    grid-column: 2;
+  }
+
+  .astral-catalog.observatory-specimen-layout .section-heading,
+  .tarot-constellation.observatory-specimen-layout .section-heading,
+  .reading-chambers.observatory-specimen-layout .section-heading {
+    display: block;
+    margin: 0;
+  }
+
+  .astral-catalog.observatory-specimen-layout .section-heading-astra,
+  .tarot-constellation.observatory-specimen-layout .section-heading-astra,
+  .reading-chambers.observatory-specimen-layout .section-heading-astra {
+    margin-top: 2rem;
+  }
+
+  .astral-catalog.observatory-specimen-layout .featured-catalog-grid,
+  .tarot-constellation.observatory-specimen-layout .tarot-catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .astral-catalog.observatory-specimen-layout .catalog-constellation:nth-child(2),
+  .tarot-constellation.observatory-specimen-layout .tarot-constellation__cell:nth-of-type(n) {
+    transform: none;
+  }
+
+  .astral-catalog.observatory-specimen-layout .catalog-constellation:last-child {
+    grid-column: 1 / -1;
+    width: min(100%, 32rem);
+    justify-self: end;
+  }
+
+  .reading-chambers.observatory-specimen-layout .reading-tier-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .reading-chambers.observatory-specimen-layout .reading-tier,
+  .reading-chambers.observatory-specimen-layout .reading-tier.is-featured {
+    min-height: 33rem;
+    transform: none;
+  }
+
+  .artifact-scene.observatory-specimen-layout .book-artifact {
+    top: var(--observatory-sticky-top);
+  }
+}
+
+.orbital-categories.observatory-choice {
+  display: block;
+  min-height: 0;
+  overflow: clip;
+  padding-top: clamp(8rem, 13vw, 12rem);
+  padding-bottom: clamp(8rem, 13vw, 12rem);
+}
+
+.orbital-categories.observatory-choice .orbital-categories__heading {
+  width: min(100%, 58rem);
+  margin-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.orbital-categories.observatory-choice .category-orbit {
+  min-height: 0;
+  place-items: stretch;
+}
+
+.orbital-categories.observatory-choice .category-orbit__core {
+  top: 50%;
+  left: 50%;
+  z-index: var(--z-raised);
+  opacity: 0.18;
+  transform: translate3d(-50%, -50%, 0) scale(2.6);
+}
+
+.orbital-categories.observatory-choice .category-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.orbital-categories.observatory-choice .category-card {
+  min-height: 20rem;
+  align-content: space-between;
+}
+
+@media (max-width: 1100px) {
+  .orbital-categories.observatory-choice .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .orbital-categories.observatory-choice .category-card {
+    min-height: 15rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .observatory-sticky-stage,
+  .artifact-scene.observatory-specimen-layout .book-artifact {
+    position: relative;
+    top: auto;
+  }
+
+  .astral-catalog.observatory-specimen-layout,
+  .tarot-constellation.observatory-specimen-layout,
+  .reading-chambers.observatory-specimen-layout {
+    display: block;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .cosmos-entry > .observatory-chapter-word--arrival {
+    right: 0.75rem;
+    bottom: 1rem;
+    left: 0.75rem;
+  }
+
+  .cosmos-entry > .observatory-chapter-word--arrival > strong,
+  .observatory-chapter-word--specimen > strong,
+  .observatory-chapter-word--choice > strong,
+  .observatory-chapter-word--clarity > strong,
+  .observatory-chapter-word--portal > strong {
+    font-size: clamp(4.2rem, 21vw, 6.8rem);
+  }
+
+  .orbital-categories.observatory-choice {
+    overflow: hidden;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+
+  .orbital-categories.observatory-choice .category-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    transform: none;
+  }
+
+  .orbital-categories.observatory-choice .category-card {
+    min-height: 0;
+    transform: none;
+  }
+
+  .observatory-choice-locus > .observatory-chapter-word--choice {
+    top: 0.8rem;
+    right: 0.8rem;
+  }
+
+  .observatory-portal {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 70svh;
+  }
+
+  .observatory-portal::after {
+    top: 50%;
+    left: 68%;
+    width: min(34rem, 104vw);
+    opacity: calc(var(--finale-p, 0) * 0.82);
+  }
+
+  .observatory-portal > div:not(.orbit-portal):not(.observatory-chapter-word),
+  .observatory-portal > .button {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .observatory-portal h2 {
+    max-width: 15ch;
+    font-size: clamp(2.55rem, 10.5vw, 4rem);
+  }
+
+  .observatory-portal > .observatory-chapter-word--portal,
+  .portal-close > .observatory-chapter-word--portal {
+    right: 0.8rem;
+    bottom: 0.8rem;
+    left: 0.8rem;
+  }
+
+  .observatory-clarity .process-card,
+  .observatory-clarity .process-card:nth-child(2) {
+    text-align: left;
+    transform: none;
+  }
+}
+
+html[data-performance-mode="lite"] .observatory-sticky-stage,
+.kinetic-save-data .observatory-sticky-stage,
+.motion-reduced .observatory-sticky-stage,
+html[data-performance-mode="lite"] .artifact-scene.observatory-specimen-layout .book-artifact,
+.kinetic-save-data .artifact-scene.observatory-specimen-layout .book-artifact,
+.motion-reduced .artifact-scene.observatory-specimen-layout .book-artifact {
+  position: relative;
+  top: auto;
+}
+
+html[data-performance-mode="lite"] :is(.observatory-chapter-word, .observatory-choice .category-grid),
+.kinetic-save-data :is(.observatory-chapter-word, .observatory-choice .category-grid),
+.motion-reduced :is(.observatory-chapter-word, .observatory-choice .category-grid) {
+  transform: none !important;
+  transition: none !important;
+}
+
+html[data-performance-mode="lite"] .tarot-constellation [data-observatory-phase],
+.kinetic-save-data .tarot-constellation [data-observatory-phase],
+.motion-reduced .tarot-constellation [data-observatory-phase] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+html[data-performance-mode="lite"] .observatory-portal::after,
+.kinetic-save-data .observatory-portal::after,
+.motion-reduced .observatory-portal::after {
+  opacity: 0.08;
+  transform: translate3d(-50%, -50%, 0) scale(0.72);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .observatory-sticky-stage,
+  .artifact-scene.observatory-specimen-layout .book-artifact {
+    position: relative;
+    top: auto;
+  }
+
+  :is(.observatory-chapter-word, .observatory-choice .category-grid) {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .tarot-constellation [data-observatory-phase] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .observatory-portal::after {
+    opacity: 0.08;
+    transform: translate3d(-50%, -50%, 0) scale(0.72);
+  }
+}
+
+@media (forced-colors: active) {
+  .observatory-chapter-word,
+  .orbital-categories.observatory-choice .category-orbit__core,
+  .observatory-portal::after {
+    display: none;
+  }
+
+  .tarot-constellation [data-observatory-phase] {
+    opacity: 1;
+    transform: none;
   }
 }
 

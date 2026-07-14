@@ -43,6 +43,15 @@ export function PageHero({
       data-galaxy-anchor={`${variant}-threshold`}
       data-route-relic={variant}
     >
+      <div
+        className="observatory-chapter-word observatory-chapter-word--arrival"
+        data-observatory-chapter="arrival"
+        data-reveal="fade"
+        aria-hidden="true"
+      >
+        <span>Llegada · 00</span>
+        <strong>UMBRAL</strong>
+      </div>
       <span className="route-relic" aria-hidden="true">
         <span>{routeRelics[variant].label}</span>
         <span className="route-relic__coordinate">{routeRelics[variant].coordinate}</span>

@@ -37,8 +37,18 @@ export function CelestialBackdrop() {
     <div className="celestial-backdrop" aria-hidden="true">
       <div className="nebula-field nebula-field-one" />
       <div className="nebula-field nebula-field-two" />
-      <div className="celestial-focus-lens" />
-      <div className="celestial-finale-supernova" />
+      <div
+        className="celestial-focus-lens"
+        data-observatory-instrument="aperture"
+      />
+      <div
+        className="celestial-observatory-axis"
+        data-observatory-instrument="axis"
+      />
+      <div
+        className="celestial-finale-supernova"
+        data-observatory-instrument="portal"
+      />
 
       <div className="astral-sun" />
       <div className="astral-crescent" />
