@@ -47,6 +47,20 @@
   --ui-ease-structural: cubic-bezier(0.76, 0, 0.24, 1);
   --ui-ease-out: var(--ui-ease-snap);
   --ui-focus: #fff2b8;
+  /* Celestial Titanium — shared foreground material, never ambient canvas. */
+  --titanium-smoke: rgba(11, 9, 24, 0.78);
+  --titanium-smoke-strong: rgba(14, 10, 31, 0.9);
+  --titanium-smoke-solid: #100b22;
+  --titanium-edge-milk: rgba(255, 252, 244, 0.14);
+  --titanium-edge-gold: rgba(239, 207, 142, 0.52);
+  --titanium-edge-iris: rgba(177, 135, 255, 0.42);
+  --titanium-refraction: linear-gradient(118deg, rgba(239, 207, 142, 0.1), rgba(177, 135, 255, 0.12) 48%, rgba(126, 237, 244, 0.08));
+  --titanium-shadow: 0 1.35rem 3.8rem rgba(2, 0, 12, 0.32), inset 0 1px rgba(255, 255, 255, 0.08);
+  --titanium-shadow-quiet: 0 0.75rem 2rem rgba(2, 0, 12, 0.22), inset 0 1px rgba(255, 255, 255, 0.065);
+  --titanium-blur: 22px;
+  --titanium-radius-control: 18px;
+  --titanium-radius-card: 28px;
+  --titanium-radius-panel: 36px;
   --z-underlay: -1;
   --z-raised: 1;
   --z-badge: 2;

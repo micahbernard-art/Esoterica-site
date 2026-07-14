@@ -69,6 +69,68 @@ test("hidden tabs stop the refresh-synchronized galaxy scheduler", async () => {
   assert.match(scheduler, /document\.hidden/);
 });
 
+test("one section score drives the chapter lens and restrained finale", async () => {
+  const [motion, backdrop, motionCss] = await Promise.all([
+    read("components/site/cosmic-motion.tsx"),
+    read("components/site/celestial-backdrop.tsx"),
+    read("app/cosmic-motion.css"),
+  ]);
+
+  assert.match(motion, /root\.dataset\.cosmicChapter/);
+  for (const closingScene of [
+    "recommendation-portal",
+    "book-question",
+    "reading-close",
+    "portal-close",
+  ]) {
+    assert.match(motion, new RegExp(`["']${closingScene}["']`));
+  }
+  assert.match(motion, /FINALE_SCENES\.has\(sceneName\)/);
+  for (const property of [
+    "--environment-p",
+    "--environment-focus",
+    "--environment-velocity",
+    "--finale-p",
+  ]) {
+    assert.match(motion, new RegExp(`["']${property}["']`));
+  }
+  assert.match(
+    motion,
+    /ENVIRONMENT_PROPERTIES\.forEach\([\s\S]*?removeProperty\(property\)/,
+  );
+  assert.equal((motion.match(/requestAnimationFrame/g) ?? []).length, 2);
+  assert.equal((motion.match(/setTimeout/g) ?? []).length, 1);
+  assert.doesNotMatch(motion, /setInterval|requestEnvironmentFrame/);
+
+  assert.equal(
+    (backdrop.match(/className="celestial-focus-lens"/g) ?? []).length,
+    1,
+  );
+  assert.equal(
+    (backdrop.match(/className="celestial-finale-supernova"/g) ?? []).length,
+    1,
+  );
+
+  for (const chapter of ["threshold", "orbit", "eclipse", "archive", "finale"]) {
+    assert.match(
+      motionCss,
+      new RegExp(`data-cosmic-chapter=["']${chapter}["']`),
+    );
+  }
+  assert.match(motionCss, /\.celestial-finale-supernova[\s\S]*var\(--finale-p\)/);
+  assert.doesNotMatch(
+    motionCss.match(/\.celestial-focus-lens\s*\{[\s\S]*?\n\}/)?.[0] ?? "",
+    /transition\s*:/,
+  );
+  assert.doesNotMatch(
+    motionCss.match(/\.celestial-finale-supernova\s*\{[\s\S]*?\n\}/)?.[0] ?? "",
+    /animation\s*:/,
+  );
+  assert.match(motionCss, /data-performance-mode="lite"[\s\S]*celestial-finale-supernova/);
+  assert.match(motionCss, /prefers-reduced-motion:\s*reduce[\s\S]*celestial-finale-supernova/);
+  assert.match(motionCss, /forced-colors:\s*active[\s\S]*celestial-finale-supernova/);
+});
+
 test("custom cursor remains semantic, decorative, and bounded", async () => {
   const [layout, cursor, styles] = await Promise.all([
     read("app/layout.tsx"),

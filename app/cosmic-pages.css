@@ -1856,3 +1856,183 @@ body {
   .button.eclipse-cta[data-ui-action="primary"]::after { display: none; }
   .button.eclipse-cta[data-ui-action="primary"]:focus-visible { outline-color: Highlight; }
 }
+
+/* Celestial Titanium — route surfaces share one quiet luxury hierarchy. */
+.cosmos-entry .hero-feature,
+:is(.eclipse-panel, .monthly-eclipse, .portal-close) {
+  border: 1px solid var(--titanium-edge-milk);
+  background:
+    radial-gradient(circle at 88% 12%, rgba(177, 135, 255, 0.14), transparent 21rem),
+    var(--titanium-refraction),
+    var(--titanium-smoke);
+  box-shadow: var(--titanium-shadow);
+  -webkit-backdrop-filter: blur(var(--titanium-blur)) saturate(1.14);
+  backdrop-filter: blur(var(--titanium-blur)) saturate(1.14);
+}
+
+.cosmos-entry .hero-feature {
+  border-radius: var(--titanium-radius-card);
+}
+
+:is(.eclipse-panel, .monthly-eclipse, .portal-close) {
+  border-radius: var(--titanium-radius-panel);
+}
+
+.orbital-categories .category-card,
+.reading-chambers .reading-tier {
+  overflow: hidden;
+  border: 1px solid var(--titanium-edge-milk);
+  border-radius: var(--titanium-radius-card);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(177, 135, 255, 0.12), transparent 14rem),
+    linear-gradient(152deg, rgba(255, 255, 255, 0.035), transparent 38%),
+    var(--titanium-smoke-strong);
+  box-shadow: var(--titanium-shadow);
+  clip-path: none;
+}
+
+.reading-chambers .reading-tier.is-featured {
+  border-color: var(--titanium-edge-gold);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(239, 207, 142, 0.14), transparent 15rem),
+    var(--titanium-refraction),
+    var(--titanium-smoke-strong);
+}
+
+.artifact-scene .book-cover {
+  border: 1px solid var(--titanium-edge-gold);
+  border-radius: var(--titanium-radius-card);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(177, 135, 255, 0.2), transparent 10rem),
+    var(--titanium-refraction),
+    var(--titanium-smoke-solid);
+  box-shadow: 1rem 1.1rem 0 rgba(239, 207, 142, 0.045), var(--titanium-shadow);
+}
+
+.artifact-scene .book-cover::before {
+  border-color: var(--titanium-edge-milk);
+  border-radius: calc(var(--titanium-radius-card) - 10px);
+}
+
+.artifact-scene .book-purchase {
+  padding: 1.4rem;
+  border: 1px solid var(--titanium-edge-milk);
+  border-radius: var(--titanium-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), transparent 46%), var(--titanium-smoke-strong);
+  box-shadow: var(--titanium-shadow-quiet);
+}
+
+.celestial-gateways .purchase-link {
+  border: 1px solid var(--titanium-edge-milk);
+  border-radius: var(--titanium-radius-control);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 44%), var(--titanium-smoke-strong);
+  box-shadow: var(--titanium-shadow-quiet);
+  clip-path: none;
+}
+
+.button.astral-button:is([data-ui-action="primary"], [data-ui-action="secondary"]),
+.button.eclipse-cta[data-ui-action="primary"] {
+  border-radius: var(--titanium-radius-control);
+  box-shadow: var(--titanium-shadow-quiet) !important;
+}
+
+.button.astral-button.button-primary[data-ui-action="primary"],
+.button.eclipse-cta[data-ui-action="primary"] {
+  border-color: transparent;
+  background:
+    linear-gradient(142deg, rgba(44, 24, 79, 0.9), rgba(13, 9, 31, 0.97)) padding-box,
+    linear-gradient(112deg, var(--titanium-edge-gold), var(--titanium-edge-iris), color-mix(in srgb, var(--comet-300) 68%, transparent)) border-box;
+  color: var(--pearl-50);
+}
+
+.button.astral-button.button-secondary[data-ui-action="secondary"] {
+  border-color: transparent;
+  background:
+    linear-gradient(142deg, rgba(25, 16, 46, 0.9), rgba(11, 8, 27, 0.96)) padding-box,
+    linear-gradient(112deg, color-mix(in srgb, var(--titanium-edge-iris) 72%, transparent), var(--titanium-edge-milk)) border-box;
+  color: color-mix(in srgb, var(--pearl-50) 92%, var(--orchid-300));
+}
+
+.button.astral-button[data-ui-action]::before,
+.button.eclipse-cta[data-ui-action="primary"]::before {
+  border-color: var(--titanium-edge-milk);
+  border-radius: calc(var(--titanium-radius-control) - 3px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button.astral-button[data-ui-action]:hover,
+  .button.eclipse-cta[data-ui-action="primary"]:hover,
+  .celestial-gateways .purchase-link:hover {
+    transform: translate3d(0, -2px, 0) scale(1.01);
+  }
+
+  .celestial-gateways .purchase-link:hover {
+    border-color: var(--titanium-edge-milk);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 44%), var(--titanium-smoke-strong);
+    box-shadow: var(--titanium-shadow-quiet);
+  }
+}
+
+.button.astral-button[data-ui-action]:active,
+.button.eclipse-cta[data-ui-action="primary"]:active,
+.celestial-gateways .purchase-link:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+}
+
+:is(.button.astral-button[data-ui-action], .button.eclipse-cta[data-ui-action="primary"], .celestial-gateways .purchase-link):focus-visible {
+  z-index: var(--z-focus);
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 4px;
+}
+
+@media (max-width: 720px) {
+  .cosmos-entry .hero-feature,
+  :is(.eclipse-panel, .monthly-eclipse, .portal-close) {
+    background: var(--titanium-smoke-strong);
+    box-shadow: var(--titanium-shadow-quiet);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .orbital-categories .category-card,
+  .reading-chambers .reading-tier,
+  .artifact-scene .book-cover,
+  .artifact-scene .book-purchase,
+  .celestial-gateways .purchase-link {
+    box-shadow: var(--titanium-shadow-quiet);
+  }
+}
+
+html[data-performance-mode="lite"] :is(.cosmos-entry .hero-feature, .eclipse-panel, .monthly-eclipse, .portal-close),
+.kinetic-save-data :is(.cosmos-entry .hero-feature, .eclipse-panel, .monthly-eclipse, .portal-close),
+.motion-reduced :is(.cosmos-entry .hero-feature, .eclipse-panel, .monthly-eclipse, .portal-close) {
+  background: var(--titanium-smoke-solid);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .cosmos-entry .hero-feature,
+  :is(.eclipse-panel, .monthly-eclipse, .portal-close) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .cosmos-entry .hero-feature,
+  :is(.eclipse-panel, .monthly-eclipse, .portal-close),
+  .orbital-categories .category-card,
+  .reading-chambers .reading-tier,
+  .artifact-scene .book-cover,
+  .artifact-scene .book-purchase,
+  .celestial-gateways .purchase-link,
+  .button.astral-button[data-ui-action],
+  .button.eclipse-cta[data-ui-action="primary"] {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none !important;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+}

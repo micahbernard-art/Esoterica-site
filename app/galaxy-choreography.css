@@ -66,10 +66,10 @@
   transform-origin: 0 70%;
   transition:
     clip-path 780ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 520ms ease,
+    opacity 520ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
     translate 760ms cubic-bezier(0.16, 1, 0.3, 1),
     rotate 760ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 620ms ease;
+    filter 620ms var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1));
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -82,9 +82,9 @@
 
 .motion-ready [data-cosmic-role="body"] {
   transition:
-    opacity 620ms ease,
+    opacity 620ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
     translate 720ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 620ms ease;
+    filter 620ms var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1));
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -190,7 +190,7 @@
 /* The rail is a quiet astronomical coordinate, not navigation. */
 .cosmic-journey-rail {
   position: fixed;
-  z-index: 24;
+  z-index: var(--z-journey-rail);
   top: 50%;
   right: clamp(0.6rem, 1.4vw, 1.4rem);
   display: grid;
@@ -222,9 +222,9 @@
   opacity: 0.48;
   scale: 0.72;
   transition:
-    border-color 360ms ease,
-    box-shadow 360ms ease,
-    opacity 360ms ease,
+    border-color 360ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow 360ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity 360ms var(--ui-ease-snap, cubic-bezier(0.16, 1, 0.3, 1)),
     scale 520ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 

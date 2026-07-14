@@ -83,6 +83,59 @@ test("foreground kinetics use tokenized premium easing without layout animation"
   assert.doesNotMatch(kinetic, /\s(?:linear|ease-in-out|ease-out|ease)\s*[,;]/);
 });
 
+test("Celestial Titanium keeps one coherent material hierarchy with safe fallbacks", async () => {
+  const [globals, components, pages, guardian] = await Promise.all([
+    read("app/globals.css"),
+    read("app/cosmic-components.css"),
+    read("app/cosmic-pages.css"),
+    read("app/performance-guardian.css"),
+  ]);
+  const componentMaterial = components.slice(
+    components.lastIndexOf("/* Celestial Titanium"),
+  );
+  const pageMaterial = pages.slice(pages.lastIndexOf("/* Celestial Titanium"));
+  const guardianMaterial = guardian.slice(
+    guardian.lastIndexOf("/* Celestial Titanium"),
+  );
+  const materialStyles = [componentMaterial, pageMaterial, guardianMaterial].join("\n");
+
+  assert.match(globals, /--titanium-smoke:\s*rgba\(/);
+  assert.match(globals, /--titanium-smoke-strong:\s*rgba\(/);
+  assert.match(globals, /--titanium-edge-milk:\s*rgba\(/);
+  assert.match(globals, /--titanium-edge-gold:\s*rgba\(/);
+  assert.match(globals, /--titanium-edge-iris:\s*rgba\(/);
+  assert.match(globals, /--titanium-blur:\s*22px/);
+  assert.match(globals, /--titanium-radius-control:\s*18px/);
+  assert.match(globals, /--titanium-radius-card:\s*28px/);
+  assert.match(globals, /--titanium-radius-panel:\s*36px/);
+
+  assert.match(componentMaterial, /\.site-header\s*\{[\s\S]*backdrop-filter:\s*blur\(var\(--titanium-blur\)\)/);
+  assert.match(componentMaterial, /\.catalog-card\s*\{[\s\S]*var\(--titanium-radius-card\)/);
+  assert.match(componentMaterial, /\.primary-nav ul\s*\{[\s\S]*backdrop-filter:\s*none/);
+  assert.match(pageMaterial, /\.reading-chambers \.reading-tier/);
+  assert.match(pageMaterial, /\.artifact-scene \.book-cover/);
+  assert.match(pageMaterial, /\.artifact-scene \.book-purchase/);
+  assert.match(pageMaterial, /\.celestial-gateways \.purchase-link/);
+  assert.match(guardianMaterial, /\.performance-guardian-offer\s*\{[\s\S]*backdrop-filter:\s*blur\(var\(--titanium-blur\)\)/);
+  assert.match(guardianMaterial, /\.performance-guardian-switch\s*\{[\s\S]*backdrop-filter:\s*none/);
+
+  assert.match(materialStyles, /@media \(max-width:\s*720px\)/);
+  assert.match(materialStyles, /data-performance-mode="lite"/);
+  assert.match(materialStyles, /\.kinetic-save-data/);
+  assert.match(materialStyles, /@media \(forced-colors:\s*active\)/);
+  assert.match(materialStyles, /outline:\s*2px solid var\(--ui-focus\)/);
+  assert.match(materialStyles, /translate3d\(0, -2px, 0\) scale\(1\.01\)/);
+  assert.match(materialStyles, /translate3d\(0, 0, 0\) scale\(0\.985\)/);
+  assert.doesNotMatch(
+    materialStyles,
+    /transition(?:-property)?:[^;]*(?:width|height|margin)/,
+  );
+  assert.doesNotMatch(
+    materialStyles,
+    /\s(?:linear|ease-in-out|ease-out|ease)\s*[,;]/,
+  );
+});
+
 test("cosmic reveal observers rebind by route and cannot strand mobile copy", async () => {
   const motion = await read("components/site/cosmic-motion.tsx");
 

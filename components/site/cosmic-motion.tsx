@@ -8,6 +8,14 @@ import "@/app/galaxy-choreography.css";
 
 const SCENE_SELECTOR = "main > section, .site-footer";
 const CHAPTERS = ["threshold", "orbit", "eclipse", "archive", "finale"] as const;
+type CosmicChapter = (typeof CHAPTERS)[number];
+
+const ENVIRONMENT_PROPERTIES = [
+  "--environment-p",
+  "--environment-focus",
+  "--environment-velocity",
+  "--finale-p",
+] as const;
 
 const REVEAL_SELECTOR = "[data-reveal]";
 
@@ -40,7 +48,7 @@ const KINETIC_PROPERTIES = [
 const clamp = (value: number, minimum = 0, maximum = 1) =>
   Math.min(maximum, Math.max(minimum, value));
 
-const CHAPTER_SCENES: Record<(typeof CHAPTERS)[number], string[]> = {
+const CHAPTER_SCENES: Record<CosmicChapter, string[]> = {
   threshold: ["entry", "hero"],
   orbit: ["catalog", "category", "constellation", "recommendation"],
   eclipse: ["reading", "eclipse", "question"],
@@ -48,11 +56,19 @@ const CHAPTER_SCENES: Record<(typeof CHAPTERS)[number], string[]> = {
   finale: ["close", "portal", "footer"],
 };
 
+const FINALE_SCENES = new Set([
+  "recommendation-portal",
+  "book-question",
+  "reading-close",
+  "portal-close",
+]);
+
 const getChapter = (scene: HTMLElement, index: number, total: number) => {
   if (index === 0) return CHAPTERS[0];
   if (index === total - 1) return CHAPTERS[4];
 
   const sceneName = scene.dataset.scrollScene?.toLowerCase() ?? "";
+  if (FINALE_SCENES.has(sceneName)) return CHAPTERS[4];
   return (
     CHAPTERS.find((chapter) =>
       CHAPTER_SCENES[chapter].some((word) => sceneName.includes(word)),
@@ -119,6 +135,15 @@ export function CosmicMotion() {
       );
       root.classList.remove("motion-paused", "kinetic-enabled");
       root.style.setProperty("--scroll-p", "0");
+      root.dataset.cosmicChapter = getChapter(
+        scenes[0] ?? document.body,
+        0,
+        Math.max(scenes.length, 1),
+      );
+      root.style.setProperty("--environment-p", "0.5");
+      root.style.setProperty("--environment-focus", "0.14");
+      root.style.setProperty("--environment-velocity", "0");
+      root.style.setProperty("--finale-p", "0");
 
       scenes.forEach((scene, index) => {
         scene.dataset.cosmicScene = "";
@@ -157,6 +182,10 @@ export function CosmicMotion() {
           "kinetic-save-data",
         );
         root.style.removeProperty("--scroll-p");
+        delete root.dataset.cosmicChapter;
+        ENVIRONMENT_PROPERTIES.forEach((property) =>
+          root.style.removeProperty(property),
+        );
 
         scenes.forEach((scene) => {
           delete scene.dataset.cosmicScene;
@@ -216,6 +245,11 @@ export function CosmicMotion() {
     let pointerX = 0;
     let pointerY = 0;
     let revealObserver: IntersectionObserver | null = null;
+    let activeChapter: CosmicChapter = getChapter(
+      scenes[0] ?? document.body,
+      0,
+      Math.max(scenes.length, 1),
+    );
 
     const saveData = connection?.saveData === true;
 
@@ -320,12 +354,10 @@ export function CosmicMotion() {
       const rect = scene.getBoundingClientRect();
       const travel = window.innerHeight + rect.height;
       const progress = clamp((window.innerHeight - rect.top) / Math.max(travel, 1));
+      const focus = clamp(1 - Math.abs(0.5 - progress) * 2);
 
       scene.style.setProperty("--scene-p", progress.toFixed(4));
-      scene.style.setProperty(
-        "--scene-focus",
-        clamp(1 - Math.abs(0.5 - progress) * 2).toFixed(4),
-      );
+      scene.style.setProperty("--scene-focus", focus.toFixed(4));
       scene.style.setProperty("--scene-velocity", scrollVelocity.toFixed(3));
       scene.style.setProperty("--scene-direction", `${scrollDirection}`);
       scene.style.setProperty(
@@ -340,6 +372,52 @@ export function CosmicMotion() {
         "--scene-shift-reverse",
         `${((progress - 0.5) * 52).toFixed(2)}px`,
       );
+
+      return {
+        distance: Math.abs(
+          rect.top + rect.height / 2 - window.innerHeight / 2,
+        ),
+        focus,
+        progress,
+      };
+    };
+
+    const writeEnvironmentScore = (
+      scene: HTMLElement | null,
+      progress: number,
+      focus: number,
+    ) => {
+      const chapter =
+        (scene?.dataset.cosmicChapter as CosmicChapter | undefined) ??
+        activeChapter;
+      const environmentIsStatic = reducedMotion || forcedColors || saveData;
+      const environmentProgress = environmentIsStatic ? 0.5 : progress;
+      const environmentFocus = environmentIsStatic
+        ? Math.min(focus, 0.14)
+        : focus;
+      const environmentVelocity = environmentIsStatic ? 0 : scrollVelocity;
+      const finaleProgress =
+        !environmentIsStatic && chapter === "finale"
+          ? clamp((progress - 0.08) / 0.38)
+          : 0;
+
+      activeChapter = chapter;
+      if (root.dataset.cosmicChapter !== chapter) {
+        root.dataset.cosmicChapter = chapter;
+      }
+      root.style.setProperty(
+        "--environment-p",
+        environmentProgress.toFixed(4),
+      );
+      root.style.setProperty(
+        "--environment-focus",
+        environmentFocus.toFixed(4),
+      );
+      root.style.setProperty(
+        "--environment-velocity",
+        environmentVelocity.toFixed(3),
+      );
+      root.style.setProperty("--finale-p", finaleProgress.toFixed(4));
     };
 
     const writeMotionFrame = () => {
@@ -369,36 +447,49 @@ export function CosmicMotion() {
         lastScrollProgress = scrollProgress;
       }
 
+      let activeScene: HTMLElement | null = null;
+      let activeDistance = Number.POSITIVE_INFINITY;
+      let activeProgress = 0.5;
+      let activeFocus = 0;
+
       visibleScenes.forEach((scene) => {
+        let sceneProgress = 0.5;
+        let sceneFocus = 1;
+        let sceneDistance = Number.POSITIVE_INFINITY;
+
         if (reducedMotion) {
+          const rect = scene.getBoundingClientRect();
+          sceneDistance = Math.abs(
+            rect.top + rect.height / 2 - window.innerHeight / 2,
+          );
           scene.style.setProperty("--scene-p", "0.5");
           scene.style.setProperty("--scene-shift", "0px");
           scene.style.setProperty("--scene-shift-soft", "0px");
           scene.style.setProperty("--scene-shift-reverse", "0px");
           scene.style.setProperty("--scene-focus", "1");
           scene.style.setProperty("--scene-velocity", "0");
-          return;
+        } else {
+          const score = updateSceneProgress(scene);
+          sceneProgress = score.progress;
+          sceneFocus = score.focus;
+          sceneDistance = score.distance;
         }
 
-        updateSceneProgress(scene);
+        if (sceneDistance < activeDistance) {
+          activeScene = scene;
+          activeDistance = sceneDistance;
+          activeProgress = sceneProgress;
+          activeFocus = sceneFocus;
+        }
       });
 
-      if (!reducedMotion && visibleScenes.size > 0) {
-        let activeScene: HTMLElement | null = null;
-        let activeDistance = Number.POSITIVE_INFINITY;
-        visibleScenes.forEach((scene) => {
-          const rect = scene.getBoundingClientRect();
-          const distance = Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2);
-          if (distance < activeDistance) {
-            activeDistance = distance;
-            activeScene = scene;
-          }
-        });
+      if (activeScene) {
         scenes.forEach((scene, index) => {
           const active = scene === activeScene;
           scene.classList.toggle("is-cosmic-focus", active);
           journeyPoints[index]?.classList.toggle("is-active", active);
         });
+        writeEnvironmentScore(activeScene, activeProgress, activeFocus);
       }
 
       if (pointerDirty) {
@@ -809,6 +900,10 @@ export function CosmicMotion() {
         "kinetic-save-data",
       );
       root.style.removeProperty("--scroll-p");
+      delete root.dataset.cosmicChapter;
+      ENVIRONMENT_PROPERTIES.forEach((property) =>
+        root.style.removeProperty(property),
+      );
       journeyRail.remove();
 
       scenes.forEach((scene) => {

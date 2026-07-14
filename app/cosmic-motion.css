@@ -1,5 +1,9 @@
 :root {
   --scroll-p: 0;
+  --environment-p: 0.5;
+  --environment-focus: 0;
+  --environment-velocity: 0;
+  --finale-p: 0;
 }
 
 .celestial-backdrop {
@@ -38,6 +42,142 @@
   mask-image: radial-gradient(circle at 50% 44%, black, transparent 66%);
   opacity: 0.18;
   transform: translate3d(0, calc(var(--scroll-p) * -8vh), 0) rotate(calc(var(--scroll-p) * 7deg));
+}
+
+/* A single section-aware light field follows the active chapter. Its score is
+ * written by CosmicMotion's existing frame, so this layer adds no timeline. */
+.celestial-focus-lens,
+.celestial-finale-supernova {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.celestial-focus-lens {
+  z-index: var(--z-raised);
+  top: 50%;
+  left: 50%;
+  width: min(64rem, 92vw);
+  aspect-ratio: 1.16;
+  border-radius: 50%;
+  opacity: calc(0.055 + var(--environment-focus) * 0.25);
+  transform: translate3d(-50%, -50%, 0) scale(0.9);
+}
+
+.celestial-focus-lens::before,
+.celestial-focus-lens::after {
+  position: absolute;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+  opacity: calc(0.1 + var(--environment-focus) * 0.42);
+  will-change: transform, opacity;
+}
+
+.celestial-focus-lens::before {
+  inset: 10%;
+  border: 1px solid color-mix(in srgb, var(--chapter-ambient, var(--comet-300)) 18%, transparent);
+  transform: rotate(calc(-8deg + var(--environment-p) * 14deg));
+}
+
+.celestial-focus-lens::after {
+  inset: 23%;
+  border: 1px solid color-mix(in srgb, var(--chapter-ambient, var(--orchid-300)) 14%, transparent);
+  transform: rotate(calc(12deg - var(--environment-p) * 9deg)) scale(calc(0.96 + var(--environment-focus) * 0.04));
+}
+
+html[data-cosmic-chapter="threshold"] .celestial-focus-lens {
+  --chapter-ambient: var(--solar-400);
+  background:
+    radial-gradient(circle at 56% 44%, color-mix(in srgb, var(--pearl) 16%, transparent), transparent 18%),
+    radial-gradient(ellipse at 52% 48%, color-mix(in srgb, var(--solar-400) 22%, transparent), transparent 62%);
+  transform:
+    translate3d(-50%, -50%, 0)
+    translate3d(calc(20vw - var(--environment-p) * 2vw), calc(-21vh + var(--environment-p) * 4vh), 0)
+    scale(calc(0.9 + var(--environment-focus) * 0.06));
+}
+
+html[data-cosmic-chapter="orbit"] .celestial-focus-lens {
+  --chapter-ambient: var(--comet-300);
+  background:
+    radial-gradient(circle at 44% 46%, color-mix(in srgb, var(--comet-300) 20%, transparent), transparent 30%),
+    radial-gradient(ellipse at 58% 54%, color-mix(in srgb, var(--orchid-300) 20%, transparent), transparent 64%);
+  transform:
+    translate3d(-50%, -50%, 0)
+    translate3d(calc(-8vw + var(--environment-p) * 6vw), calc(-2vh + var(--environment-p) * 4vh), 0)
+    scale(calc(0.94 + var(--environment-focus) * 0.07));
+}
+
+html[data-cosmic-chapter="eclipse"] .celestial-focus-lens {
+  --chapter-ambient: var(--dawn-400);
+  background:
+    radial-gradient(circle, rgb(3 1 14 / 42%) 0 24%, color-mix(in srgb, var(--dawn-400) 18%, transparent) 35%, transparent 58%),
+    radial-gradient(ellipse at 50% 48%, color-mix(in srgb, var(--solar-400) 11%, transparent), transparent 68%);
+  transform:
+    translate3d(-50%, -50%, 0)
+    translate3d(calc(18vw - var(--environment-p) * 7vw), calc(2vh + var(--environment-velocity) * 4vh), 0)
+    scale(calc(0.9 + var(--environment-focus) * 0.05));
+}
+
+html[data-cosmic-chapter="archive"] .celestial-focus-lens {
+  --chapter-ambient: var(--orchid-300);
+  background:
+    radial-gradient(circle at 42% 48%, color-mix(in srgb, var(--comet-300) 12%, transparent), transparent 28%),
+    radial-gradient(ellipse at 50% 52%, color-mix(in srgb, var(--orchid-300) 22%, transparent), transparent 66%);
+  transform:
+    translate3d(-50%, -50%, 0)
+    translate3d(calc(-15vw + var(--environment-p) * 4vw), calc(10vh - var(--environment-p) * 3vh), 0)
+    scale(calc(0.88 + var(--environment-focus) * 0.04));
+}
+
+html[data-cosmic-chapter="finale"] .celestial-focus-lens {
+  --chapter-ambient: var(--pearl);
+  background: radial-gradient(ellipse at 50% 58%, color-mix(in srgb, var(--solar-400) 18%, transparent), transparent 64%);
+  opacity: calc(0.04 + var(--environment-focus) * 0.14);
+  transform:
+    translate3d(-50%, -50%, 0)
+    translate3d(0, calc(22vh - var(--finale-p) * 8vh), 0)
+    scale(calc(0.9 + var(--finale-p) * 0.08));
+}
+
+/* The finale is a restrained progress bloom, not an autonomous explosion. */
+.celestial-finale-supernova {
+  z-index: var(--z-badge);
+  bottom: -22%;
+  left: 50%;
+  width: min(42rem, 82vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--pearl) 94%, transparent) 0 1.2%, color-mix(in srgb, var(--solar-400) 62%, transparent) 5%, color-mix(in srgb, var(--solar-400) 19%, transparent) 22%, transparent 64%);
+  opacity: calc(var(--finale-p) * 0.76);
+  transform: translate3d(-50%, calc(14% - var(--finale-p) * 9%), 0) scale(calc(0.52 + var(--finale-p) * 0.48));
+}
+
+.celestial-finale-supernova::before,
+.celestial-finale-supernova::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.celestial-finale-supernova::before {
+  inset: 17%;
+  border: 1px solid color-mix(in srgb, var(--pearl) 32%, transparent);
+  border-radius: 50%;
+  opacity: calc(var(--finale-p) * 0.72);
+  transform: scale(calc(0.76 + var(--finale-p) * 0.38));
+}
+
+.celestial-finale-supernova::after {
+  inset: 5%;
+  background:
+    linear-gradient(90deg, transparent 49.8%, color-mix(in srgb, var(--pearl) 24%, transparent) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 49.8%, color-mix(in srgb, var(--solar-400) 21%, transparent) 50%, transparent 50.2%);
+  mask-image: radial-gradient(circle, black 0 4%, transparent 62%);
+  opacity: calc(var(--finale-p) * 0.58);
+  transform: rotate(calc(-4deg + var(--finale-p) * 8deg)) scale(calc(0.7 + var(--finale-p) * 0.34));
 }
 
 .nebula-field {
@@ -102,7 +242,7 @@
 }
 
 .star-plane-near .celestial-star:nth-child(-n + 2) {
-  animation: star-twinkle 7.5s ease-in-out infinite;
+  animation: star-twinkle 7.5s var(--ui-ease-structural, cubic-bezier(0.76, 0, 0.24, 1)) infinite;
 }
 
 .star-plane-near .celestial-star::before,
@@ -139,6 +279,7 @@
   box-shadow: 0 0 5rem color-mix(in srgb, var(--solar) 18%, transparent);
   opacity: 0.64;
   transform: translate3d(calc(var(--scroll-p) * -5vw), calc(var(--scroll-p) * 12vh), 0) rotate(calc(var(--scroll-p) * 18deg));
+  will-change: transform, opacity;
 }
 
 .astral-sun::before,
@@ -174,6 +315,7 @@
     0 0 4rem color-mix(in srgb, var(--comet) 18%, transparent);
   opacity: 0.6;
   transform: translate3d(calc(var(--scroll-p) * 8vw), calc(var(--scroll-p) * -17vh), 0) rotate(calc(-18deg + var(--scroll-p) * 52deg));
+  will-change: transform, opacity;
 }
 
 .orbit-shell {
@@ -182,6 +324,7 @@
   border: 1px solid color-mix(in srgb, var(--solar) 23%, transparent);
   border-radius: 50%;
   opacity: 0.46;
+  will-change: transform, opacity;
 }
 
 .orbit-shell::after {
@@ -234,6 +377,27 @@
     inset 0 0 0 calc(2.4rem + 1px) color-mix(in srgb, var(--orchid) 20%, transparent);
   opacity: 0.56;
   transform: translate3d(calc(var(--scroll-p) * 5vw), calc(var(--scroll-p) * -23vh), 0) rotate(calc(var(--scroll-p) * 80deg));
+  will-change: transform, opacity;
+}
+
+html[data-cosmic-chapter="threshold"] .astral-sun {
+  opacity: calc(0.5 + var(--environment-focus) * 0.24);
+  scale: calc(0.98 + var(--environment-focus) * 0.03);
+}
+
+html[data-cosmic-chapter="orbit"] .orbit-shell {
+  opacity: calc(0.42 + var(--environment-focus) * 0.16);
+  scale: calc(1 + var(--environment-focus) * 0.035);
+}
+
+html[data-cosmic-chapter="eclipse"] .astral-crescent {
+  opacity: calc(0.52 + var(--environment-focus) * 0.18);
+  scale: calc(0.98 + var(--environment-focus) * 0.025);
+}
+
+html[data-cosmic-chapter="archive"] .celestial-meridian {
+  opacity: calc(0.48 + var(--environment-focus) * 0.16);
+  scale: calc(0.94 + var(--environment-focus) * 0.025);
 }
 
 .celestial-meridian::before,
@@ -436,6 +600,50 @@
     width: 13rem;
   }
 
+  html[data-cosmic-chapter="threshold"] .celestial-focus-lens {
+    transform:
+      translate3d(-50%, -50%, 0)
+      translate3d(calc(8vw - var(--environment-p) * 0.8vw), calc(-8.4vh + var(--environment-p) * 1.6vh), 0)
+      scale(calc(0.78 + var(--environment-focus) * 0.025));
+  }
+
+  html[data-cosmic-chapter="orbit"] .celestial-focus-lens {
+    transform:
+      translate3d(-50%, -50%, 0)
+      translate3d(calc(-3.2vw + var(--environment-p) * 2.4vw), calc(-0.8vh + var(--environment-p) * 1.6vh), 0)
+      scale(calc(0.82 + var(--environment-focus) * 0.03));
+  }
+
+  html[data-cosmic-chapter="eclipse"] .celestial-focus-lens {
+    transform:
+      translate3d(-50%, -50%, 0)
+      translate3d(calc(7.2vw - var(--environment-p) * 2.8vw), calc(0.8vh + var(--environment-velocity) * 1.6vh), 0)
+      scale(calc(0.8 + var(--environment-focus) * 0.02));
+  }
+
+  html[data-cosmic-chapter="archive"] .celestial-focus-lens {
+    transform:
+      translate3d(-50%, -50%, 0)
+      translate3d(calc(-6vw + var(--environment-p) * 1.6vw), calc(4vh - var(--environment-p) * 1.2vh), 0)
+      scale(calc(0.78 + var(--environment-focus) * 0.018));
+  }
+
+  html[data-cosmic-chapter="finale"] .celestial-focus-lens {
+    transform:
+      translate3d(-50%, -50%, 0)
+      translate3d(0, calc(8.8vh - var(--finale-p) * 3.2vh), 0)
+      scale(calc(0.82 + var(--finale-p) * 0.032));
+  }
+
+  html[data-cosmic-chapter="orbit"] .orbit-shell {
+    scale: calc(1 + var(--environment-focus) * 0.014);
+  }
+
+  .celestial-finale-supernova {
+    opacity: calc(var(--finale-p) * 0.58);
+    transform: translate3d(-50%, calc(12% - var(--finale-p) * 3.6%), 0) scale(calc(0.62 + var(--finale-p) * 0.19));
+  }
+
   .star-plane-far {
     transform: translate3d(0, calc(var(--scroll-p) * -3vh), 0);
   }
@@ -485,6 +693,21 @@
   transition-duration: 1ms !important;
 }
 
+html.motion-reduced .celestial-focus-lens,
+html.kinetic-save-data .celestial-focus-lens {
+  opacity: 0.055 !important;
+  transform: translate3d(-50%, -50%, 0) scale(0.82) !important;
+  transition: none !important;
+}
+
+html.motion-reduced .celestial-finale-supernova,
+html.kinetic-save-data .celestial-finale-supernova,
+html[data-performance-mode="lite"] :is(.celestial-focus-lens, .celestial-finale-supernova) {
+  opacity: 0 !important;
+  transform: translate3d(-50%, -50%, 0) scale(0.72) !important;
+  transition: none !important;
+}
+
 .motion-reduced .celestial-backdrop :is(.star-plane, .nebula-field, .astral-sun, .astral-crescent, .orbit-shell, .celestial-meridian),
 .motion-reduced [data-cosmic-scene] :is(.hero-copy, .page-hero-copy, .section-heading, .about-copy, .book-copy, .hero-feature, .about-principles, .book-cover, .readings-highlight-details, .catalog-grid, .category-grid, .process-grid, .reading-tier-grid) {
   transform: none !important;
@@ -521,5 +744,21 @@
     filter: none !important;
     scale: 1 !important;
     translate: 0 0 !important;
+  }
+
+  .celestial-focus-lens {
+    opacity: 0.055 !important;
+    transform: translate3d(-50%, -50%, 0) scale(0.82) !important;
+  }
+
+  .celestial-finale-supernova {
+    opacity: 0 !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .celestial-focus-lens,
+  .celestial-finale-supernova {
+    display: none;
   }
 }
